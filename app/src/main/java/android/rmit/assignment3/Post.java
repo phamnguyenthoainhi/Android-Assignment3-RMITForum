@@ -2,7 +2,7 @@ package android.rmit.assignment3;
 
 public class Post {
 
-    private String owner, title, content, course;
+    private String owner, title, content, course,id;
     private int upvote, downvote;
     private long dateTime;
 
@@ -17,6 +17,18 @@ public class Post {
         this.upvote = 0;
         this.downvote = 0;
         this.dateTime = System.currentTimeMillis();
+        this.id="";
+    }
+
+    public Post(String owner, String title, String content, String course, String id, int upvote, int downvote, long dateTime) {
+        this.owner = owner;
+        this.title = title;
+        this.content = content;
+        this.course = course;
+        this.id = id;
+        this.upvote = upvote;
+        this.downvote = downvote;
+        this.dateTime = dateTime;
     }
 
     public Post(String owner, String title, String content, String course, int upvote, int downvote, long dateTime) {
@@ -83,6 +95,14 @@ public class Post {
 
     public void setDateTime(long dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

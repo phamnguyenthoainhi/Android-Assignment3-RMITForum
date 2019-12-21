@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10px">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView4"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reply to this post"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/reply_input_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Content"
-        android:inputType="textPersonName" />
+        <LinearLayout
+            android:id="@+id/reply_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/create_reply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reply" />
-</LinearLayout>
+            <TextView
+                android:id="@+id/reply_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Content" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

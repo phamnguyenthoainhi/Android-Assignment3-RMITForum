@@ -30,6 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
         Button createPost = findViewById(R.id.create_post);
 
+        Button postsList = findViewById(R.id.posts_list_button);
+
+        postsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,PostsListActivity.class);
+                startActivity(intent);
+            }
+        });
+
         createPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

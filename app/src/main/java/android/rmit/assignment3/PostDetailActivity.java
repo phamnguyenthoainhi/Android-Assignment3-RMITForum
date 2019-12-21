@@ -3,6 +3,9 @@ package android.rmit.assignment3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +21,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-public class PostDetailActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class PostDetailActivity extends AppCompatActivity implements ReplyAdapter.ReplyViewHolder.OnReplyListener {
 
     String TAG = "Post Detail";
     String id;
@@ -27,8 +34,12 @@ public class PostDetailActivity extends AppCompatActivity {
     Post post = new Post();
     TextView title;
     TextView content;
-    //Reply newReply = new Reply();
     EditText newReplyContent;
+    ArrayList<Reply> replies = new ArrayList<>();
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,16 @@ public class PostDetailActivity extends AppCompatActivity {
         });
 
         onNewIntent(getIntent());
+
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                replies = new ArrayList<>();
+                fetchReplies(id);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -63,9 +84,26 @@ public class PostDetailActivity extends AppCompatActivity {
         fetchPost(bundle.getString("id"));
         id = bundle.getString("id");
 
+        fetchReplies(id);
+
         Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    public void initRecyclerView(){
+        recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ReplyAdapter(replies,this);
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onReplyClick(int position) {
+        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
     }
 
     protected void fetchPost (String id){
@@ -88,7 +126,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     public void showReplyDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
-        final View dialogView = getLayoutInflater().inflate(R.layout.reply,null);
+        final View dialogView = getLayoutInflater().inflate(R.layout.reply_dialog,null);
 
 
         newReplyContent = dialogView.findViewById(R.id.reply_input_content);
@@ -117,15 +155,37 @@ public class PostDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(PostDetailActivity.this, "Successfully posted reply.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, "Successfully posted reply_dialog.", Toast.LENGTH_SHORT).show();
+//                        replies = new ArrayList<>();
+//                        fetchReplies(id);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostDetailActivity.this, "Failed to post reply. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, "Failed to post reply_dialog. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    protected  void fetchReplies(String postId){
+        db.collection("Replies").whereEqualTo("post",postId).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            Reply reply = documentSnapshot.toObject(Reply.class);
+                            Toast.makeText(PostDetailActivity.this, reply.getContent(), Toast.LENGTH_SHORT).show();
+                            replies.add(reply);
+                            initRecyclerView();
+
+
+                        }
+
+                    }
+                });
+
     }
 
 

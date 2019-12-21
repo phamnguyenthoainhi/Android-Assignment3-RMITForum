@@ -24,4 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public void toSignUp(View view) {
         startActivity(new Intent(this, SignUpActivity.class));
     }
+
+    public void toCourse(View view) {
+        startActivity(new Intent(this, CourseActivity.class ));
+    }
 }

@@ -2,14 +2,17 @@ package android.rmit.assignment3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,10 +27,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.util.LinkedList;
-import java.util.List;
 
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "SignInActivity";
@@ -53,7 +53,10 @@ public class SignInActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordSignin);
         signin = findViewById(R.id.signin);
         signinGoogle = findViewById(R.id.signingg);
+        LinearLayout signinlayout = findViewById(R.id.signinlayout);
         Button signout = findViewById(R.id.signout);
+
+
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,7 +70,6 @@ public class SignInActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
 
 
         signin.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +91,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -108,6 +111,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         }
     }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -128,12 +132,11 @@ public class SignInActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 
                         }
-
                     }
                 });
     }
 
-//    Check Input Validation
+    //    Check Input Validation
     public boolean isValid() {
         if (!email.getText().toString().contains("@rmit.edu.vn") || email.getText().toString().isEmpty()) {
             email.setError("Invalid Email");
@@ -147,7 +150,6 @@ public class SignInActivity extends AppCompatActivity {
 
 
     public void signin(final String inputemail, String inputpassword) {
-        Log.d(TAG, "signin: hello");
         mAuth.signInWithEmailAndPassword(inputemail, inputpassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -162,8 +164,7 @@ public class SignInActivity extends AppCompatActivity {
                                 email.setError("Email is not register");
                                 email.clearComposingText();
                                 email.requestFocus();
-                            }
-                            else if (task.getException().toString().contains(" The password is invalid or the user does not have a password")) {
+                            } else if (task.getException().toString().contains(" The password is invalid or the user does not have a password")) {
                                 password.setError("Password is invalid");
                                 password.clearComposingText();
                                 password.requestFocus();
@@ -173,6 +174,5 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
 }

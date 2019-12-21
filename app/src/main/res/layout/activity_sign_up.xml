@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signoutlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -51,6 +52,7 @@
             android:layout_marginBottom="5dp"
             android:background="@drawable/view"
             android:backgroundTint="#48030303" />
+
         <Button
             android:id="@+id/hidepasswordsignup"
             style="?android:attr/borderlessButtonStyle"

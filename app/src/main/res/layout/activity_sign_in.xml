@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signinlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Email"
-         />
+        android:hint="Email" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -43,6 +43,7 @@
             android:layout_marginBottom="5dp"
             android:background="@drawable/view"
             android:backgroundTint="#48030303" />
+
         <Button
             android:id="@+id/hidepasswordsignin"
             style="?android:attr/borderlessButtonStyle"
@@ -63,10 +64,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In" />
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/signingg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
     </com.google.android.gms.common.SignInButton>
 

@@ -22,4 +22,12 @@
         android:text="To Sign Up"
         android:onClick="toSignUp"
         />
+
+    <Button
+        android:id="@+id/toCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="To Course"
+        android:onClick="toCourse"/>
 </LinearLayout>

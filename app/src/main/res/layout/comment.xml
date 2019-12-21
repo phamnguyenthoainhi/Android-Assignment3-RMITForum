@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:paddingLeft="20px">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -10,22 +10,16 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/reply_info"
+            android:id="@+id/comment_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/reply_content"
+                android:id="@+id/comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Content" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/my_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
 
         </LinearLayout>
 

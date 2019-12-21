@@ -35,6 +35,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     TextView title;
     TextView content;
     EditText newReplyContent;
+    EditText newCommentContent;
     ArrayList<Reply> replies = new ArrayList<>();
 
     private RecyclerView recyclerView;
@@ -103,7 +104,14 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     @Override
     public void onReplyClick(int position) {
+        showCommentDialog(position);
         Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onReplyLongClick(int position) {
+        showCommentDialog(position);
+        return false;
     }
 
     protected void fetchPost (String id){
@@ -122,6 +130,32 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         Log.w(TAG,"Failed to fetch");
                     }
                 });
+    }
+
+    public void showCommentDialog(final int position){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.comment_dialog,null);
+
+
+        newCommentContent = dialogView.findViewById(R.id.comment_input_content);
+
+        final Button comment = dialogView.findViewById(R.id.create_comment);
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createComment(new Comment(replies.get(position).getId(),newCommentContent.getText().toString()));
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+
     }
 
     public void showReplyDialog(){
@@ -150,6 +184,24 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     }
 
+    protected void createComment(Comment comment){
+        db.collection("Comments").add(comment)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(PostDetailActivity.this, "Successfully posted comment.", Toast.LENGTH_SHORT).show();
+//                        replies = new ArrayList<>();
+//                        fetchReplies(id);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(PostDetailActivity.this, "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     protected void createReply(Reply reply){
         db.collection("Replies").add(reply)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -176,6 +228,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
                         for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
                             Reply reply = documentSnapshot.toObject(Reply.class);
+                            reply.setId(documentSnapshot.getId());
                             Toast.makeText(PostDetailActivity.this, reply.getContent(), Toast.LENGTH_SHORT).show();
                             replies.add(reply);
                             initRecyclerView();

@@ -10,7 +10,7 @@ public class Comment {
 
     public Comment(String reply, String content) {
         this.reply=reply;
-        this.owner = owner;
+        this.owner = "comment person";
         this.content = content;
         this.upvote = 0;
         this.downvote = 0;

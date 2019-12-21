@@ -63,5 +63,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In" />
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/signingg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+    </com.google.android.gms.common.SignInButton>
+
+    <Button
+        android:id="@+id/signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
 </LinearLayout>

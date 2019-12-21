@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.icu.util.ULocale;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db;
     User currentUser;
+    Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class SignUpActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordSignup);
         fullname = findViewById(R.id.fullname);
         signup = findViewById(R.id.signup);
+        utilities = new Utilities();
+
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void createUser(final User currentUser) {
         db.collection("Users").document(currentUser.getId()).set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -64,6 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 
     //    Check Input Validation
     public boolean isValid() {
@@ -94,10 +100,11 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(inputfullname).build();
-
-                            currentUser = new User(user.getUid(), inputfullname, inputemail);
-                            createUser(currentUser);
                             user.updateProfile(profileUpdates);
+                            currentUser = new User(user.getUid(), inputfullname, inputemail);
+                            utilities.createUser(currentUser);
+//                            createUser(currentUser);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

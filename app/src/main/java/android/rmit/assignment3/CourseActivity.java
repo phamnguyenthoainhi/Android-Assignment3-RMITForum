@@ -144,17 +144,17 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 
                     AlertDialog.Builder buider1 = new AlertDialog.Builder(view.getContext()).setTitle("Confirmation").setMessage("Do you want to save these changes?")
                             .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            final Course editedcourse = new Course();
-                            editedcourse.setDocid(courses.get(position).getDocid());
-                            editedcourse.setName(coursenameedit.getText().toString());
-                            editedcourse.setId(courseidedit.getText().toString());
-                            updateCourse(editedcourse);
-                            courses = new ArrayList<>();
-                            fetchCourse();
-                        }
-                    })
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    final Course editedcourse = new Course();
+                                    editedcourse.setDocid(courses.get(position).getDocid());
+                                    editedcourse.setName(coursenameedit.getText().toString());
+                                    editedcourse.setId(courseidedit.getText().toString());
+                                    updateCourse(editedcourse);
+                                    courses = new ArrayList<>();
+                                    fetchCourse();
+                                }
+                            })
                             .setPositiveButton("No", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {

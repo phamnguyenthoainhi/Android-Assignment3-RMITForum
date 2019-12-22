@@ -15,12 +15,11 @@
         android:backgroundTint="#00C52222"
         android:text="Add coursee" />
 
-    <ListView
-        android:id="@+id/listviewcourse"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleviewcourse"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp" />
 
 </LinearLayout>

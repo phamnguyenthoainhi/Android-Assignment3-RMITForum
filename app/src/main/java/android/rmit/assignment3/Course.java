@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 public class Course {
     private String id;
     private String name;
+    private String docid;
 
     public Course(String id, String name) {
         this.id = id;
@@ -34,5 +35,19 @@ public class Course {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Course(String id, String name, String docid) {
+        this.id = id;
+        this.name = name;
+        this.docid = docid;
+    }
+
+    public String getDocid() {
+        return docid;
+    }
+
+    public void setDocid(String docid) {
+        this.docid = docid;
     }
 }

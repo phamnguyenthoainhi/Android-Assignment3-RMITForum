@@ -33,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button postsList = findViewById(R.id.posts_list_button);
 
+        Button toUserMana = findViewById(R.id.toUserMana);
+        toUserMana.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ManageUserActivity.class));
+            }
+        });
+
         postsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
 public class MainActivity extends AppCompatActivity {
 
     EditText title;
@@ -71,6 +72,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         alertDialog.show();
+
+    }
+
+    public void toSignIn(View view) {
+        startActivity(new Intent(this, SignInActivity.class));
+    }
+
+    public void toSignUp(View view) {
+        startActivity(new Intent(this, SignUpActivity.class));
+    }
+
+    public void toCourse(View view) {
+        startActivity(new Intent(this, CourseActivity.class ));
 
     }
 

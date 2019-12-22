@@ -3,7 +3,7 @@ package android.rmit.assignment3;
 public class Post {
 
     private String owner, title, content, course,id;
-    private int upvote, downvote;
+    private int upvote;
     private long dateTime;
 
     public Post() {
@@ -15,29 +15,26 @@ public class Post {
         this.content = content;
         this.course = "COSC2171";
         this.upvote = 0;
-        this.downvote = 0;
         this.dateTime = System.currentTimeMillis();
         this.id="";
     }
 
-    public Post(String owner, String title, String content, String course, String id, int upvote, int downvote, long dateTime) {
+    public Post(String owner, String title, String content, String course, String id, int upvote, long dateTime) {
         this.owner = owner;
         this.title = title;
         this.content = content;
         this.course = course;
         this.id = id;
         this.upvote = upvote;
-        this.downvote = downvote;
         this.dateTime = dateTime;
     }
 
-    public Post(String owner, String title, String content, String course, int upvote, int downvote, long dateTime) {
+    public Post(String owner, String title, String content, String course, int upvote, long dateTime) {
         this.owner = owner;
         this.title = title;
         this.content = content;
         this.course = course;
         this.upvote = upvote;
-        this.downvote = downvote;
         this.dateTime = dateTime;
     }
 
@@ -77,17 +74,11 @@ public class Post {
         return upvote;
     }
 
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
+    public void increaseUpvote() {
+        this.upvote+=1;
     }
+    public void decreaseUpvote(){this.upvote-=1;}
 
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
 
     public long getDateTime() {
         return dateTime;
@@ -113,7 +104,6 @@ public class Post {
                 ", content='" + content + '\'' +
                 ", course='" + course + '\'' +
                 ", upvote=" + upvote +
-                ", downvote=" + downvote +
                 ", dateTime=" + dateTime +
                 '}';
     }

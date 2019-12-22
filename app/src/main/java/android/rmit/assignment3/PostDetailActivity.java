@@ -38,9 +38,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     EditText newCommentContent;
     ArrayList<Reply> replies = new ArrayList<>();
 
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +92,12 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     }
 
     public void initRecyclerView(){
-        recyclerView = findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);;
+
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
         adapter = new ReplyAdapter(replies,this);
 
         recyclerView.setAdapter(adapter);
@@ -241,5 +242,45 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     }
 
+    protected void upvote(){
+        post.increaseUpvote();
+        updateUpvote();
+    }
+
+    protected void downvote(){
+        post.decreaseUpvote();
+        updateUpvote();
+    }
+
+    protected void updateUpvote(){
+        db.collection("Posts").document(post.getId()).update("upvote",post.getUpvote())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(PostDetailActivity.this, "Upvoted post", Toast.LENGTH_SHORT).show();
+                        //TODO: create new document in UpVotes collection
+                    }
+                });
+    }
+
+    protected void upvoteReply(int replyIndex){
+        replies.get(replyIndex).increaseUpvote();
+        updateReplyUpvote(replies.get(replyIndex).getId(),replies.get(replyIndex).getUpvote());
+    }
+    protected void downvoteReply(int replyIndex){
+        replies.get(replyIndex).decreaseUpvote();
+        updateReplyUpvote(replies.get(replyIndex).getId(),replies.get(replyIndex).getUpvote());
+    }
+
+    protected void updateReplyUpvote(String id, int upvote){
+        db.collection("Replies").document(id).update("upvote",upvote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(PostDetailActivity.this, "Upvoted reply", Toast.LENGTH_SHORT).show();
+                        //TODO: create new document in UpVotes collection
+                    }
+                });
+    }
 
 }

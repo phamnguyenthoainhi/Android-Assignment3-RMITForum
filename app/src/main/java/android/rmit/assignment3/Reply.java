@@ -3,7 +3,7 @@ package android.rmit.assignment3;
 public class Reply {
 
     private String post, owner, content,id;
-    private int upvote, downvote;
+    private int upvote;
     private long dateTime;
 
     public Reply() {
@@ -14,27 +14,24 @@ public class Reply {
         this.owner = "def";
         this.content = content;
         this.upvote = 0;
-        this.downvote = 0;
         this.dateTime = System.currentTimeMillis();
         this.id="";
     }
 
-    public Reply(String post, String owner, String content, int upvote, int downvote, long dateTime) {
+    public Reply(String post, String owner, String content, int upvote, long dateTime) {
         this.post = post;
         this.owner = owner;
         this.content = content;
         this.upvote = upvote;
-        this.downvote = downvote;
         this.dateTime = dateTime;
     }
 
-    public Reply(String post, String owner, String content, String id, int upvote, int downvote, long dateTime) {
+    public Reply(String post, String owner, String content, String id, int upvote, long dateTime) {
         this.post = post;
         this.owner = owner;
         this.content = content;
         this.id = id;
         this.upvote = upvote;
-        this.downvote = downvote;
         this.dateTime = dateTime;
     }
 
@@ -74,17 +71,10 @@ public class Reply {
         return upvote;
     }
 
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
+    public void increaseUpvote() {
+        this.upvote+=1;
     }
-
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
+    public void decreaseUpvote(){this.upvote-=1;}
 
     public long getDateTime() {
         return dateTime;

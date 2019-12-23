@@ -87,8 +87,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         final Bundle bundle = intent.getExtras();
 
-        fetchPost(bundle.getString("id"));
-        id = bundle.getString("id");
+        fetchPost((String)bundle.get("id"));
+        id =(String) bundle.get("id");
 
         fetchReplies(id);
 
@@ -124,7 +124,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
             showCommentDialog(position);
         }
         else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
-        return false;
+        return true;
     }
 
     protected void fetchPost (String id){

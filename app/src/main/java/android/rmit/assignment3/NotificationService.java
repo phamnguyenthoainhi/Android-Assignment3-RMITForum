@@ -21,12 +21,17 @@ public class NotificationService extends FirebaseMessagingService {
                 case "reply":
                     Intent intent = new Intent(this,PostDetailActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    intent.putExtra("id",remoteMessage.getData().get("postId"));
+                    intent.putExtra("id",remoteMessage.getData().get("id"));
 
                     notify(remoteMessage,intent);
 
                     break;
                 case "comment":
+                    Intent intentComment = new Intent(this,ReplyDetailActivity.class);
+                    intentComment.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intentComment.putExtra("id",remoteMessage.getData().get("id"));
+
+                    notify(remoteMessage,intentComment);
                     break;
             }
         }

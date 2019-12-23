@@ -93,7 +93,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         @Override
         public boolean onLongClick(View v) {
              onReplyListener.onReplyLongClick(getAdapterPosition());
-             return false;
+             return true;
         }
 
         public interface OnReplyListener{

@@ -1,26 +1,20 @@
 package android.rmit.assignment3;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.icu.util.ULocale;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -113,9 +107,10 @@ public class SignUpActivity extends AppCompatActivity {
                                     .setDisplayName(inputfullname).build();
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
-                            utilities.createUser(currentUser);
+
+
+                            utilities.createUser(currentUser, SignUpActivity.this);
                             utilities.getToken();
-//                            createUser(currentUser);
 
                         } else {
                             // If sign in fails, display a message to the user.

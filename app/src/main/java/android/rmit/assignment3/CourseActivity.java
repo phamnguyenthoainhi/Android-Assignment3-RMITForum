@@ -108,13 +108,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         alertDialog.show();
     }
 
-    public void showDeleteDialog() {
-
-
-
-    }
-
-
     public void showEditDialog(final int position) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
@@ -134,31 +127,36 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         editCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (courseidedit.getText().toString().isEmpty()) {
+                    courseidedit.setError("Course id can not be empty");
+                } else if (coursenameedit.getText().toString().isEmpty()) {
+                    coursenameedit.setError("Course name can not be empty");
+                } else {
+                    if (courses.size() > 0) {
+                        AlertDialog.Builder buider1 = new AlertDialog.Builder(view.getContext()).setTitle("Confirmation").setMessage("Do you want to save these changes?")
+                                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        final Course editedcourse = new Course();
+                                        editedcourse.setDocid(courses.get(position).getDocid());
+                                        editedcourse.setName(coursenameedit.getText().toString());
+                                        editedcourse.setId(courseidedit.getText().toString());
+                                        updateCourse(editedcourse);
+                                        courses = new ArrayList<>();
+                                        fetchCourse();
+                                    }
+                                })
+                                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                        buider1.create().show();
+                    }
+                    alertDialog.dismiss();
 
-                if (courses.size() > 0) {
-
-                    AlertDialog.Builder buider1 = new AlertDialog.Builder(view.getContext()).setTitle("Confirmation").setMessage("Do you want to save these changes?")
-                            .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    final Course editedcourse = new Course();
-                                    editedcourse.setDocid(courses.get(position).getDocid());
-                                    editedcourse.setName(coursenameedit.getText().toString());
-                                    editedcourse.setId(courseidedit.getText().toString());
-                                    updateCourse(editedcourse);
-                                    courses = new ArrayList<>();
-                                    fetchCourse();
-                                }
-                            })
-                            .setPositiveButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                    buider1.create().show();
                 }
-                alertDialog.dismiss();
             }
         });
         alertDialog.show();
@@ -209,7 +207,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     }
 
 
-    //    Update site with new values
+    //    Update course with new values
     private void updateCourse(final Course course){
         db.collection("Courses").document(course.getDocid())
                 .set(course)
@@ -217,23 +215,13 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Toast.makeText(CourseActivity.this, "Successfully updated site info.\"", Toast.LENGTH_SHORT).show();
-                        db.collection("SitesVolunteers").document(course.getDocid())
-                                .update("id",course.getId(),
-                                        "name",course.getName()
-                                )
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(CourseActivity.this, "Successfully update course", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        Toast.makeText(CourseActivity.this, "Successfully updated course info", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CourseActivity.this, "Failed to update course.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CourseActivity.this, "Failed to update course", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

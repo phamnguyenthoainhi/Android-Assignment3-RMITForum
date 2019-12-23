@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E9DAD9"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
 
 
     <Button
@@ -14,16 +14,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="List"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-         />
-
+        android:text="List" />
 
     <Button
         android:id="@+id/toSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/posts_list_button"
         android:onClick="toSignIn"
         android:text="To Sign In" />
 
@@ -31,22 +28,36 @@
         android:id="@+id/toSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toSignIn"
         android:onClick="toSignUp"
         android:text="To Sign Up" />
+
 
     <Button
         android:id="@+id/toCourse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="To Course"
-        android:onClick="toCourse"/>
-
+        android:layout_below="@id/toSignUp"
+        android:onClick="toCourse"
+        android:text="To Course" />
 
     <Button
         android:id="@+id/toUserMana"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toCourse"
+        android:layout_marginTop="256dp"
         android:text="To User Management" />
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/botton_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+
+
+        app:menu="@menu/bottom_nav_menu" />
+</RelativeLayout>
+

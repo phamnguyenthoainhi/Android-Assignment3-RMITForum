@@ -2,15 +2,11 @@ package android.rmit.assignment3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -151,7 +147,7 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
-                            utilities.createUser(currentUser);
+                            utilities.createUser(currentUser, SignInActivity.this);
 
                         } else {
                             // If sign in fails, display a message to the user.

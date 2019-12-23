@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ManageUserActivity"></activity>
+        <activity android:name=".ManageUserActivity" />
         <activity android:name=".PostsListActivity" />
         <activity android:name=".CourseActivity" />
         <activity android:name=".SignUpActivity" />

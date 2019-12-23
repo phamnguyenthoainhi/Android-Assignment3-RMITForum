@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     EditText content;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    BottomNavigationView bottomNavigationView ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button postsList = findViewById(R.id.posts_list_button);
 
+        bottomNavigationView = findViewById(R.id.botton_nav);
         Button toUserMana = findViewById(R.id.toUserMana);
         toUserMana.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        createNavBar();
         createPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +121,28 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    public void createNavBar() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_home:
+                        Toast.makeText(MainActivity.this, "Switch To Home", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.navigation_user:
+                        startActivity(new Intent(MainActivity.this, ManageUserActivity.class));
+                        break;
+                    case R.id.navigation_notifications:
+
+                        Toast.makeText(MainActivity.this, "Switch to Notification", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
 
 
 }

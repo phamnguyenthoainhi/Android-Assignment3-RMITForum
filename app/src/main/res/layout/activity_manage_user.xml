@@ -8,7 +8,34 @@
     tools:context=".ManageUserActivity">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp">
+
+        <Button
+            android:id="@+id/fromUser"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/back"
+            />
+
+        <Button
+            android:id="@+id/openedituser"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/icons8edit" />
+
+    </RelativeLayout>
+
+
     <android.rmit.assignment3.RoundedImage
+        android:id="@+id/avatarimage"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
@@ -16,28 +43,49 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/person" />
 
-
-    <Button
-        android:id="@+id/openedituser"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit" />
-
     <TextView
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginTop="10dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/useremail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textAlignment="center" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="#E53935"
+        app:tabTextColor="#3E000000"
+
+        >
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Courses" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unknown" />
+
+    </com.google.android.material.tabs.TabLayout>
 
     <Button
         android:id="@+id/logout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out" />
+        android:text="Log out"
+        android:visibility="gone" />
 </LinearLayout>

@@ -60,8 +60,8 @@ public class SignInActivity extends AppCompatActivity {
         show = findViewById(R.id.showpasswordsignin);
         hide = findViewById(R.id.hidepasswordsignin);
         show.setVisibility(View.INVISIBLE);
-        LinearLayout signinlayout = findViewById(R.id.signinlayout);
-        Button signout = findViewById(R.id.signout);
+
+
 
         hide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,12 +83,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
+
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

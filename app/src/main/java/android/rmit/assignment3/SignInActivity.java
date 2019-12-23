@@ -151,7 +151,7 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
-                            utilities.createUser(currentUser);
+                            utilities.createUser(currentUser, SignInActivity.this);
 
                         } else {
                             // If sign in fails, display a message to the user.

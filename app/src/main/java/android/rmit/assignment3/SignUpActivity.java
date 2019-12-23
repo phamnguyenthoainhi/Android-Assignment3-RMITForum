@@ -127,7 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     .setDisplayName(inputfullname).build();
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
-                            utilities.createUser(currentUser);
+                            utilities.createUser(currentUser, SignUpActivity.this);
 //                            createUser(currentUser);
 
                         } else {

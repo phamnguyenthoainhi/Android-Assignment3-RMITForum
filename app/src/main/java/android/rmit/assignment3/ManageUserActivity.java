@@ -104,7 +104,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                                 .setDisplayName(usernameedit.getText().toString()).build();
                                         currentUser.updateProfile(profileUpdates);
                                         fetchCurrentUser(currentUser.getUid());
-                                       
+
                                     }
                                 }
                             })

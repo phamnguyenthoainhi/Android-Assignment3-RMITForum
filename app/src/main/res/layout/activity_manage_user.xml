@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".ManageUserActivity">
 
+
+    <android.rmit.assignment3.RoundedImage
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/person" />
+
+
     <Button
         android:id="@+id/openedituser"
         android:layout_width="match_parent"

@@ -11,9 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PostsListActivity"></activity>
+        <activity android:name=".ReplyDetailActivity"></activity>
+
+        <service android:name=".NotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".PostsListActivity" />
         <activity android:name=".PostDetailActivity" />
-        <activity android:name=".CourseActivity"></activity>
+        <activity android:name=".CourseActivity" />
+        <activity android:name=".ManageUserActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".MainActivity">

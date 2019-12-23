@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,9 +21,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     private ArrayList<Reply> replies;
     private ReplyViewHolder.OnReplyListener onReplyListener;
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+
 
     private ArrayList<Comment> comments = new ArrayList<>();
 
@@ -60,12 +57,13 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                 });
     }
 
-    protected void initRecyclerView(View v){
-        recyclerView=v.findViewById(R.id.my_recycler_view);
+    private void initRecyclerView(View v){
+        RecyclerView recyclerView=v.findViewById(R.id.my_recycler_view);
+        RecyclerView.Adapter adapter= new CommentAdapter(comments,this);
+        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(v.getContext());
+
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new CommentAdapter(comments,this);
         recyclerView.setAdapter(adapter);
     }
 

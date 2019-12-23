@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/courselayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:backgroundTint="#FFFFFF"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+
+
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,18 +50,18 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/edit"
+                android:id="@+id/editcourse"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@+id/delete"
+                android:layout_toStartOf="@+id/deletecourse"
                 android:background="@drawable/circle_button"
                 android:backgroundTint="#1B000000"
                 android:src="@mipmap/ic_edit_foreground" />
 
             <ImageButton
-                android:id="@+id/delete"
+                android:id="@+id/deletecourse"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"

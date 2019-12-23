@@ -4,17 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/create_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/posts_list_button"
@@ -24,24 +17,22 @@
         android:text="List"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_post" />
+         />
+
 
     <Button
         android:id="@+id/toSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="To Sign In"
-        android:onClick="toSignIn"/>
+        android:onClick="toSignIn"
+        android:text="To Sign In" />
 
     <Button
         android:id="@+id/toSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="To Sign Up"
         android:onClick="toSignUp"
-        />
+        android:text="To Sign Up" />
 
     <Button
         android:id="@+id/toCourse"
@@ -50,4 +41,12 @@
         android:layout_weight="1"
         android:text="To Course"
         android:onClick="toCourse"/>
+
+
+    <Button
+        android:id="@+id/toUserMana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To User Management" />
+
 </LinearLayout>

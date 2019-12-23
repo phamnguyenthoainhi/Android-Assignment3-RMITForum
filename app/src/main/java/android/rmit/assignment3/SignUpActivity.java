@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.icu.util.ULocale;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity {
     EditText password;
     EditText fullname;
     Button signup;
+    Button show;
+    Button hide;
     private FirebaseAuth mAuth;
     FirebaseFirestore db;
     User currentUser;
@@ -40,31 +43,39 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         email = findViewById(R.id.emailSignup);
+        show = findViewById(R.id.showpasswordsignup);
+        hide = findViewById(R.id.hidepasswordsignup);
+        show.setVisibility(View.INVISIBLE);
         password = findViewById(R.id.passwordSignup);
         fullname = findViewById(R.id.fullname);
         signup = findViewById(R.id.signup);
         utilities = new Utilities();
+        
+        hide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hide.setVisibility(View.INVISIBLE);
+                show.setVisibility(View.VISIBLE);
+                password.setInputType(InputType.TYPE_CLASS_TEXT);
 
+            }
+        });
+
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                show.setVisibility(View.INVISIBLE);
+                hide.setVisibility(View.VISIBLE);
+
+            }
+        });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isValid()) {
                     signup(email.getText().toString(), password.getText().toString(), fullname.getText().toString());
-                }
-            }
-        });
-    }
-
-
-    public void createUser(final User currentUser) {
-        db.collection("Users").document(currentUser.getId()).set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-
-                } else {
-
                 }
             }
         });
@@ -103,6 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
                             utilities.createUser(currentUser);
+                            utilities.getToken();
 //                            createUser(currentUser);
 
                         } else {

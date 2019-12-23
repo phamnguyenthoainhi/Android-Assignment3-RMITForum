@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,9 @@ public class SignInActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     Button signin;
+    Button show;
+    Button hide;
+
     SignInButton signinGoogle;
     private FirebaseAuth mAuth;
     User currentUser;
@@ -53,9 +57,31 @@ public class SignInActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordSignin);
         signin = findViewById(R.id.signin);
         signinGoogle = findViewById(R.id.signingg);
+        show = findViewById(R.id.showpasswordsignin);
+        hide = findViewById(R.id.hidepasswordsignin);
+        show.setVisibility(View.INVISIBLE);
         LinearLayout signinlayout = findViewById(R.id.signinlayout);
         Button signout = findViewById(R.id.signout);
 
+        hide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hide.setVisibility(View.INVISIBLE);
+                show.setVisibility(View.VISIBLE);
+                password.setInputType(InputType.TYPE_CLASS_TEXT);
+
+            }
+        });
+
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                show.setVisibility(View.INVISIBLE);
+                hide.setVisibility(View.VISIBLE);
+
+            }
+        });
 
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +150,7 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            currentUser = new User(user.getUid(), user.getEmail(), user.getDisplayName());
+                            currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
                             utilities.createUser(currentUser);
 
                         } else {
@@ -158,6 +184,9 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            utilities.getToken();
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             if (task.getException().toString().contains("There is no user record corresponding to this identifier. The user may have been deleted")) {

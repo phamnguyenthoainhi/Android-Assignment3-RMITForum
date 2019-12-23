@@ -4,22 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B000000"
     android:orientation="vertical"
-    tools:context=".CourseActivity">
+    tools:context=".ManageUserActivity">
 
-    <Button
-        android:id="@+id/opencreatecourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#00C52222"
-        android:text="Add coursee" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleviewcourse"
+    <TextView
+        android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:text="TextView" />
 
+    <TextView
+        android:id="@+id/useremail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log out" />
 </LinearLayout>

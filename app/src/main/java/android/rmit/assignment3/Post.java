@@ -19,6 +19,16 @@ public class Post {
         this.id="";
     }
 
+    public Post(String owner, String title, String content) {
+        this.owner = owner;
+        this.title = title;
+        this.content = content;
+        this.course = "COSC2171";
+        this.upvote = 0;
+        this.dateTime = System.currentTimeMillis();
+        this.id="";
+    }
+
     public Post(String owner, String title, String content, String course, String id, int upvote, long dateTime) {
         this.owner = owner;
         this.title = title;

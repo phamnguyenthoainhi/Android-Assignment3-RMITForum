@@ -2,7 +2,7 @@ package android.rmit.assignment3;
 
 public class Comment {
     private String reply, owner,content;
-    private int upvote, downvote;
+    private int upvote;
     private long dateTime;
 
     public Comment() {
@@ -13,18 +13,22 @@ public class Comment {
         this.owner = "comment person";
         this.content = content;
         this.upvote = 0;
-        this.downvote = 0;
         this.dateTime = System.currentTimeMillis();
     }
 
+    public Comment(String reply, String owner, String content) {
+        this.reply = reply;
+        this.owner = owner;
+        this.content = content;
+        this.upvote = 0;
+        this.dateTime = System.currentTimeMillis();
+    }
 
-
-    public Comment(String reply, String owner, String content, int upvote, int downvote, long dateTime) {
+    public Comment(String reply, String owner, String content, int upvote, long dateTime) {
         this.reply = reply;
         this.owner = owner;
         this.content = content;
         this.upvote = upvote;
-        this.downvote = downvote;
         this.dateTime = dateTime;
     }
 
@@ -52,21 +56,10 @@ public class Comment {
         this.content = content;
     }
 
-    public int getUpvote() {
-        return upvote;
+    public void increaseUpvote() {
+        this.upvote+=1;
     }
-
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
-    }
-
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
+    public void decreaseUpvote(){this.upvote-=1;}
 
     public long getDateTime() {
         return dateTime;

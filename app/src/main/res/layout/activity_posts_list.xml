@@ -20,6 +20,13 @@
             android:textAlignment="center"
             android:textSize="24sp" />
 
+
+        <Button
+            android:id="@+id/create_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Post" />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_to_refresh"
             android:layout_width="match_parent"

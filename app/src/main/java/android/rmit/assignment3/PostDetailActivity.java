@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +39,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     EditText newCommentContent;
     ArrayList<Reply> replies = new ArrayList<>();
 
-    private RecyclerView.Adapter adapter;
+    RecyclerView.Adapter adapter;
+
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
 
     @Override
@@ -54,7 +57,10 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showReplyDialog();
+                if(mAuth.getUid()!=null) {
+                    showReplyDialog();
+                }
+                else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
             }
         });
 
@@ -105,13 +111,19 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     @Override
     public void onReplyClick(int position) {
-        showCommentDialog(position);
         Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        if(mAuth.getUid()!=null) {
+            showCommentDialog(position);
+        }
+        else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
     }
 
     @Override
     public boolean onReplyLongClick(int position) {
-        showCommentDialog(position);
+        if(mAuth.getUid()!=null) {
+            showCommentDialog(position);
+        }
+        else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
         return false;
     }
 
@@ -150,7 +162,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createComment(new Comment(replies.get(position).getId(),newCommentContent.getText().toString()));
+                createComment(new Comment(replies.get(position).getId(),mAuth.getUid(),newCommentContent.getText().toString()));
                 alertDialog.dismiss();
             }
         });
@@ -176,7 +188,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createReply(new Reply(id,newReplyContent.getText().toString()));
+                createReply(new Reply(id,mAuth.getUid(),newReplyContent.getText().toString()));
                 alertDialog.dismiss();
             }
         });

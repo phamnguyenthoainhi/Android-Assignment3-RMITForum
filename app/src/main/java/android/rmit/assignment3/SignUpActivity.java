@@ -124,7 +124,10 @@ public class SignUpActivity extends AppCompatActivity {
 //                            SetUp user
                             FirebaseUser user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(inputfullname).build();
+                                    .setDisplayName(inputfullname)
+
+                                    .build();
+
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
                             utilities.createUser(currentUser, SignUpActivity.this);

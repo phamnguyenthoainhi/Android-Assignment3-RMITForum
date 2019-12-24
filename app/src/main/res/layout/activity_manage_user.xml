@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +9,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relativelayoutuser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -21,6 +22,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/back"
+
             />
 
         <Button
@@ -34,58 +36,70 @@
     </RelativeLayout>
 
 
-    <android.rmit.assignment3.RoundedImage
-        android:id="@+id/avatarimage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/person" />
-
-    <TextView
-        android:id="@+id/username"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/relativelayoutuser"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/useremail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="center" />
+        <android.rmit.assignment3.RoundedImage
+            android:id="@+id/avatarimage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/person" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:tabIndicatorHeight="0dp"
-        app:tabSelectedTextColor="#E53935"
-        app:tabTextColor="#3E000000"
-
-        >
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Courses" />
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/useremail"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Unknown" />
+            android:text="TextView"
+            android:textAlignment="center" />
 
-    </com.google.android.material.tabs.TabLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:tabIndicatorHeight="0dp"
+            app:tabSelectedTextColor="#E53935"
+            app:tabTextColor="#3E000000"
 
-    <Button
+            >
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Courses" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unknown" />
+
+        </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
+
+    <ImageButton
         android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log out"
-        android:visibility="gone" />
-</LinearLayout>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/circle_button"
+        android:backgroundTint="#370E0000"
+        android:src="@mipmap/ic_signout_foreground" />
+</RelativeLayout>

@@ -32,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class CourseActivity extends AppCompatActivity implements CourseAdapter.CourseViewHolder.OnCourseListener {
-    Button openCreateCourse;
+    ImageButton openCreateCourse;
     FirebaseFirestore db;
     Course course;
     private static final String TAG = "CourseActivity";

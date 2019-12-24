@@ -4,16 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B000000"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".CourseActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/opencreatecourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#00C52222"
-        android:text="Add coursee" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/plus"
+        android:backgroundTint="#6F0A0000"
+        android:text="+"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleviewcourse"

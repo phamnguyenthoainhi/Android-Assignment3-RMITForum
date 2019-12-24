@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/untitled"
     android:orientation="vertical"
-    tools:context=".SignInActivity">
+    tools:context=".SignInActivity"
+    android:onClick="hideKeyBoard">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -17,12 +18,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="30dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="0dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -53,8 +54,8 @@
                 <Button
                     android:id="@+id/showpasswordsignin"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="5dp"
@@ -67,8 +68,8 @@
                 <Button
                     android:id="@+id/hidepasswordsignin"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="5dp"
@@ -93,18 +94,27 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/signingg"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
 
-            </com.google.android.gms.common.SignInButton>
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/signingg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp">
+
+                </com.google.android.gms.common.SignInButton>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,6 +136,7 @@
 
             </LinearLayout>
         </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 

@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PostDetailActivity extends AppCompatActivity implements ReplyAdapter.ReplyViewHolder.OnReplyListener {
 
@@ -35,6 +36,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     Post post = new Post();
     TextView title;
     TextView content;
+    Button upvotePost;
+    Button downvotePost;
+    TextView votes;
     EditText newReplyContent;
     EditText newCommentContent;
     ArrayList<Reply> replies = new ArrayList<>();
@@ -43,6 +47,10 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    enum Vote{
+        UPVOTE,
+        DOWNVOTE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,10 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         title = findViewById(R.id.title_text);
         content = findViewById(R.id.content_text);
+        votes = findViewById(R.id.post_votes);
+
+        upvotePost = findViewById(R.id.post_upvote);
+        downvotePost = findViewById(R.id.post_downvote);
 
         Button replyButton = findViewById(R.id.reply_button);
 
@@ -133,8 +145,12 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         post = documentSnapshot.toObject(Post.class);
+                        post.setId(documentSnapshot.getId());
                         title.setText(post.getTitle());
                         content.setText(post.getContent());
+                        votes.setText(post.getUpvote()+"");
+
+                        fetchVoteInfo();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -242,7 +258,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
                             Reply reply = documentSnapshot.toObject(Reply.class);
                             reply.setId(documentSnapshot.getId());
-                            Toast.makeText(PostDetailActivity.this, reply.getContent(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PostDetailActivity.this, reply.getContent(), Toast.LENGTH_SHORT).show();
                             replies.add(reply);
                             initRecyclerView();
 
@@ -254,45 +270,182 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     }
 
-    protected void upvote(){
-        post.increaseUpvote();
-        updateUpvote();
+    protected void vote(Vote vote){
+        switch(vote){
+            case UPVOTE:
+                post.increaseUpvote();
+                break;
+            case DOWNVOTE:
+                post.decreaseUpvote();
+                break;
+        }
+
+        updateUpvote(vote);
     }
 
-    protected void downvote(){
-        post.decreaseUpvote();
-        updateUpvote();
+    protected void undoVote(Vote vote){
+        switch(vote){
+            case UPVOTE:
+                post.decreaseUpvote();
+                break;
+            case DOWNVOTE:
+                post.increaseUpvote();
+                break;
+        }
+        removeUpvote();
     }
 
-    protected void updateUpvote(){
-        db.collection("Posts").document(post.getId()).update("upvote",post.getUpvote())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(PostDetailActivity.this, "Upvoted post", Toast.LENGTH_SHORT).show();
-                        //TODO: create new document in UpVotes collection
-                    }
-                });
+    protected void updateUpvote(final Vote vote){
+        if(mAuth.getUid()!=null) {
+            final HashMap<String, String> object = new HashMap<>();
+            switch (vote) {
+                case UPVOTE:
+                    object.put("type", "upvote");
+                    break;
+                case DOWNVOTE:
+                    object.put("type", "downvote");
+                    break;
+            }
+            System.out.println("updating database...");
+            final String docId = post.getId().concat(mAuth.getUid());
+            db.collection("Posts").document(post.getId()).update("upvote", post.getUpvote())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            db.collection("PostVotes").document(docId).set(object)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            votes.setText(post.getUpvote()+"");
+                                            switch(vote){
+                                                case UPVOTE:
+                                                    upvotePost.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            undoVote(Vote.UPVOTE);
+                                                        }
+                                                    });
+                                                    downvotePost.setClickable(false);
+                                                    break;
+                                                case DOWNVOTE:
+                                                    downvotePost.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            undoVote(Vote.DOWNVOTE);
+                                                        }
+                                                    });
+                                                    upvotePost.setClickable(false);
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+        }
+    }
+    protected void removeUpvote(){
+        if(mAuth.getUid()!=null) {
+            System.out.println("updating database...");
+            final String docId = post.getId().concat(mAuth.getUid());
+            db.collection("Posts").document(post.getId()).update("upvote", post.getUpvote())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            db.collection("PostVotes").document(docId).delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            votes.setText(post.getUpvote()+"");
+                                            upvotePost.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    vote(Vote.UPVOTE);
+                                                }
+                                            });
+
+                                            downvotePost.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    vote(Vote.DOWNVOTE);
+                                                }
+                                            });
+
+                                            upvotePost.setClickable(true);
+                                            downvotePost.setClickable(true);
+                                        }
+                                    });
+                        }
+                    });
+        }
     }
 
-    protected void upvoteReply(int replyIndex){
-        replies.get(replyIndex).increaseUpvote();
-        updateReplyUpvote(replies.get(replyIndex).getId(),replies.get(replyIndex).getUpvote());
-    }
-    protected void downvoteReply(int replyIndex){
-        replies.get(replyIndex).decreaseUpvote();
-        updateReplyUpvote(replies.get(replyIndex).getId(),replies.get(replyIndex).getUpvote());
+    protected void fetchVoteInfo(){
+        if(mAuth.getUid()!=null) {
+            db.collection("PostVotes").document(post.getId().concat(mAuth.getUid())).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.get("type")!=null){
+                                switch(documentSnapshot.get("type").toString()){
+                                    //if current user has already upvoted this post
+                                    case "upvote":
+                                        upvotePost.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                undoVote(Vote.UPVOTE);
+                                            }
+                                        });
+                                        downvotePost.setClickable(false);
+                                        break;
+                                    case "downvote":
+                                        downvotePost.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                undoVote(Vote.DOWNVOTE);
+                                            }
+                                        });
+                                        upvotePost.setClickable(false);
+                                }
+                            }
+                            else{
+                                upvotePost.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        vote(Vote.UPVOTE);
+                                    }
+                                });
+
+                                downvotePost.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        vote(Vote.DOWNVOTE);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            upvotePost.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    vote(Vote.UPVOTE);
+                                }
+                            });
+
+                            downvotePost.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    vote(Vote.DOWNVOTE);
+                                }
+                            });
+                        }
+                    })
+            ;
+        }
     }
 
-    protected void updateReplyUpvote(String id, int upvote){
-        db.collection("Replies").document(id).update("upvote",upvote)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(PostDetailActivity.this, "Upvoted reply", Toast.LENGTH_SHORT).show();
-                        //TODO: create new document in UpVotes collection
-                    }
-                });
-    }
+
+
 
 }

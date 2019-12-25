@@ -1,38 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#1D0C0000">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        app:cardCornerRadius="15dp"
+        app:cardCornerRadius="2dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
-        app:contentPadding="15dp"
 
-        >
+        app:contentPadding="15dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:id="@+id/ownerlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <android.rmit.assignment3.RoundedImage
+                    android:id="@+id/owneravatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/person" />
+
+
+                <TextView
+                    android:id="@+id/ownername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/owneravatar"
+                    android:text="Owner name"
+                    android:textColor="#B51A0202" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/post_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_below="@id/ownerlayout">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/upvotenumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+ 1"
+                        android:textColor="#D13430"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/donwvotenum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="- 2"
+                        android:textColor="#1A78CA"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/post_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title" />
+                    android:layout_weight="0.5"
+                    android:text="Title"
+                    android:textColor="#FC070000" />
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/replybuttoningroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/post_info"
+                android:layout_marginTop="10dp">
+
+                <Button
+                    android:id="@+id/replyinpost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="0dp"
+                    android:background="#FFFFFF"
+                    android:text="Reply"
+                    android:textAlignment="textEnd"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/showallreplies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:text="Show All Replies
+"
+                    android:textAllCaps="false"
+                    android:textColor="#AE090000" />
+            </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

@@ -138,9 +138,9 @@ public class ManageUserActivity extends AppCompatActivity {
         usernameedit = editDialog.findViewById(R.id.usernameedit);
         usernameedit.setText(currentUser.getDisplayName());
         edit = editDialog.findViewById(R.id.editUserbtn);
+        ImageView imageView = editDialog.findViewById(R.id.imageview);
 
-
-
+        imageView.setImageURI(currentUser.getPhotoUrl());
         editavatar = editDialog.findViewById(R.id.editavatar);
 
 

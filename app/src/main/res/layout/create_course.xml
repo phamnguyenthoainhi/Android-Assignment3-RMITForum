@@ -3,25 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2F2F2"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp">
+        app:contentPadding="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="Create A New Course"
                 android:textAlignment="center"
                 android:textColor="#DC250202" />
@@ -30,23 +30,32 @@
                 android:id="@+id/courseid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Course Id (E.g: COSC2102)"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/coursename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Course Name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/createCourse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create" />
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#BC1C22"
+                android:text="Create"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

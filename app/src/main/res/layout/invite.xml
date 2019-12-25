@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:contentPadding="25dp">
 
-        <TextView
-            android:id="@+id/textView"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Post"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20px"
-            android:text="Title" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Post"
+                android:textAlignment="center"
+                android:textSize="24sp" />
 
-        <EditText
-            android:id="@+id/input_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Title"
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/input_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="Title"
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20px"
-            android:text="Content" />
+            <EditText
+                android:id="@+id/input_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ems="10"
+                android:hint="Content"
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
-        <EditText
-            android:id="@+id/input_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Content"
-            android:inputType="textPersonName" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#BC1C22"
+                android:text="Post"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

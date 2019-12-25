@@ -6,6 +6,15 @@ public class User {
     private String id;
     private String fullname;
     private String email;
+    private String imageuri;
+
+    public String getImageuri() {
+        return imageuri;
+    }
+
+    public void setImageuri(String imageuri) {
+        this.imageuri = imageuri;
+    }
 
     public User(String id, String fullname, String email) {
         this.id = id;

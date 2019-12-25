@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -56,8 +59,25 @@ public class SignInActivity extends AppCompatActivity {
         show = findViewById(R.id.showpasswordsignin);
         hide = findViewById(R.id.hidepasswordsignin);
         show.setVisibility(View.INVISIBLE);
-        LinearLayout signinlayout = findViewById(R.id.signinlayout);
-        Button signout = findViewById(R.id.signout);
+        final RelativeLayout layout = findViewById(R.id.signinlayout);
+//        password.setClickable(true);
+//        password.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                layout.setBackgroundColor(Color.parseColor("#BC1C22"));
+//                Toast.makeText(SignInActivity.this, "Click", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+////        password.setOnTouchListener(new View.OnTouchListener() {
+////            @Override
+////            public boolean onTouch(View view, MotionEvent motionEvent) {
+////                layout.setBackgroundColor(Color.parseColor("#BC1C22"));
+////                Toast.makeText(SignInActivity.this, "Click", Toast.LENGTH_SHORT).show();
+////                return true;
+////            }
+////        });
+
 
         hide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +99,8 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
+
+
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -199,5 +215,15 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    //    Hide the keyboard
+    public void hideKeyBoard(View view) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.
+                getWindowToken(), 0);
+    }
+
 
 }

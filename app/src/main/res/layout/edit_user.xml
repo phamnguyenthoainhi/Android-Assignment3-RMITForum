@@ -8,28 +8,51 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp">
+        app:contentPadding="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="Edit Your Profile"
                 android:textAlignment="center"
                 android:textColor="#DC250202" />
+
+<!--            <android.rmit.assignment3.RoundedImage-->
+<!--                android:id="@+id/editimage"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:backgroundTint="#CBCE2222"-->
+<!--                android:src="@mipmap/ic_camera_foreground" />-->
+
+            <ImageButton
+                android:id="@+id/editavatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/circle_camera"
+                android:backgroundTint="#3C020000"
+                app:srcCompat="@mipmap/ic_camera_foreground" />
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                app:srcCompat="@drawable/person" />
 
             <EditText
                 android:id="@+id/usernameedit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
@@ -38,7 +61,12 @@
                 android:id="@+id/editUserbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="#BC1C22"
+                android:text="Save"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

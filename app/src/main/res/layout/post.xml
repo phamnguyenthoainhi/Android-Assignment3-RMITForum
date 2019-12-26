@@ -35,7 +35,7 @@
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/person" />
+                    app:srcCompat="@drawable/defaultimg" />
 
 
                 <TextView

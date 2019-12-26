@@ -13,8 +13,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".NotificationsListActivity"></activity>
+        <activity
+            android:name=".ReplyDetailActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="REPLY_INFO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".NotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity android:name=".ManageUserActivity" />
         <activity android:name=".PostsListActivity" />
+        <activity
+            android:name=".PostDetailActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="POST_INFO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".CourseActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".SignInActivity" />

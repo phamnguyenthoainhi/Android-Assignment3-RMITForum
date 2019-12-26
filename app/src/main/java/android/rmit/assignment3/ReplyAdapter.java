@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,21 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder> implements CommentAdapter.CommentViewHolder.OnCommentListener {
 
     private ArrayList<Reply> replies;
     private ReplyViewHolder.OnReplyListener onReplyListener;
-
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private ArrayList<Comment> comments = new ArrayList<>();
 
@@ -41,10 +44,11 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ReplyViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull final ReplyViewHolder holder, final int position){
         holder.replyContent.setText(replies.get(position).getContent());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        holder.replyVotes.setText(replies.get(position).getUpvote()+"");
 
+        fetchReplyVoteInfo(replies.get(position).getId(),holder,position);
 
         db.collection("Comments").whereEqualTo("reply",replies.get(position).getId()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -60,12 +64,13 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                 });
     }
 
-    protected void initRecyclerView(View v){
-        recyclerView=v.findViewById(R.id.my_recycler_view);
+    private void initRecyclerView(View v){
+        RecyclerView recyclerView=v.findViewById(R.id.my_recycler_view);
+        RecyclerView.Adapter adapter= new CommentAdapter(comments,this);
+        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(v.getContext());
+
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new CommentAdapter(comments,this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -78,11 +83,17 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     public static class ReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
          TextView replyContent;
+         Button replyUpvote;
+         Button replyDownvote;
+         TextView replyVotes;
          OnReplyListener onReplyListener;
 
          ReplyViewHolder(View v, OnReplyListener onReplyListener){
              super(v);
              replyContent = v.findViewById(R.id.reply_content);
+             replyUpvote = v.findViewById(R.id.reply_upvote);
+             replyDownvote = v.findViewById(R.id.reply_downvote);
+             replyVotes=v.findViewById(R.id.reply_votes);
              this.onReplyListener = onReplyListener;
              v.setOnClickListener(this);
          }
@@ -95,7 +106,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         @Override
         public boolean onLongClick(View v) {
              onReplyListener.onReplyLongClick(getAdapterPosition());
-             return false;
+             return true;
         }
 
         public interface OnReplyListener{
@@ -107,5 +118,178 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     @Override
     public void onCommentClick(int position) {
         System.out.println("comment clicked");
+    }
+
+    protected void vote(int replyIndex, PostDetailActivity.Vote vote, ReplyViewHolder holder){
+        switch(vote){
+            case UPVOTE:
+                replies.get(replyIndex).increaseUpvote();
+                break;
+            case DOWNVOTE:
+                replies.get(replyIndex).decreaseUpvote();
+                break;
+        }
+        updateReplyUpvote(replies.get(replyIndex).getId(),replyIndex,vote,holder);
+    }
+
+    protected void undoVote(int replyIndex, PostDetailActivity.Vote vote, ReplyViewHolder holder){
+        switch(vote){
+            case UPVOTE:
+                replies.get(replyIndex).decreaseUpvote();
+                break;
+            case DOWNVOTE:
+                replies.get(replyIndex).increaseUpvote();
+                break;
+        }
+        removeReplyVote(replies.get(replyIndex).getId(),holder,replyIndex);
+    }
+
+    protected void updateReplyUpvote(String id, final int replyIndex, final PostDetailActivity.Vote vote, final ReplyViewHolder holder){
+        if(mAuth.getUid()!=null) {
+            final HashMap<String, String> object = new HashMap<>();
+            switch (vote) {
+                case UPVOTE:
+                    object.put("type", "upvote");
+                    break;
+                case DOWNVOTE:
+                    object.put("type", "downvote");
+                    break;
+            }
+            System.out.println("updating database...");
+            final String docId = id.concat(mAuth.getUid());
+            db.collection("Replies").document(id).update("upvote", replies.get(replyIndex).getUpvote())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            db.collection("ReplyVotes").document(docId).set(object)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.replyVotes.setText(replies.get(replyIndex).getUpvote()+"");
+                                            switch(vote){
+                                                case UPVOTE:
+                                                    holder.replyDownvote.setClickable(false);
+                                                    holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            undoVote(replyIndex, PostDetailActivity.Vote.UPVOTE,holder);
+                                                        }
+                                                    });
+                                                    break;
+                                                case DOWNVOTE:
+                                                    holder.replyUpvote.setClickable(false);
+                                                    holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            undoVote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
+                                                        }
+                                                    });
+                                                    break;
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+        }
+    }
+
+    protected void removeReplyVote(final String id, final ReplyViewHolder holder,final int replyIndex){
+        if(mAuth.getUid()!=null){
+            db.collection("Replies").document(id).update("upvote",replies.get(replyIndex).getUpvote())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            db.collection("ReplyVotes").document(id.concat(mAuth.getUid())).delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.replyDownvote.setClickable(true);
+                                            holder.replyUpvote.setClickable(true);
+
+                                            holder.replyVotes.setText(replies.get(replyIndex).getUpvote()+"");
+
+                                            holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    //Toast.makeText(holder.itemView.getContext(), "upvote clicked", Toast.LENGTH_SHORT).show();
+                                                    vote(replyIndex, PostDetailActivity.Vote.UPVOTE,holder);
+                                                }
+                                            });
+                                            holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    vote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    });
+
+        }
+    }
+
+    protected void fetchReplyVoteInfo(final String id, final ReplyViewHolder holder, final int replyIndex){
+        if(mAuth.getUid()!=null) {
+            final String docId = id.concat(mAuth.getUid());
+            db.collection("ReplyVotes").document(docId).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.get("type")!=null){
+                                switch(documentSnapshot.get("type").toString()){
+                                    case "upvote":
+                                        holder.replyDownvote.setClickable(false);
+                                        holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                undoVote(replyIndex, PostDetailActivity.Vote.UPVOTE,holder);
+                                            }
+                                        });
+                                        break;
+                                    case "downvote":
+                                        holder.replyUpvote.setClickable(false);
+                                        holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                undoVote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
+                                            }
+                                        });
+                                }
+                            }
+                            else{
+                                holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        vote(replyIndex, PostDetailActivity.Vote.UPVOTE,holder);
+                                    }
+                                });
+                                holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        vote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    vote(replyIndex, PostDetailActivity.Vote.UPVOTE,holder);
+                                }
+                            });
+                            holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    vote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
+                                }
+                            });
+                        }
+                    });
+        }
     }
 }

@@ -8,26 +8,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/create_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/posts_list_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/create_post"
         android:layout_marginTop="8dp"
-        android:text="List"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_post" />
+        android:text="List" />
 
     <Button
         android:id="@+id/toSignIn"
@@ -45,10 +32,12 @@
         android:onClick="toSignUp"
         android:text="To Sign Up" />
 
+
     <Button
         android:id="@+id/toCourse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_below="@id/toSignUp"
         android:onClick="toCourse"
         android:text="To Course" />
@@ -58,8 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/toCourse"
+        android:layout_marginTop="256dp"
         android:text="To User Management" />
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/botton_nav"
@@ -71,3 +60,4 @@
 
         app:menu="@menu/bottom_nav_menu" />
 </RelativeLayout>
+

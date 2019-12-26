@@ -1,28 +1,28 @@
 package android.rmit.assignment3;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.content.Intent;
 import android.icu.util.ULocale;
+
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -93,20 +93,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    public void createUser(final User currentUser) {
-        db.collection("Users").document(currentUser.getId()).set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-
-                } else {
-
-                }
-            }
-        });
-    }
-
-
     //    Check Input Validation
     public boolean isValid() {
         if (!email.getText().toString().contains("@rmit.edu.vn") || email.getText().toString().isEmpty()) {
@@ -141,8 +127,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
+
+
                             utilities.createUser(currentUser, SignUpActivity.this);
-//                            createUser(currentUser);
+                            utilities.getToken();
 
                         } else {
                             // If sign in fails, display a message to the user.

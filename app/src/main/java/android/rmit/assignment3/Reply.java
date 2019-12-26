@@ -18,6 +18,15 @@ public class Reply {
         this.id="";
     }
 
+    public Reply(String post, String owner, String content) {
+        this.post = post;
+        this.owner = owner;
+        this.content = content;
+        this.upvote = 0;
+        this.dateTime = System.currentTimeMillis();
+        this.id="";
+    }
+
     public Reply(String post, String owner, String content, int upvote, long dateTime) {
         this.post = post;
         this.owner = owner;

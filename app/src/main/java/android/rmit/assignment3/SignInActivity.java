@@ -2,14 +2,12 @@ package android.rmit.assignment3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -195,7 +193,9 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            //startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            utilities.getToken();
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             if (task.getException().toString().contains("There is no user record corresponding to this identifier. The user may have been deleted")) {

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -63,24 +64,18 @@ public class SignInActivity extends AppCompatActivity {
         show = findViewById(R.id.showpasswordsignin);
         hide = findViewById(R.id.hidepasswordsignin);
         show.setVisibility(View.INVISIBLE);
-        final RelativeLayout layout = findViewById(R.id.signinlayout);
-//        password.setClickable(true);
-//        password.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                layout.setBackgroundColor(Color.parseColor("#BC1C22"));
-//                Toast.makeText(SignInActivity.this, "Click", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-////        password.setOnTouchListener(new View.OnTouchListener() {
-////            @Override
-////            public boolean onTouch(View view, MotionEvent motionEvent) {
-////                layout.setBackgroundColor(Color.parseColor("#BC1C22"));
-////                Toast.makeText(SignInActivity.this, "Click", Toast.LENGTH_SHORT).show();
-////                return true;
-////            }
-////        });
+
+        TextView signupfromsignin = findViewById(R.id.signupfromsignin);
+        signupfromsignin.setClickable(true);
+        signupfromsignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
+            }
+        });
+
+
+
 
 
         hide.setOnClickListener(new View.OnClickListener() {

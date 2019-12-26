@@ -4,9 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1D0C0000"
     android:orientation="vertical"
     tools:context=".PostsListActivity">
 
+
+    <EditText
+        android:id="@+id/searchbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="#FFFFFF"
+
+        android:ems="10"
+        android:hint="Search for post"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"
@@ -18,8 +38,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#1D0C0000" />
+            android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

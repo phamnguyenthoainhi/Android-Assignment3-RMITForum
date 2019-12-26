@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.icu.util.ULocale;
 import android.os.Bundle;
 import android.text.InputType;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,7 +52,16 @@ public class SignUpActivity extends AppCompatActivity {
         fullname = findViewById(R.id.fullname);
         signup = findViewById(R.id.signup);
         utilities = new Utilities();
-        
+
+        TextView signinfromsignup = findViewById(R.id.signinfromsignup);
+        signinfromsignup.setClickable(true);
+        signinfromsignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
+            }
+        });
+
         hide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

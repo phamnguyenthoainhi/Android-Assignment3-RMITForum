@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#1D0C0000">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -97,6 +96,7 @@
 
                 <Button
                     android:id="@+id/replyinpost"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -108,11 +108,11 @@
 
                 <Button
                     android:id="@+id/showallreplies"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
-                    android:text="Show All Replies
-"
+                    android:text="Show All Replies"
                     android:textAllCaps="false"
                     android:textColor="#AE090000" />
             </RelativeLayout>

@@ -4,80 +4,208 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0D090000"
     android:orientation="vertical"
     tools:context=".PostDetailActivity">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="false"
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        app:contentPadding="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp">
 
-            <Button
-                android:id="@+id/post_upvote"
+            <RelativeLayout
+                android:id="@+id/ownerlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <android.rmit.assignment3.RoundedImage
+                    android:id="@+id/owneravatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/defaultimg" />
+
+
+                <TextView
+                    android:id="@+id/ownername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/owneravatar"
+                    android:text="Owner name"
+                    android:textColor="#B51A0202" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/post_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Up" />
+                android:layout_below="@id/ownerlayout">
 
-            <TextView
-                android:id="@+id/post_votes"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Upvotes" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <Button
-                android:id="@+id/post_downvote"
-                android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/post_votes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+ 1"
+                        android:textColor="#D13430"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/donwvotenum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="- 2"
+                        android:textColor="#1A78CA"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:text="Title"
+                        android:textColor="#FC070000" />
+
+                    <TextView
+                        android:id="@+id/content_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        tools:text="Content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/replybuttoningroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Down" />
+                android:layout_below="@id/post_info"
+                android:layout_marginTop="10dp">
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/reply_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toEndOf="@id/post_downvote"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Reply"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+                <Button
+                    android:id="@+id/post_upvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Up Vote"
 
-            <TextView
-                android:id="@+id/title_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingLeft="10px"
-                android:text="Title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#D13430"
+                    android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/content_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingLeft="10px"
-                android:text="Content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_text" />
-        </LinearLayout>
-    </LinearLayout>
+                <Button
+                    android:id="@+id/post_downvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/post_upvote"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Down Vote"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#1A78CA"
+                    android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/reply_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:background="#1E88E5"
-        android:text="Reply"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content_text" />
+
+<!--                <Button-->
+<!--                    android:id="@+id/showallreplies"-->
+<!--                    style="?android:attr/borderlessButtonStyle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_marginEnd="0dp"-->
+<!--                    android:background="#FFFFFF"-->
+<!--                    android:text="Show All Replies"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textColor="#AE090000"-->
+<!--                    android:textSize="12sp" />-->
+            </RelativeLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical">-->
+
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/post_votes"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="Upvotes" />-->
+
+
+    <!--        </LinearLayout>-->
+
+    <!--   -->
+    <!--    </LinearLayout>-->
+
+    <!--    <Button-->
+    <!--        -->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:background="#1E88E5"-->
+    <!--        android:text="Reply"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/content_text" />-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"

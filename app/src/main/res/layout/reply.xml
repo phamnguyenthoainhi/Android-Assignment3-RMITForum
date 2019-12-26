@@ -1,69 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/reply_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/reply_info"
+            android:id="@+id/ownerreply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <android.rmit.assignment3.RoundedImage
+                android:id="@+id/owneravatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/defaultimg" />
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/owneravatar"
+                android:text="Owner name"
+                android:textColor="#F8080000" />
+            />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contentreply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ownerreply"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/reply_votes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textColor="#D13430"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textColor="#1A78CA"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/reply_upvote"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Up" />
-
-                    <TextView
-                        android:id="@+id/reply_votes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Upvotes" />
-
-                    <Button
-                        android:id="@+id/reply_downvote"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Down" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/reply_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/reply_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Content" />
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Content"
+                    android:textColor="#AB080000" />
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/my_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/replybuttongroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contentreply"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp">
+
+
+            <Button
+                android:id="@+id/reply_upvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Up Vote"
+
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="#D13430"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/reply_downvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_toEndOf="@id/reply_upvote"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Down Vote"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="#1A78CA"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/replybuttongroup" />
+
+
     </RelativeLayout>
+
 </RelativeLayout>

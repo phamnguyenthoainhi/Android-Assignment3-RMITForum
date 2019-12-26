@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder>  {
@@ -56,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         PostViewHolder (View v, OnPostListener onPostListener){
             super(v);
-            title = v.findViewById(R.id.post_title);
+            title = v.findViewById(R.id.title_text);
             this.onPostListener = onPostListener;
             v.setOnClickListener(this);
         }

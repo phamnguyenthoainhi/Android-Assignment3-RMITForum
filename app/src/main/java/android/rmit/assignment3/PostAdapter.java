@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder>  {
@@ -35,6 +36,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public int getItemCount(){
         return posts.size();
+    }
+
+    public void filter(CharSequence text, ArrayList<Post> inputposts) {
+        ArrayList<Post> filtered= new ArrayList<>();
+        for (Post post: inputposts) {
+
+            if (post.getTitle().toLowerCase().contains(text.toString().toLowerCase())) {
+                filtered.add(post);
+            }
+        }
+        posts = filtered;
+        notifyDataSetChanged();
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

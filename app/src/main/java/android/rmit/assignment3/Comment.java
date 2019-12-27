@@ -80,6 +80,10 @@ public class Comment {
     }
     public void decreaseUpvote(){this.upvote-=1;}
 
+    public int getUpvote() {
+        return upvote;
+    }
+
     public long getDateTime() {
         return dateTime;
     }

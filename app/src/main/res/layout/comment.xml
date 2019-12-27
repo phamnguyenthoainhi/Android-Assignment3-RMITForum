@@ -39,17 +39,96 @@
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/comment_content"
+        <LinearLayout
+            android:id="@+id/comment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ownercmtinfo"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/comment_votes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textColor="#D13430"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/donwvotenum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textColor="#1A78CA"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/comment_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="Content"
+                    android:textColor="#99050000" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/replybuttongroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/comment_layout"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:text="Content"
-            android:textColor="#99050000" />
+            android:layout_marginBottom="15dp">
+
+
+            <Button
+                android:id="@+id/comment_upvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Up Vote"
+
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="#D13430"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/comment_downvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_toEndOf="@id/comment_upvote"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Down Vote"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="#1A78CA"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
     </RelativeLayout>
 

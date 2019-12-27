@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Comment> comments;
     private CommentViewHolder.OnCommentListener onCommentListener;
+    private Utilities utilities = new Utilities();
 
     @NonNull
     @Override
@@ -43,6 +45,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.commentVotes.setText(comments.get(position).getUpvote()+"");
 
         fetchCommentVoteInfo(comments.get(position).getId(),holder,position);
+        fetchCommentOwner(comments.get(position).getOwner(),holder);
     }
 
     @Override
@@ -55,6 +58,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Button commentUpvote;
         Button commentDownvote;
         TextView commentVotes;
+        ImageView commentAvatar;
+        TextView commentOwner;
 
         OnCommentListener onCommentListener;
 
@@ -64,6 +69,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentUpvote = v.findViewById(R.id.comment_upvote);
             commentDownvote = v.findViewById(R.id.comment_downvote);
             commentVotes = v.findViewById(R.id.comment_votes);
+            commentAvatar = v.findViewById(R.id.comment_onwer_avatar);
+            commentOwner = v.findViewById(R.id.comment_onwer_name);
             this.onCommentListener = onCommentListener;
             v.setOnClickListener(this);
         }
@@ -246,6 +253,26 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                     vote(commentIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
                                 }
                             });
+                        }
+                    });
+        }
+    }
+
+    protected void fetchCommentOwner(String ownerId,final CommentViewHolder holder){
+        if(ownerId!=null) {
+            db.collection("Users").document(ownerId).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User user = documentSnapshot.toObject(User.class);
+                            if (user != null) {
+                                if (user.getImageuri() != null && user.getImageuri() != "") {
+                                    holder.commentAvatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                }
+                                if (user.getFullname() != null) {
+                                    holder.commentOwner.setText(user.getFullname());
+                                }
+                            }
                         }
                     });
         }

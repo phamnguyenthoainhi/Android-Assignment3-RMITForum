@@ -1,6 +1,7 @@
 package android.rmit.assignment3;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.util.Log;
 
 import android.content.Context;
@@ -73,5 +74,9 @@ public class Utilities {
         }
     }
 
+    public Uri convertUri(String s) {
+        Uri uri = Uri.parse(s);
+        return uri;
+    }
 
 }

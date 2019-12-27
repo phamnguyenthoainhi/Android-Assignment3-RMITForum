@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +43,10 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     TextView votes;
     EditText newReplyContent;
     EditText newCommentContent;
+    ImageView avatar;
+    TextView owner;
     ArrayList<Reply> replies = new ArrayList<>();
+    Utilities utilities = new Utilities();
 
     RecyclerView.Adapter adapter;
 
@@ -63,6 +68,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         upvotePost = findViewById(R.id.post_upvote);
         downvotePost = findViewById(R.id.post_downvote);
+
+        avatar = findViewById(R.id.owneravatar);
+        owner = findViewById(R.id.ownername);
 
         Button replyButton = findViewById(R.id.reply_button);
 
@@ -151,12 +159,31 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         votes.setText(post.getUpvote()+"");
 
                         fetchVoteInfo();
+                        fetchPostOwner(post.getOwner());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG,"Failed to fetch");
+                    }
+                });
+    }
+
+    protected void fetchPostOwner(String ownerId){
+        db.collection("Users").document(ownerId).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user!=null){
+                            if(user.getImageuri()!=null && user.getImageuri()!="") {
+                                avatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                            }
+                            if(user.getFullname()!=null){
+                                owner.setText(user.getFullname());
+                            }
+                        }
                     }
                 });
     }
@@ -444,6 +471,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
             ;
         }
     }
+
 
 
 

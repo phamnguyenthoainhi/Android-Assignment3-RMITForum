@@ -3,10 +3,15 @@ package android.rmit.assignment3;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -14,6 +19,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private ArrayList<Post> posts;
     private PostViewHolder.OnPostListener onPostListener;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Utilities utilities = new Utilities();
 
     @NonNull
     @Override
@@ -30,6 +37,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position){
         holder.title.setText(posts.get(position).getTitle());
+        holder.votes.setText(posts.get(position).getUpvote()+"");
+        fetchPostOwner(posts.get(position).getOwner(),holder);
     }
 
     @Override
@@ -51,11 +60,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public static class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
+        TextView votes;
+        ImageView avatar;
+        TextView owner;
         OnPostListener onPostListener;
 
         PostViewHolder (View v, OnPostListener onPostListener){
             super(v);
             title = v.findViewById(R.id.title_text);
+            votes = v.findViewById(R.id.upvotenumber);
+            avatar = v.findViewById(R.id.owneravatar);
+            owner = v.findViewById(R.id.ownername);
             this.onPostListener = onPostListener;
             v.setOnClickListener(this);
         }
@@ -67,6 +82,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         public interface OnPostListener{
             void OnPostClick(int position);
+        }
+    }
+
+    protected void fetchPostOwner(String ownerId,final PostViewHolder holder){
+        if(ownerId!=null) {
+            db.collection("Users").document(ownerId).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User user = documentSnapshot.toObject(User.class);
+                            if (user != null) {
+                                if (user.getImageuri() != null && user.getImageuri() != "") {
+                                    holder.avatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                }
+                                if (user.getFullname() != null) {
+                                    holder.owner.setText(user.getFullname());
+                                }
+                            }
+                        }
+                    });
         }
     }
 }

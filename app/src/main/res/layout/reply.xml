@@ -19,7 +19,7 @@
             android:orientation="horizontal">
 
             <android.rmit.assignment3.RoundedImage
-                android:id="@+id/owneravatar"
+                android:id="@+id/reply_owner_avatar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
@@ -30,6 +30,7 @@
 
             <TextView
 
+                android:id="@+id/reply_owner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

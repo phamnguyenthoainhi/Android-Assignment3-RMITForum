@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     private ReplyViewHolder.OnReplyListener onReplyListener;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private Utilities utilities = new Utilities();
 
     private ArrayList<Comment> comments = new ArrayList<>();
 
@@ -48,6 +50,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         holder.replyVotes.setText(replies.get(position).getUpvote()+"");
 
         fetchReplyVoteInfo(replies.get(position).getId(),holder,position);
+        fetchReplyOwner(replies.get(position).getOwner(),holder);
 
         db.collection("Comments").whereEqualTo("reply",replies.get(position).getId()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -86,6 +89,8 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
          Button replyUpvote;
          Button replyDownvote;
          TextView replyVotes;
+         ImageView replyAvatar;
+         TextView replyOwner;
          OnReplyListener onReplyListener;
 
          ReplyViewHolder(View v, OnReplyListener onReplyListener){
@@ -94,6 +99,8 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
              replyUpvote = v.findViewById(R.id.reply_upvote);
              replyDownvote = v.findViewById(R.id.reply_downvote);
              replyVotes=v.findViewById(R.id.reply_votes);
+             replyAvatar = v.findViewById(R.id.reply_owner_avatar);
+             replyOwner = v.findViewById(R.id.reply_owner_name);
              this.onReplyListener = onReplyListener;
              v.setOnClickListener(this);
          }
@@ -288,6 +295,26 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                                     vote(replyIndex, PostDetailActivity.Vote.DOWNVOTE,holder);
                                 }
                             });
+                        }
+                    });
+        }
+    }
+
+    protected void fetchReplyOwner(String ownerId,final ReplyViewHolder holder){
+        if(ownerId!=null) {
+            db.collection("Users").document(ownerId).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User user = documentSnapshot.toObject(User.class);
+                            if (user != null) {
+                                if (user.getImageuri() != null && user.getImageuri() != "") {
+                                    holder.replyAvatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                }
+                                if (user.getFullname() != null) {
+                                    holder.replyOwner.setText(user.getFullname());
+                                }
+                            }
                         }
                     });
         }

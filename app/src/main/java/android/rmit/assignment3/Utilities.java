@@ -1,6 +1,9 @@
 package android.rmit.assignment3;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
@@ -19,6 +22,9 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import androidx.annotation.NonNull;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Utilities {
@@ -78,5 +84,20 @@ public class Utilities {
         Uri uri = Uri.parse(s);
         return uri;
     }
+    public Drawable loadImageFromWebOperations(String url) {
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
+
+
+    }
+
+
+
+
 
 }

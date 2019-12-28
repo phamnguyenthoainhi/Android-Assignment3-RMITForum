@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -29,6 +30,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class PostsListActivity extends AppCompatActivity implements PostAdapter.PostViewHolder.OnPostListener {
 
@@ -57,8 +61,6 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
             public void onClick(View view) {
                 posts = new ArrayList<>();
                 fetchPosts();
-
-
             }
         });
 
@@ -98,8 +100,18 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         });
     }
 
+    public ArrayList<Post> test(ArrayList<Post> postArrayList) {
+        Collections.sort(postArrayList, new Comparator<Post>() {
+            @Override
+            public int compare(Post p1, Post p2) {
+                return p1.getUpvote() - p2.getUpvote();
+            }
+        } );
+        return postArrayList;
+    }
+
     protected void initRecyclerView(){
-        recyclerView=findViewById(R.id.my_recycler_view);
+        recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -124,6 +136,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                             posts.add(post);
                             initRecyclerView();
                         }
+                        System.out.println("Helllo  "+ posts);
                     }
                 });
     }
@@ -141,6 +154,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
         final AlertDialog alertDialog = alert.create();
         alertDialog.setCanceledOnTouchOutside(true);
+
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override

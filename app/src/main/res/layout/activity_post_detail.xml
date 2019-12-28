@@ -153,59 +153,10 @@
                     android:textAllCaps="false"
                     android:textColor="#1A78CA"
                     android:textSize="12sp" />
-
-
-<!--                <Button-->
-<!--                    android:id="@+id/showallreplies"-->
-<!--                    style="?android:attr/borderlessButtonStyle"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:layout_marginEnd="0dp"-->
-<!--                    android:background="#FFFFFF"-->
-<!--                    android:text="Show All Replies"-->
-<!--                    android:textAllCaps="false"-->
-<!--                    android:textColor="#AE090000"-->
-<!--                    android:textSize="12sp" />-->
             </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal">-->
-
-    <!--        <LinearLayout-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="vertical">-->
-
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/post_votes"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="match_parent"-->
-    <!--                android:layout_weight="1"-->
-    <!--                android:text="Upvotes" />-->
-
-
-    <!--        </LinearLayout>-->
-
-    <!--   -->
-    <!--    </LinearLayout>-->
-
-    <!--    <Button-->
-    <!--        -->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:layout_marginTop="8dp"-->
-    <!--        android:background="#1E88E5"-->
-    <!--        android:text="Reply"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/content_text" />-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"

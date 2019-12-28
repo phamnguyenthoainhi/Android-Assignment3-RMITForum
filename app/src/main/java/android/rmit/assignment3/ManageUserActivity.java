@@ -18,25 +18,36 @@ import android.os.Messenger;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.util.HashMap;
 
 
 public class ManageUserActivity extends AppCompatActivity {
@@ -58,9 +69,15 @@ public class ManageUserActivity extends AppCompatActivity {
     Button edit;
     ImageButton editavatar;
     private Uri imageUri;
+    Uri myUri;
     View editDialog;
     private StorageReference mStorageRef;
     ImageView avatar;
+    AlertDialog alertDialog;
+    ImageView imageView;
+    User fetchUser;
+    boolean ifImageChange = false;
+
 
 
 
@@ -74,9 +91,15 @@ public class ManageUserActivity extends AppCompatActivity {
         useremail = findViewById(R.id.useremail);
         logoutbtn = findViewById(R.id.logout);
         openeditform = findViewById(R.id.openedituser);
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+        mStorageRef = FirebaseStorage.getInstance().getReference().child("ImageFolder");
         avatar = findViewById(R.id.avatarimage);
+        editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
+        imageView = editDialog.findViewById(R.id.imageview);
 
+        RelativeLayout relativeLayout = findViewById(R.id.manageuserly);
+
+        
+        
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -84,6 +107,9 @@ public class ManageUserActivity extends AppCompatActivity {
         user = new User();
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
+            if (currentUser.getPhotoUrl() != null) {
+                imageView.setImageURI(currentUser.getPhotoUrl());
+            }
         }
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
@@ -99,53 +125,108 @@ public class ManageUserActivity extends AppCompatActivity {
                 openForm();
             }
         });
+
+
     }
 
-    private void openFileChooser() {
-        Intent intent = new Intent();
+
+
+    public void uploadData(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-                 if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                         && data != null && data.getData() != null) {
-                     imageUri = data.getData();
-                     ImageView imageView = editDialog.findViewById(R.id.imageview);
-                     imageView.setImageURI(null);
-                     imageView.setImageURI(imageUri);
+        if (requestCode == 1 && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            ifImageChange = true;
+            imageView.setImageURI(imageUri);
 
-                 } else {
-                     Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
-                 }
+        } else {
+            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+        }
 
+    }
+
+    public void uploadtostorage() {
+        Log.d(TAG, "uploadtostorage: Called");
+
+        final StorageReference imgname = mStorageRef.child("image" + this.imageUri.getLastPathSegment());
+        imgname.putFile(this.imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imgname.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        if (!usernameedit.getText().toString().isEmpty()) {
+                            
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(usernameedit.getText().toString())
+                                        .setPhotoUri(uri)
+                                        .build();
+                            user.setFullname(usernameedit.getText().toString());
+
+                            currentUser.updateProfile(profileUpdates);
+                                updateUser(uri.toString());
+                                user.setImageuri(uri.toString());
+
+//                            updateUserProfile(usernameedit.getText().toString());
+//                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                    .setDisplayName(usernameedit.getText().toString())
+//                                    .build();
+//                            currentUser.updateProfile(profileUpdates);
+//                            fetchCurrentUser(currentUser.getUid());
+
+                        }
+
+                    }
+
+
+                });
+
+            }
+
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: "+ e);
+                    }
+                });
     }
 
     public void openForm() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ManageUserActivity.this);
+        if (editDialog.getParent() != null) {
+            ((ViewGroup)editDialog.getParent()).removeView(editDialog);
+        }
 
-        editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
         builder.setView(editDialog);
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(true);
 
         usernameedit = editDialog.findViewById(R.id.usernameedit);
         usernameedit.setText(currentUser.getDisplayName());
         edit = editDialog.findViewById(R.id.editUserbtn);
-        ImageView imageView = editDialog.findViewById(R.id.imageview);
+        imageView = editDialog.findViewById(R.id.imageview);
 
-        imageView.setImageURI(currentUser.getPhotoUrl());
+
+//        imageView.setImageURI(currentUser.getPhotoUrl());
+        Log.d(TAG, "openForm: current user photo url "+ currentUser.getPhotoUrl());
         editavatar = editDialog.findViewById(R.id.editavatar);
 
 
         editavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openFileChooser();
+                uploadData(view);
+
             }
         });
 
@@ -161,19 +242,25 @@ public class ManageUserActivity extends AppCompatActivity {
                             .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (!usernameedit.getText().toString().isEmpty() && imageUri!= null) {
+
+                                    if (ifImageChange) {
+                                        uploadtostorage();
+
+                                    } else {
+                                        if (!usernameedit.getText().toString().isEmpty()) {
+
                                         updateUserProfile(usernameedit.getText().toString());
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                 .setDisplayName(usernameedit.getText().toString())
-                                                .setPhotoUri(imageUri)
+
                                                 .build();
                                         currentUser.updateProfile(profileUpdates);
-                                        user.setImageuri(imageUri.toString());
-                                        user.setFullname(usernameedit.getText().toString());
-                                        updateUser(imageUri.toString());
-                                        fetchCurrentUser(currentUser.getUid());
 
+                                        user.setFullname(usernameedit.getText().toString());
+                                        fetchCurrentUser(currentUser.getUid());
                                     }
+                                    }
+//
                                 }
                             })
                             .setPositiveButton("No", new DialogInterface.OnClickListener() {
@@ -190,6 +277,7 @@ public class ManageUserActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
+
 
     public void updateUserProfile(String fullname) {
         db.collection("Users").document(currentUser.getUid())
@@ -236,8 +324,20 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
     }
-
     
+    
+    public User fetch(String id) {
+        fetchUser = new User();
+        db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                fetchUser.setImageuri(snapshot.get("imageuri").toString());
+            }
+        });
+        return fetchUser;
+    }
+
+
     public Uri convertUri(String s) {
         Uri uri = Uri.parse(s);
         return uri;

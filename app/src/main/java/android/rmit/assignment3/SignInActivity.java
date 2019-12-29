@@ -193,9 +193,14 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             utilities.getToken();
+                            if (user.isEmailVerified()) {
+                                startActivity(new Intent(SignInActivity.this, CourseActivity.class));
+                            } else {
+                                startActivity(new Intent(SignInActivity.this, Validate.class));
+                            }
                             finish();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             if (task.getException().toString().contains("There is no user record corresponding to this identifier. The user may have been deleted")) {

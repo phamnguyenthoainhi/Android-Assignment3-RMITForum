@@ -84,6 +84,7 @@ public class Utilities {
         Uri uri = Uri.parse(s);
         return uri;
     }
+
     public Drawable loadImageFromWebOperations(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();

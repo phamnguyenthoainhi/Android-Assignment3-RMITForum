@@ -33,6 +33,13 @@ public class NotificationService extends FirebaseMessagingService {
 
                     notify(remoteMessage,intentComment);
                     break;
+                case "post":
+                    Intent intentPost = new Intent(this,PostDetailActivity.class);
+                    intentPost.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intentPost.putExtra("id",remoteMessage.getData().get("id"));
+
+                    notify(remoteMessage,intentPost);
+                    break;
             }
         }
     }

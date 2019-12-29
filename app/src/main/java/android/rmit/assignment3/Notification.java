@@ -82,8 +82,8 @@ public class Notification {
         return seen;
     }
 
-    public void setSeen(boolean seen) {
-        this.seen = seen;
+    public void setSeen() {
+        this.seen = true;
     }
 
     public String getTitle() {

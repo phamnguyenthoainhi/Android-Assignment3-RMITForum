@@ -52,6 +52,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     @Override
     public void onNotificationClick(int position) {
         Intent intent;
+        updateNotificationStatus(notifications.get(position).getId());
         switch(notifications.get(position).getType()){
             case "reply":
                 intent = new Intent(this, PostDetailActivity.class);
@@ -60,6 +61,11 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                 break;
             case "comment":
                 intent = new Intent(this,ReplyDetailActivity.class);
+                intent.putExtra("id",notifications.get(position).getTargetId());
+                startActivity(intent);
+                break;
+            case "post":
+                intent = new Intent(this, PostDetailActivity.class);
                 intent.putExtra("id",notifications.get(position).getTargetId());
                 startActivity(intent);
                 break;
@@ -79,6 +85,16 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                             notifications.add(notification);
                             initRecyclerView();
                         }
+                    }
+                });
+    }
+
+    protected void updateNotificationStatus(String id){
+        db.collection("Notifications").document(id).update("seen",true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(NotificationsListActivity.this, "Set done", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

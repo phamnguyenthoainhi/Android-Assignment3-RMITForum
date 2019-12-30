@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ViewUtils;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -77,8 +79,11 @@ public class ManageUserActivity extends AppCompatActivity {
     User fetchUser;
     boolean ifImageChange = false;
     ArrayList<Course> subscribedCourses;
-    ArrayList<String> coursesid;
+//    ArrayList<String> coursesid;
     Course fetchedCourse;
+    RecyclerView recyclerView;
+    GridLayoutManager gridLayoutManager;
+    SubscribedCourseAdapter subscribedCourseAdapter;
 
 
 
@@ -96,6 +101,7 @@ public class ManageUserActivity extends AppCompatActivity {
         avatar = findViewById(R.id.avatarimage);
         editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
         imageView = editDialog.findViewById(R.id.imageview);
+
 
 
 
@@ -127,6 +133,15 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void initRecyclerView() {
+        recyclerView = findViewById(R.id.subscribecourserecyclerview);
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
+        recyclerView.setAdapter(subscribedCourseAdapter);
 
     }
 
@@ -181,8 +196,6 @@ public class ManageUserActivity extends AppCompatActivity {
                                     .placeholder(R.drawable.grey)
                                     .error(R.drawable.grey)
                                     .into(avatar);
-
-//                                user.setImageuri(uri.toString());
 
                         }
 
@@ -331,7 +344,6 @@ public class ManageUserActivity extends AppCompatActivity {
 
     public void fetchCoursesbyUser(final String userid) {
 
-
         db.collection("CourseUsers")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -364,24 +376,13 @@ public class ManageUserActivity extends AppCompatActivity {
                         fetchedCourse.setDocid(doccourseid);
                         subscribedCourses.add(fetchedCourse);
                         Log.d(TAG, "fetchCoursesbyUser: "+ subscribedCourses);
+                        initRecyclerView();
                     }
                 });
 
 
     }
-    
-    
-//    public User fetch(String id) {
-//        fetchUser = new User();
-//        db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot snapshot) {
-//
-//                fetchUser.setImageuri(snapshot.get("imageuri").toString());
-//            }
-//        });
-//        return fetchUser;
-//    }
+
 
 
     public Uri convertUri(String s) {

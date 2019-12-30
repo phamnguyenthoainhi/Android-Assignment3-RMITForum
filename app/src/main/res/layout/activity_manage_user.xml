@@ -79,6 +79,11 @@
             android:textColor="#C5302D"
             android:textSize="15sp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subscribecourserecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
     <ImageButton

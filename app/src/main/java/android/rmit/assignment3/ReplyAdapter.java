@@ -1,21 +1,28 @@
 package android.rmit.assignment3;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,7 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder> implements CommentAdapter.CommentViewHolder.OnCommentListener {
+public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder>{
 
     private ArrayList<Reply> replies;
     private ReplyViewHolder.OnReplyListener onReplyListener;
@@ -53,8 +60,36 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     public void onBindViewHolder(@NonNull final ReplyViewHolder holder, final int position){
         holder.replyContent.setText(replies.get(position).getContent());
         holder.replyVotes.setText(replies.get(position).getUpvote()+"");
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCommentDialog(position,holder);
+            }
+        });
 
-        fetchReplyVoteInfo(replies.get(position).getId(),holder,position);
+        if(mAuth.getUid()!=null && !mAuth.getUid().equals(replies.get(position).getOwner())){
+            holder.deleteReply.setVisibility(View.GONE);
+            holder.editReply.setVisibility(View.GONE);
+            fetchReplyVoteInfo(replies.get(position).getId(),holder,position);
+        }
+        else if(mAuth.getUid()!=null && mAuth.getUid().equals(replies.get(position).getOwner())){
+            holder.replyUpvote.setVisibility(View.GONE);
+            holder.replyDownvote.setVisibility(View.GONE);
+            holder.editReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editReply(replies.get(position).getId(),holder,position);
+                }
+            });
+            holder.deleteReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteReply(replies.get(position).getId(),holder);
+                }
+            });
+        }
+
+
         fetchReplyOwner(replies.get(position).getOwner(),holder);
 
         db.collection("Comments").whereEqualTo("reply",replies.get(position).getId()).get()
@@ -74,7 +109,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     private void initRecyclerView(View v){
         RecyclerView recyclerView=v.findViewById(R.id.my_recycler_view);
-        RecyclerView.Adapter adapter= new CommentAdapter(comments,this);
+        RecyclerView.Adapter adapter= new CommentAdapter(comments);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(v.getContext());
 
         recyclerView.setHasFixedSize(true);
@@ -89,13 +124,17 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         return replies.size();
     }
 
-    public static class ReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    public static class ReplyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
          TextView replyContent;
          Button replyUpvote;
          Button replyDownvote;
          TextView replyVotes;
          ImageView replyAvatar;
          TextView replyOwner;
+         Button editReply;
+         Button deleteReply;
+         Button comment;
+
          OnReplyListener onReplyListener;
 
          ReplyViewHolder(View v, OnReplyListener onReplyListener){
@@ -106,6 +145,10 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
              replyVotes=v.findViewById(R.id.reply_votes);
              replyAvatar = v.findViewById(R.id.reply_owner_avatar);
              replyOwner = v.findViewById(R.id.reply_owner_name);
+             editReply = v.findViewById(R.id.edit_reply);
+             deleteReply = v.findViewById(R.id.delete_reply);
+             comment=v.findViewById(R.id.reply_comment);
+
              this.onReplyListener = onReplyListener;
              v.setOnClickListener(this);
          }
@@ -115,21 +158,10 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
              onReplyListener.onReplyClick(getAdapterPosition());
          }
 
-        @Override
-        public boolean onLongClick(View v) {
-             onReplyListener.onReplyLongClick(getAdapterPosition());
-             return true;
-        }
 
         public interface OnReplyListener{
              void onReplyClick(int position);
-             boolean onReplyLongClick(int position);
          }
-    }
-
-    @Override
-    public void onCommentClick(int position) {
-        System.out.println("comment clicked");
     }
 
     protected void vote(int replyIndex, PostDetailActivity.Vote vote, ReplyViewHolder holder){
@@ -327,5 +359,106 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                         }
                     });
         }
+    }
+
+    protected void editReply (final String id, ReplyViewHolder holder, int replyIndex){
+
+        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+        final View dialogView = LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.reply_dialog,null);
+
+        final EditText content = dialogView.findViewById(R.id.reply_input_content);
+        content.setText(replies.get(replyIndex).getContent());
+
+        Button reply = dialogView.findViewById(R.id.create_reply);
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("Replies").document(id).update("content",content.getText().toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    protected void deleteReply(final String id, final ReplyViewHolder holder){
+        AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext())
+                .setTitle("Confirmation")
+                .setMessage("Do you want to delete this reply?")
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        db.collection("Replies").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(holder.itemView.getContext(), "Deleted the reply.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+
+                    }
+                })
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    public void showCommentDialog(final int position, final ReplyViewHolder holder){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+        final View dialogView = LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.comment_dialog,null);
+
+
+        final EditText newCommentContent = dialogView.findViewById(R.id.comment_input_content);
+
+        final Button comment = dialogView.findViewById(R.id.create_comment);
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createComment(new Comment(replies.get(position).getId(),mAuth.getUid(),newCommentContent.getText().toString()),holder);
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+
+    }
+
+    protected void createComment(Comment comment, final ReplyViewHolder holder){
+        db.collection("Comments").add(comment)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(holder.itemView.getContext(), "Successfully posted comment.", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(holder.itemView.getContext(), "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

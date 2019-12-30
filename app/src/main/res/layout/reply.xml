@@ -125,6 +125,51 @@
                 android:textAllCaps="false"
                 android:textColor="#1A78CA"
                 android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/reply_comment"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginRight="20dp"
+                android:layout_toEndOf="@id/reply_downvote"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Comment"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/edit_reply"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginRight="20dp"
+                android:layout_toEndOf="@id/reply_comment"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Edit"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/delete_reply"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginEnd="0dp"
+                android:layout_toEndOf="@id/edit_reply"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Delete"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

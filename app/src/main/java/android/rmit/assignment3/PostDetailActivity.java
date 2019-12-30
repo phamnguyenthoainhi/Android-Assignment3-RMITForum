@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,9 +44,10 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     TextView content;
     Button upvotePost;
     Button downvotePost;
+    Button editPost;
+    Button deletePost;
     TextView votes;
     EditText newReplyContent;
-    EditText newCommentContent;
     ImageView avatar;
     TextView owner;
     ArrayList<Reply> replies = new ArrayList<>();
@@ -69,6 +73,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         upvotePost = findViewById(R.id.post_upvote);
         downvotePost = findViewById(R.id.post_downvote);
+
+        editPost=findViewById(R.id.edit_post);
+        deletePost=findViewById(R.id.delete_post);
 
         avatar = findViewById(R.id.owneravatar);
         owner = findViewById(R.id.ownername);
@@ -134,18 +141,11 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     public void onReplyClick(int position) {
         Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
         if(mAuth.getUid()!=null) {
-            showCommentDialog(position);
+            Intent intent = new Intent(PostDetailActivity.this,ReplyDetailActivity.class);
+            intent.putExtra("id",replies.get(position).getId());
+            startActivity(intent);
         }
         else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
-    }
-
-    @Override
-    public boolean onReplyLongClick(int position) {
-        if(mAuth.getUid()!=null) {
-            showCommentDialog(position);
-        }
-        else{startActivity(new Intent(PostDetailActivity.this,SignInActivity.class));}
-        return true;
     }
 
     protected void fetchPost (String id){
@@ -159,8 +159,31 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         content.setText(post.getContent());
                         votes.setText(post.getUpvote()+"");
 
-                        fetchVoteInfo();
                         fetchPostOwner(post.getOwner());
+
+                        if(mAuth.getUid()!=null && !mAuth.getUid().equals(post.getOwner())){
+                            editPost.setVisibility(View.GONE);
+                            deletePost.setVisibility(View.GONE);
+                            fetchVoteInfo();
+                        }
+                        else if(mAuth.getUid()!=null && mAuth.getUid().equals(post.getOwner())){
+                            upvotePost.setVisibility(View.GONE);
+                            downvotePost.setVisibility(View.GONE);
+
+                            editPost.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showPostDialog();
+                                }
+                            });
+
+                            deletePost.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    deletePost();
+                                }
+                            });
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -193,31 +216,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 });
     }
 
-    public void showCommentDialog(final int position){
-        final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
-        final View dialogView = getLayoutInflater().inflate(R.layout.comment_dialog,null);
 
-
-        newCommentContent = dialogView.findViewById(R.id.comment_input_content);
-
-        final Button comment = dialogView.findViewById(R.id.create_comment);
-
-        alert.setView(dialogView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createComment(new Comment(replies.get(position).getId(),mAuth.getUid(),newCommentContent.getText().toString()));
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.show();
-
-    }
 
     public void showReplyDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
@@ -243,24 +242,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         alertDialog.show();
 
-    }
-
-    protected void createComment(Comment comment){
-        db.collection("Comments").add(comment)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(PostDetailActivity.this, "Successfully posted comment.", Toast.LENGTH_SHORT).show();
-//                        replies = new ArrayList<>();
-//                        fetchReplies(id);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostDetailActivity.this, "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     protected void createReply(Reply reply){
@@ -477,8 +458,71 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         }
     }
 
+    public void showPostDialog(){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.invite,null);
+
+        final EditText newTitle = dialogView.findViewById(R.id.input_title);
+        final EditText newContent = dialogView.findViewById(R.id.input_content);
+
+        newTitle.setText(post.getTitle());
+        newContent.setText(post.getContent());
+
+        final Button postButton = dialogView.findViewById(R.id.post);
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
 
 
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editPost(post.getId(),newTitle.getText().toString(),newContent.getText().toString());
+                alertDialog.dismiss();
+            }
+        });
 
+        alertDialog.show();
+
+    }
+
+    public void editPost(String id, String newTitle, String newContent){
+
+        db.collection("Posts").document(id).update("title",newTitle,"content",newContent)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(PostDetailActivity.this, "Successfully updated.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void deletePost(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Do you want to delete this post?")
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        db.collection("Posts").document(post.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(PostDetailActivity.this, "Deleted post", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+
+                    }
+                })
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
 
 }

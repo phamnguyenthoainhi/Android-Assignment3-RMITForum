@@ -21,7 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ReplyDetailActivity extends AppCompatActivity implements CommentAdapter.CommentViewHolder.OnCommentListener {
+public class ReplyDetailActivity extends AppCompatActivity{
 
     String id;
     String TAG="REPLY DETAIL";
@@ -80,14 +80,9 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CommentAdapter(comments,this);
+        adapter = new CommentAdapter(comments);
 
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onCommentClick(int position) {
-        Toast.makeText(this, "comment clicked", Toast.LENGTH_SHORT).show();
     }
 
     protected void fetchReply (String id){

@@ -85,7 +85,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/replybuttongroup"
+            android:id="@+id/commentbuttongroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/comment_layout"
@@ -120,6 +120,36 @@
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
                 android:textColor="#1A78CA"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/edit_comment"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginRight="20dp"
+                android:layout_toEndOf="@id/comment_downvote"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Edit"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/delete_comment"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginEnd="0dp"
+                android:layout_toEndOf="@id/edit_comment"
+                android:background="@android:color/transparent"
+                android:minWidth="10dp"
+                android:text="Delete"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
                 android:textSize="12sp" />
         </RelativeLayout>
 

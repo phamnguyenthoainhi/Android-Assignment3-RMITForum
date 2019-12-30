@@ -23,7 +23,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     ArrayList<Notification> notifications = new ArrayList<>();
     RecyclerView.Adapter adapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private static final String TAG = "NotificationsListActivi";
+    private static final String TAG = "NotificationsListActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

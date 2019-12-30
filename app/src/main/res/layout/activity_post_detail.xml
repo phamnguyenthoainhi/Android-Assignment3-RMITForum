@@ -110,11 +110,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="false"
-                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="20dp"
                     android:layout_toEndOf="@id/post_downvote"
                     android:background="#FFFFFF"
                     android:minWidth="10dp"
                     android:text="Reply"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/edit_post"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_button"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Edit"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/delete_post"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toEndOf="@id/edit_post"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Delete"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
                     android:textSize="12sp" />

@@ -47,6 +47,16 @@
                     android:text="aaaaaaaaaaaaaaaaaaaaaaa"
                     android:textColor="#6B140101"
                     android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/subscribebtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Subsribe"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#E53935" />
             </LinearLayout>
 
             <ImageButton

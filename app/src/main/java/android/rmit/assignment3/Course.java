@@ -13,14 +13,6 @@ public class Course {
     public Course() {
     }
 
-    @Override
-    public String toString() {
-        return "Course{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
     public String getId() {
         return id;
     }
@@ -49,5 +41,13 @@ public class Course {
 
     public void setDocid(String docid) {
         this.docid = docid;
+    }
+
+    @Override
+    public String toString() {
+        return "Course " +
+                "id  '" + id + '\'' +
+                ", name  " + name + '\'' +
+                ", docid  " + docid + '\'' ;
     }
 }

@@ -61,6 +61,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         TextView courseid;
         ImageButton edit;
         ImageButton delete;
+        Button subsribebtn;
 
         OnCourseListener onCourseListener;
         CourseViewHolder(View v, final OnCourseListener onCourseListener) {
@@ -69,6 +70,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             coursename = v.findViewById(R.id.coursenamedisplay);
             edit = v.findViewById(R.id.editcourse);
             delete = v.findViewById(R.id.deletecourse);
+            subsribebtn = v.findViewById(R.id.subscribebtn);
 
             this.onCourseListener = onCourseListener;
             v.setOnClickListener(this);
@@ -86,6 +88,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                     onCourseListener.deleteButtonClick(view, getAdapterPosition());
                 }
             });
+
+            subsribebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onCourseListener.subscribe(view, getAdapterPosition());
+                }
+            });
         }
 
         @Override
@@ -97,6 +106,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             void onCourseClick(int position);
             void editButtonClick(View v, int posision);
             void deleteButtonClick(View v, int position);
+            void subscribe(View v, int position);
         }
     }
 

@@ -116,6 +116,7 @@ public class ManageUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ManageUserActivity.this, SignInActivity.class));
             }
         });
 
@@ -145,7 +146,11 @@ public class ManageUserActivity extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             imageUri = data.getData();
             ifImageChange = true;
-            imageView.setImageURI(imageUri);
+            Picasso.with(ManageUserActivity.this).load(imageUri).fit().centerCrop()
+                    .placeholder(R.drawable.grey)
+                    .error(R.drawable.grey)
+                    .into(imageView);
+//            imageView.setImageURI(imageUri);
 
         } else {
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
@@ -179,7 +184,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                     .error(R.drawable.grey)
                                     .into(avatar);
 
-                                user.setImageuri(uri.toString());
+//                                user.setImageuri(uri.toString());
 
                         }
 
@@ -312,10 +317,13 @@ public class ManageUserActivity extends AppCompatActivity {
                 Log.d(TAG, "onComplete: fetch User " + task.getResult().get("imageuri"));
 
                 if (task.getResult().get("imageuri") != null) {
-                    avatar.setImageURI(convertUri(task.getResult().get("imageuri").toString()));
+                    Picasso.with(ManageUserActivity.this).load(convertUri(task.getResult().get("imageuri").toString()).toString()).fit().centerCrop()
+                            .placeholder(R.drawable.grey)
+                            .error(R.drawable.grey)
+                            .into(avatar);
                 } else {
-                    avatar.setImageResource(R.drawable.bell);
-                }
+                avatar.setImageResource(R.drawable.grey);
+            }
 
                 useremail.setText(task.getResult().get("email").toString());
                 username.setText(task.getResult().get("fullname").toString());
@@ -329,6 +337,7 @@ public class ManageUserActivity extends AppCompatActivity {
         db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot snapshot) {
+
                 fetchUser.setImageuri(snapshot.get("imageuri").toString());
             }
         });

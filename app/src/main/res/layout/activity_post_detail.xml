@@ -70,13 +70,6 @@
                         android:textColor="#D13430"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/donwvotenum"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textColor="#1A78CA"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout

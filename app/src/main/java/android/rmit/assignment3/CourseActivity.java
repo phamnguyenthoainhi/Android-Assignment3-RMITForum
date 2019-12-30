@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,7 +38,11 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     ArrayList<Course> courses;
     ImageButton edit;
     ImageButton delete;
-
+    Course_User course_user;
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+//    boolean isSubscribed = false;
+    
 
 
     @Override
@@ -45,11 +51,11 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         setContentView(R.layout.activity_course);
         db = FirebaseFirestore.getInstance();
         openCreateCourse = findViewById(R.id.opencreatecourse);
-
+        mAuth = FirebaseAuth.getInstance();
         View course = getLayoutInflater().inflate(R.layout.course, null);
         edit = course.findViewById(R.id.editcourse);
         delete = course.findViewById(R.id.deletecourse);
-
+        currentUser = mAuth.getCurrentUser();
         courses = new ArrayList<>();
         openCreateCourse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,15 +64,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
             }
         });
         fetchCourse();
-
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(CourseActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
     }
 
 
@@ -275,6 +272,15 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     }
                 });
         buider.create().show();
+    }
+
+    @Override
+    public void subscribe(View v, int position) {
+        if (courses.size() > 0 && currentUser!= null) {
+            course_user = new Course_User(courses.get(position).getDocid(),currentUser.getUid());
+            Utilities utilities = new Utilities();
+            utilities.subscribe(course_user, CourseActivity.this);
+        }
     }
 
     public static class ReplyDetailAdapter {

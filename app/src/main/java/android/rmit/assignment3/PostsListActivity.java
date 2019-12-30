@@ -54,7 +54,6 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts_list);
         searchbar = findViewById(R.id.searchbar);
-        adapter = new PostAdapter(posts,this);
 
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,21 +97,23 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                 }
             }
         });
+
     }
 
     public ArrayList<Post> test(ArrayList<Post> postArrayList) {
         Collections.sort(postArrayList, new Comparator<Post>() {
             @Override
             public int compare(Post p1, Post p2) {
-                return p1.getUpvote() - p2.getUpvote();
+                return p2.getUpvote() - p1.getUpvote();
             }
         } );
         return postArrayList;
     }
 
-    protected void initRecyclerView(){
+    protected void initRecyclerView(ArrayList<Post> arrayList){
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
+        adapter = new PostAdapter(arrayList,this, PostsListActivity.this);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -134,9 +135,9 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                             Post post = documentSnapshot.toObject(Post.class);
                             post.setId(documentSnapshot.getId());
                             posts.add(post);
-                            initRecyclerView();
                         }
-                        System.out.println("Helllo  "+ posts);
+                        initRecyclerView(test(posts));
+
                     }
                 });
     }

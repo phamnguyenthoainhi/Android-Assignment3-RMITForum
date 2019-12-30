@@ -36,18 +36,17 @@ import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 
-import java.io.File;
-import java.util.HashMap;
 
 
 public class ManageUserActivity extends AppCompatActivity {
@@ -77,7 +76,9 @@ public class ManageUserActivity extends AppCompatActivity {
     ImageView imageView;
     User fetchUser;
     boolean ifImageChange = false;
-
+    ArrayList<Course> subscribedCourses;
+    ArrayList<String> coursesid;
+    Course fetchedCourse;
 
 
 
@@ -96,7 +97,7 @@ public class ManageUserActivity extends AppCompatActivity {
         editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
         imageView = editDialog.findViewById(R.id.imageview);
 
-        RelativeLayout relativeLayout = findViewById(R.id.manageuserly);
+
 
         
         
@@ -107,15 +108,15 @@ public class ManageUserActivity extends AppCompatActivity {
         user = new User();
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
-            if (currentUser.getPhotoUrl() != null) {
-                imageView.setImageURI(currentUser.getPhotoUrl());
-            }
+            fetchCoursesbyUser(currentUser.getUid());
+
         }
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ManageUserActivity.this, SignInActivity.class));
             }
         });
 
@@ -128,8 +129,6 @@ public class ManageUserActivity extends AppCompatActivity {
 
 
     }
-
-
 
     public void uploadData(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -145,7 +144,11 @@ public class ManageUserActivity extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             imageUri = data.getData();
             ifImageChange = true;
-            imageView.setImageURI(imageUri);
+            Picasso.with(ManageUserActivity.this).load(imageUri).fit().centerCrop()
+                    .placeholder(R.drawable.grey)
+                    .error(R.drawable.grey)
+                    .into(imageView);
+//            imageView.setImageURI(imageUri);
 
         } else {
             Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
@@ -174,14 +177,12 @@ public class ManageUserActivity extends AppCompatActivity {
 
                             currentUser.updateProfile(profileUpdates);
                                 updateUser(uri.toString());
-                                user.setImageuri(uri.toString());
+                            Picasso.with(ManageUserActivity.this).load(uri).fit().centerCrop()
+                                    .placeholder(R.drawable.grey)
+                                    .error(R.drawable.grey)
+                                    .into(avatar);
 
-//                            updateUserProfile(usernameedit.getText().toString());
-//                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                                    .setDisplayName(usernameedit.getText().toString())
-//                                    .build();
-//                            currentUser.updateProfile(profileUpdates);
-//                            fetchCurrentUser(currentUser.getUid());
+//                                user.setImageuri(uri.toString());
 
                         }
 
@@ -314,28 +315,73 @@ public class ManageUserActivity extends AppCompatActivity {
                 Log.d(TAG, "onComplete: fetch User " + task.getResult().get("imageuri"));
 
                 if (task.getResult().get("imageuri") != null) {
-                    avatar.setImageURI(convertUri(task.getResult().get("imageuri").toString()));
+                    Picasso.with(ManageUserActivity.this).load(convertUri(task.getResult().get("imageuri").toString()).toString()).fit().centerCrop()
+                            .placeholder(R.drawable.grey)
+                            .error(R.drawable.grey)
+                            .into(avatar);
                 } else {
-                    avatar.setImageResource(R.drawable.bell);
-                }
+                avatar.setImageResource(R.drawable.grey);
+            }
 
                 useremail.setText(task.getResult().get("email").toString());
                 username.setText(task.getResult().get("fullname").toString());
             }
         });
     }
-    
-    
-    public User fetch(String id) {
-        fetchUser = new User();
-        db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot snapshot) {
-                fetchUser.setImageuri(snapshot.get("imageuri").toString());
-            }
-        });
-        return fetchUser;
+
+    public void fetchCoursesbyUser(final String userid) {
+
+
+        db.collection("CourseUsers")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                if (document.get("userid").equals(userid)) {
+                                    fetchCoursebyId(document.get("courseid").toString());
+
+                                }
+                            }
+                        }
+                    }
+                });
+
     }
+
+    public void fetchCoursebyId(final String doccourseid) {
+        fetchedCourse = new Course();
+        subscribedCourses = new ArrayList<>();
+        db.collection("Courses").document(doccourseid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        fetchedCourse.setId(snapshot.get("id").toString());
+                        fetchedCourse.setName(snapshot.get("name").toString());
+                        fetchedCourse.setDocid(doccourseid);
+                        subscribedCourses.add(fetchedCourse);
+                        Log.d(TAG, "fetchCoursesbyUser: "+ subscribedCourses);
+                    }
+                });
+
+
+    }
+    
+    
+//    public User fetch(String id) {
+//        fetchUser = new User();
+//        db.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot snapshot) {
+//
+//                fetchUser.setImageuri(snapshot.get("imageuri").toString());
+//            }
+//        });
+//        return fetchUser;
+//    }
 
 
     public Uri convertUri(String s) {

@@ -7,10 +7,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        app:cardCornerRadius="15dp"
+        android:layout_marginBottom="3dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
         app:contentPadding="15dp"
@@ -31,7 +28,8 @@
                     android:id="@+id/notification_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Title" />
+                    android:text="Title"
+                    android:textColor="#F5090000" />
 
                 <TextView
                     android:id="@+id/notification_content"

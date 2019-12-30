@@ -161,6 +161,12 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
                             utilities.createUser(currentUser, SignInActivity.this);
+                            if (user.isEmailVerified()) {
+                                startActivity(new Intent(SignInActivity.this, CourseActivity.class));
+                            } else {
+                                startActivity(new Intent(SignInActivity.this, Validate.class));
+                            }
+                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.

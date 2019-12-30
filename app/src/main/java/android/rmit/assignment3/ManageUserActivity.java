@@ -174,14 +174,12 @@ public class ManageUserActivity extends AppCompatActivity {
 
                             currentUser.updateProfile(profileUpdates);
                                 updateUser(uri.toString());
-                                user.setImageuri(uri.toString());
+                            Picasso.with(ManageUserActivity.this).load(uri).fit().centerCrop()
+                                    .placeholder(R.drawable.grey)
+                                    .error(R.drawable.grey)
+                                    .into(avatar);
 
-//                            updateUserProfile(usernameedit.getText().toString());
-//                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                                    .setDisplayName(usernameedit.getText().toString())
-//                                    .build();
-//                            currentUser.updateProfile(profileUpdates);
-//                            fetchCurrentUser(currentUser.getUid());
+                                user.setImageuri(uri.toString());
 
                         }
 

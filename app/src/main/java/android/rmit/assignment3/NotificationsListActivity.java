@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +23,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     ArrayList<Notification> notifications = new ArrayList<>();
     RecyclerView.Adapter adapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private static final String TAG = "NotificationsListActivi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,6 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-
         adapter = new NotificationAdapter(notifications,this);
         recyclerView.setAdapter(adapter);
 
@@ -77,8 +78,10 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                             Toast.makeText(NotificationsListActivity.this, notification.getContent(), Toast.LENGTH_SHORT).show();
                             notification.setId(documentSnapshot.getId());
                             notifications.add(notification);
-                            initRecyclerView();
                         }
+                        Log.d(TAG, "onSuccess: "+ notifications);
+                        initRecyclerView();
+
                     }
                 });
     }

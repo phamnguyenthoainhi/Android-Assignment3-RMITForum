@@ -1,5 +1,7 @@
 package android.rmit.assignment3;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     private Utilities utilities = new Utilities();
 
     private ArrayList<Comment> comments = new ArrayList<>();
+    Context mContext;
 
     @NonNull
     @Override
@@ -39,9 +43,10 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         return new ReplyViewHolder(view, onReplyListener);
     }
 
-    ReplyAdapter(ArrayList<Reply> replies,ReplyViewHolder.OnReplyListener onReplyListener){
+    ReplyAdapter(ArrayList<Reply> replies,ReplyViewHolder.OnReplyListener onReplyListener, Context context){
         this.replies = replies;
         this.onReplyListener = onReplyListener;
+        mContext = context;
     }
 
     @Override
@@ -308,8 +313,12 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             User user = documentSnapshot.toObject(User.class);
                             if (user != null) {
-                                if (user.getImageuri() != null && user.getImageuri() != "") {
-                                    holder.replyAvatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                if (user.getImageuri() != null && !user.getImageuri().equals("")) {
+                                    Picasso.with(mContext).load(Uri.parse(user.getImageuri())).fit().centerCrop()
+                                            .placeholder(R.drawable.grey)
+                                            .error(R.drawable.grey)
+                                            .into(holder.replyAvatar);
+//                                    holder.replyAvatar.setImageURI(utilities.convertUri(user.getImageuri()));
                                 }
                                 if (user.getFullname() != null) {
                                     holder.replyOwner.setText(user.getFullname());

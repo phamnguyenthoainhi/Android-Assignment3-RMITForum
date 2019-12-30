@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,7 +125,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ReplyAdapter(replies,this);
+        adapter = new ReplyAdapter(replies,this, PostDetailActivity.this);
 
         recyclerView.setAdapter(adapter);
     }
@@ -178,7 +179,11 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         User user = documentSnapshot.toObject(User.class);
                         if (user!=null){
                             if(user.getImageuri()!=null && user.getImageuri()!="") {
-                                avatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                Picasso.with(PostDetailActivity.this).load(Uri.parse(user.getImageuri())).fit().centerCrop()
+                                        .placeholder(R.drawable.grey)
+                                        .error(R.drawable.grey)
+                                        .into(avatar);
+//                                avatar.setImageURI(utilities.convertUri(user.getImageuri()));
                             }
                             if(user.getFullname()!=null){
                                 owner.setText(user.getFullname());

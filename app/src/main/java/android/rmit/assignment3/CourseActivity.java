@@ -59,12 +59,12 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         });
         fetchCourse();
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(CourseActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        edit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
 
     }

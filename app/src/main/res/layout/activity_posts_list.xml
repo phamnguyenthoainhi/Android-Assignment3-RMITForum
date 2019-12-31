@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1D0C0000"
+    android:background="#f5f5f5"
     android:orientation="vertical"
     tools:context=".PostsListActivity">
 
@@ -53,17 +53,17 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/botton_nav"-->
-<!--        app:itemIconTint="@color/color_item"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"/>-->
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:id="@+id/botton_nav"-->
+    <!--        app:itemIconTint="@color/color_item"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true"/>-->
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
 
 
-<!--    </com.google.android.material.bottomnavigation.BottomNavigationView>-->
+    <!--    </com.google.android.material.bottomnavigation.BottomNavigationView>-->
 
 </LinearLayout>

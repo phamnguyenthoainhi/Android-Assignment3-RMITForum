@@ -171,7 +171,7 @@ public class SignInActivity extends AppCompatActivity {
 
                             if (user.isEmailVerified()) {
                                 Log.d(TAG, "onComplete: user verified !");
-                                startActivity(new Intent(SignInActivity.this, CourseActivity.class));
+                                startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             } else {
                                 Log.d(TAG, "onComplete: user not verified !");
                                 startActivity(new Intent(SignInActivity.this, Validate.class));
@@ -225,11 +225,13 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             utilities.getToken();
                             if (user.isEmailVerified()) {
+                                Log.d(TAG, "onComplete: Email verify");
                                 startActivity(new Intent(SignInActivity.this, CourseActivity.class));
                             } else {
+                                Log.d(TAG, "onComplete: Email not verify");
                                 startActivity(new Intent(SignInActivity.this, Validate.class));
                             }
-                            finish();
+//                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.

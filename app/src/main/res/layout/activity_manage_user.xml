@@ -5,6 +5,7 @@
     android:id="@+id/manageuserly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fafafa"
     android:orientation="vertical"
     tools:context=".ManageUserActivity">
 
@@ -41,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/relativelayoutuser"
+        android:gravity="center"
         android:orientation="vertical">
 
         <android.rmit.assignment3.RoundedImage
@@ -67,6 +69,39 @@
             android:layout_height="wrap_content"
             android:textAlignment="center" />
 
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_bg"
+            android:backgroundTint="#FFFFFF"
+            android:paddingLeft="10dp"
+            android:paddingTop="7dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="7dp">
+
+            <ImageView
+                android:id="@+id/trophy"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                app:srcCompat="@drawable/heart" />
+
+            <TextView
+                android:id="@+id/ranking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+
+                android:layout_toEndOf="@+id/trophy"
+                android:text="Top Ranks"
+                android:textAlignment="viewStart" />
+        </RelativeLayout>
+
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
@@ -81,7 +116,10 @@
             android:id="@+id/subscribecourserecyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/rounded_layout" />
 
     </LinearLayout>
 

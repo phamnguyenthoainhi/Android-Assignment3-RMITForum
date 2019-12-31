@@ -103,7 +103,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
     }
 
-    public ArrayList<Post> test(ArrayList<Post> postArrayList) {
+    public ArrayList<Post> sort(ArrayList<Post> postArrayList) {
         Collections.sort(postArrayList, new Comparator<Post>() {
             @Override
             public int compare(Post p1, Post p2) {
@@ -139,7 +139,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                             post.setId(documentSnapshot.getId());
                             posts.add(post);
                         }
-                        initRecyclerView(test(posts));
+                        initRecyclerView(sort(posts));
 
                     }
                 });

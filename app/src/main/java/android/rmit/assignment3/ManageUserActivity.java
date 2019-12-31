@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ViewUtils;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.opencensus.stats.Aggregation;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -48,7 +50,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
-
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class ManageUserActivity extends AppCompatActivity {
@@ -84,6 +87,8 @@ public class ManageUserActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     GridLayoutManager gridLayoutManager;
     SubscribedCourseAdapter subscribedCourseAdapter;
+    ArrayList<SumVote> sumVotes;
+    ImageView trophy;
 
 
 
@@ -110,6 +115,7 @@ public class ManageUserActivity extends AppCompatActivity {
         });
 
         imageView = editDialog.findViewById(R.id.imageview);
+        trophy = findViewById(R.id.trophy);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -119,6 +125,7 @@ public class ManageUserActivity extends AppCompatActivity {
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
             fetchCoursesbyUser(currentUser.getUid());
+            fetchRank();
             Toast.makeText(this, "" + currentUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         }
 
@@ -142,6 +149,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
     public void initRecyclerView() {
         recyclerView = findViewById(R.id.subscribecourserecyclerview);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(ManageUserActivity.this, 0));
         gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
         subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
@@ -153,6 +161,42 @@ public class ManageUserActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
+    }
+
+    public void fetchRank() {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        sumVotes = new ArrayList<>();
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            SumVote sumVote = new SumVote();
+                            sumVote.setSum((Long) doc.get("sum"));
+                            sumVote.setId(doc.getId());
+                            sumVotes.add(sumVote);
+
+                        }
+
+                        sumVotes = sort(sumVotes);
+
+                        for (int i = 0; i < 5 ; i++) {
+                            if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
+                                trophy.setImageResource(R.drawable.award);
+                            }
+                        }
+                    }
+                });
+    }
+    public ArrayList<SumVote> sort(ArrayList<SumVote> sumVotes) {
+        Collections.sort(sumVotes, new Comparator<SumVote>() {
+            @Override
+            public int compare(SumVote t1, SumVote t2) {
+                return (int) (t2.getSum() - t1.getSum());
+            }
+
+
+        } );
+        return sumVotes;
     }
 
     @Override

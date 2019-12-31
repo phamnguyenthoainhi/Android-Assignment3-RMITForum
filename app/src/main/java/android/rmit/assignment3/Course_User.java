@@ -2,8 +2,8 @@ package android.rmit.assignment3;
 
 public class Course_User {
 
-    String courseid;
-    String userid;
+    private String courseid;
+    private String userid;
 
     public Course_User(String courseid, String userid) {
 

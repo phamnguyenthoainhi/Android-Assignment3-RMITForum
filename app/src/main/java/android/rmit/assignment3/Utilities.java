@@ -93,18 +93,12 @@ public class Utilities {
 
     public void subscribe(final Course_User course_user, final Context context) {
 
-        db.collection("CourseUsers")
-                .add(course_user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("CourseUsers").document(course_user.getCourseid().concat(course_user.getUserid()))
+                .set(course_user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(context, "Subscribe Successful", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(context, "Subscribe Failed", Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(context, "Successfully subscribed to this course.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -112,9 +106,14 @@ public class Utilities {
 
 
 
-
-
-
+    public void unsubscribe(String id, final Context context){
+        db.collection("CourseUsers").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(context, "Successfully unsubscribed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 

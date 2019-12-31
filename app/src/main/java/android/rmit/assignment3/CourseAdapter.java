@@ -10,8 +10,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -49,6 +53,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
         holder.courseid.setText(myCourseList.get(position).getId());
         holder.coursename.setText(myCourseList.get(position).getName());
+
+        fetchSubscribeInfo(myCourseList.get(position).getDocid(),holder);
     }
 
     @Override
@@ -62,7 +68,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         TextView courseid;
         ImageButton edit;
         ImageButton delete;
-        Button subsribebtn;
+        Button subscribebtn;
+        Button unsubscribebtn;
 
         OnCourseListener onCourseListener;
         CourseViewHolder(View v, final OnCourseListener onCourseListener) {
@@ -71,7 +78,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             coursename = v.findViewById(R.id.coursenamedisplay);
             edit = v.findViewById(R.id.editcourse);
             delete = v.findViewById(R.id.deletecourse);
-            subsribebtn = v.findViewById(R.id.subscribebtn);
+            subscribebtn = v.findViewById(R.id.subscribebtn);
+            unsubscribebtn = v.findViewById(R.id.unsubscribebtn);
 
             this.onCourseListener = onCourseListener;
             v.setOnClickListener(this);
@@ -90,11 +98,21 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 }
             });
 
-            subsribebtn.setOnClickListener(new View.OnClickListener() {
+            subscribebtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    subsribebtn.setVisibility(View.GONE);
+                    subscribebtn.setVisibility(View.GONE);
+                    unsubscribebtn.setVisibility(View.VISIBLE);
                     onCourseListener.subscribe(view, getAdapterPosition());
+                }
+            });
+
+            unsubscribebtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    unsubscribebtn.setVisibility(View.GONE);
+                    subscribebtn.setVisibility(View.VISIBLE);
+                    onCourseListener.unsubscribe(view, getAdapterPosition());
                 }
             });
         }
@@ -109,10 +127,32 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             void editButtonClick(View v, int posision);
             void deleteButtonClick(View v, int position);
             void subscribe(View v, int position);
+            void unsubscribe(View v, int position);
         }
     }
 
+    private void fetchSubscribeInfo(String idCourse, final CourseViewHolder holder){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+        db.collection("CourseUsers").document(idCourse.concat(mAuth.getUid())).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if(documentSnapshot.exists()){
+                                holder.unsubscribebtn.setVisibility(View.VISIBLE);
+                                holder.subscribebtn.setVisibility(View.GONE);
+                            }
+                            else{
+                                holder.subscribebtn.setVisibility(View.VISIBLE);
+                                holder.unsubscribebtn.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
+    }
 
 
 }

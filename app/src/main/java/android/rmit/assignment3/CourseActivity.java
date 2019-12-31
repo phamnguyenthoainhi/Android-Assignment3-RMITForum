@@ -190,7 +190,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     public void onComplete(Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                fetchCourseUser(document.getId());
                                 Course course = new Course();
                                 course.setId(document.get("id").toString());
                                 course.setName(document.get("name").toString());
@@ -288,25 +287,13 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         }
     }
 
+    @Override
+    public void unsubscribe(View v, int position) {
+        if (courses.size() > 0 && currentUser!= null) {
+            Utilities utilities = new Utilities();
+            utilities.unsubscribe(courses.get(position).getDocid().concat(mAuth.getUid()), CourseActivity.this);
 
-    public void fetchCourseUser(final String courseid) {
-        db.collection("CourseUsers")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.get("courseid").equals(courseid) && document.get("userid").equals(currentUser.getUid()))       {
-
-                                }
-                            }
-                        }
-                    }
-                });
-
+        }
     }
 
-    public static class ReplyDetailAdapter {
-    }
 }

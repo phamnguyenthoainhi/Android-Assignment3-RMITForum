@@ -100,13 +100,17 @@ public class ManageUserActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference().child("ImageFolder");
         avatar = findViewById(R.id.avatarimage);
         editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
+        Button back = findViewById(R.id.fromUser);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                startActivity(new Intent(ManageUserActivity.this, CourseActivity.class));
+                finish();
+            }
+        });
+
         imageView = editDialog.findViewById(R.id.imageview);
 
-
-
-
-        
-        
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -138,7 +142,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
     public void initRecyclerView() {
         recyclerView = findViewById(R.id.subscribecourserecyclerview);
-        gridLayoutManager = new GridLayoutManager(this, 2);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
         subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
         recyclerView.setAdapter(subscribedCourseAdapter);

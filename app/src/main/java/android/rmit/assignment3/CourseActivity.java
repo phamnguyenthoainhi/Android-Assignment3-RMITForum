@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,6 +43,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
 //    boolean isSubscribed = false;
+    String subscribedCourseid;
     
 
 
@@ -168,6 +170,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        courses = new ArrayList<>();
                         fetchCourse();
                     }
                 })
@@ -187,6 +190,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     public void onComplete(Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                fetchCourseUser(document.getId());
                                 Course course = new Course();
                                 course.setId(document.get("id").toString());
                                 course.setName(document.get("name").toString());
@@ -280,7 +284,27 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
             course_user = new Course_User(courses.get(position).getDocid(),currentUser.getUid());
             Utilities utilities = new Utilities();
             utilities.subscribe(course_user, CourseActivity.this);
+
         }
+    }
+
+
+    public void fetchCourseUser(final String courseid) {
+        db.collection("CourseUsers")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.get("courseid").equals(courseid) && document.get("userid").equals(currentUser.getUid()))       {
+
+                                }
+                            }
+                        }
+                    }
+                });
+
     }
 
     public static class ReplyDetailAdapter {

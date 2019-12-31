@@ -1,12 +1,21 @@
 package android.rmit.assignment3;
 
-import java.net.URL;
+
 
 public class User {
     private String id;
     private String fullname;
     private String email;
     private String imageuri;
+    private int votes;
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 
     public String getImageuri() {
         return imageuri;
@@ -53,6 +62,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 
     @Override
     public String toString() {

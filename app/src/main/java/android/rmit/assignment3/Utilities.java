@@ -39,7 +39,8 @@ public class Utilities {
 
     public void createUser(final User currentUser, final Context context) {
 
-        db.collection("Users").document(currentUser.getId()).set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection("Users").document(currentUser.getId()).set(currentUser)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -109,6 +110,50 @@ public class Utilities {
                 });
 
     }
+
+
+    public void updateSumVote(String ownerid, long vote) {
+        db.collection("SumVotes").document(ownerid).
+                update("sum", vote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                });
+
+    }
+
+    public void createSumVote(String ownerid, SumVote sumVote) {
+        System.out.println("create Sum Vote ");
+        db.collection("SumVotes").document(ownerid).set(sumVote)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Create sumvote !");
+
+                    }
+                });
+    }
+
+    public void fetchSumVotes(final String ownerid) {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(doc.getId().equals(ownerid)) {
+
+                            }
+                        }
+                    }
+                });
+    }
+
+
+
+
+
+
 
 
 

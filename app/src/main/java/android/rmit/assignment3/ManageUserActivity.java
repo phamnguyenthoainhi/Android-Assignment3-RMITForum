@@ -119,7 +119,7 @@ public class ManageUserActivity extends AppCompatActivity {
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
             fetchCoursesbyUser(currentUser.getUid());
-
+            Toast.makeText(this, "" + currentUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         }
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
@@ -200,12 +200,8 @@ public class ManageUserActivity extends AppCompatActivity {
                                     .placeholder(R.drawable.grey)
                                     .error(R.drawable.grey)
                                     .into(avatar);
-
                         }
-
                     }
-
-
                 });
 
             }
@@ -310,6 +306,7 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
     }
+
     public void updateUser(String imageuri) {
         db.collection("Users").document(currentUser.getUid())
                 .update("imageuri", imageuri).addOnCompleteListener(new OnCompleteListener<Void>() {

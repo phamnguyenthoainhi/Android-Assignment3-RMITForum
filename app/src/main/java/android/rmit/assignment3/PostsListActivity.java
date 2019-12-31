@@ -72,8 +72,11 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                adapter.filter(charSequence, posts);
-                adapter.notifyDataSetChanged();
+                if (adapter != null) {
+                    adapter.filter(charSequence, posts);
+                    adapter.notifyDataSetChanged();
+                }
+
             }
 
             @Override

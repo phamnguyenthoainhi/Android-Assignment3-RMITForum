@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
     ArrayList<Course> myCourseList ;
+
     CourseViewHolder.OnCourseListener myOnCourseListener;
     private static final String TAG = "CourseAdapter";
 
@@ -92,6 +93,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             subsribebtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    subsribebtn.setVisibility(View.GONE);
                     onCourseListener.subscribe(view, getAdapterPosition());
                 }
             });

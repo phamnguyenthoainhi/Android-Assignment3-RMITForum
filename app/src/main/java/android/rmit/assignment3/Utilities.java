@@ -149,6 +149,29 @@ public class Utilities {
                 });
     }
 
+//    public void fetchupdateSumVotes(final String ownerid, final boolean plus) {
+//        db.collection("SumVotes").get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+//                            if(doc.getId().equals(ownerid)) {
+//                                if (doc.get("sum") != null) {
+//                                    if (plus) {
+//                                        sumVote.setSum((Long) doc.get("sum") + 1);
+//                                    } else {
+//                                        if ((long) doc.get("sum") > 0) {
+//                                            sumVote.setSum((long) doc.get("sum") - 1);
+//                                        }
+//                                    }
+//                                    utilities.updateSumVote(ownerid, sumVote.getSum());
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//    }
+
 
 
 

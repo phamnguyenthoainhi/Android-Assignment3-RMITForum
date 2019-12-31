@@ -116,8 +116,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                             .error(R.drawable.grey)
                                             .into(holder.avatar);
 
-//                                    holder.avatar.setImageURI(Uri.parse(user.getImageuri()));
-
                                 }
 
 

@@ -171,7 +171,7 @@ public class SignInActivity extends AppCompatActivity {
 
                             if (user.isEmailVerified()) {
                                 Log.d(TAG, "onComplete: user verified !");
-                                startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                startActivity(new Intent(SignInActivity.this, CourseActivity.class));
                             } else {
                                 Log.d(TAG, "onComplete: user not verified !");
                                 startActivity(new Intent(SignInActivity.this, Validate.class));

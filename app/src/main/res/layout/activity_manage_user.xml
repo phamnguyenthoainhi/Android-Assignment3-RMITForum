@@ -71,6 +71,7 @@
 
 
         <RelativeLayout
+            android:id="@+id/ranklayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -79,7 +80,8 @@
             android:paddingLeft="10dp"
             android:paddingTop="7dp"
             android:paddingRight="10dp"
-            android:paddingBottom="7dp">
+            android:paddingBottom="7dp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/trophy"
@@ -87,7 +89,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                app:srcCompat="@drawable/heart" />
+                app:srcCompat="@drawable/award" />
 
             <TextView
                 android:id="@+id/ranking"

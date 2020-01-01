@@ -89,6 +89,7 @@ public class ManageUserActivity extends AppCompatActivity {
     SubscribedCourseAdapter subscribedCourseAdapter;
     ArrayList<SumVote> sumVotes;
     ImageView trophy;
+    RelativeLayout ranklayout;
 
 
 
@@ -113,6 +114,7 @@ public class ManageUserActivity extends AppCompatActivity {
                 finish();
             }
         });
+        ranklayout = findViewById(R.id.ranklayout);
 
         imageView = editDialog.findViewById(R.id.imageview);
         trophy = findViewById(R.id.trophy);
@@ -133,7 +135,7 @@ public class ManageUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(ManageUserActivity.this, SignInActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, MainActivity.class));
             }
         });
 
@@ -178,12 +180,56 @@ public class ManageUserActivity extends AppCompatActivity {
                         }
 
                         sumVotes = sort(sumVotes);
+                        if (sumVotes.size() > 5 ) {
+                            for (int i = 0; i < 5 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        } if (sumVotes.size() == 2) {
+                            for (int i = 0; i < 2 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
 
-                        for (int i = 0; i < 5 ; i++) {
-                            if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
-                                trophy.setImageResource(R.drawable.award);
+                        } if (sumVotes.size() == 3) {
+                            for (int i = 0; i < 3 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                        } if (sumVotes.size() == 4) {
+                            for (int i = 0; i < 4 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
                             }
                         }
+                        if (sumVotes.size() == 1) {
+
+                                if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+
+                        }
+
                     }
                 });
     }

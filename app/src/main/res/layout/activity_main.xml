@@ -4,60 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E9DAD9"
+    android:layout_marginTop="-2dp"
+    android:background="@drawable/test"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
 
-    <Button
-        android:id="@+id/posts_list_button"
+    <TextView
+        android:id="@+id/welcometext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="List" />
+        android:layout_centerInParent="true"
+        android:text="Welcome"
+        android:textColor="#D2020000"
+        android:textSize="25sp" />
 
     <Button
-        android:id="@+id/toSignIn"
+        android:id="@+id/getstarted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/posts_list_button"
-        android:onClick="toSignIn"
-        android:text="To Sign In" />
-
-    <Button
-        android:id="@+id/toSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toSignIn"
-        android:onClick="toSignUp"
-        android:text="To Sign Up" />
-
-
-    <Button
-        android:id="@+id/toCourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_below="@id/toSignUp"
-        android:onClick="toCourse"
-        android:text="To Course" />
-
-    <Button
-        android:id="@+id/toUserMana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toCourse"
-        android:layout_marginTop="256dp"
-        android:text="To User Management" />
+        android:layout_below="@id/welcometext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edittextborder"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Get Started  "
+        android:drawableRight="@drawable/arrow30"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/botton_nav"
-        app:itemIconTint="@color/color_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
         android:layout_alignParentBottom="true"
 
 
-        app:menu="@menu/bottom_nav_menu" />
+        android:visibility="invisible"
+        app:itemIconTint="@color/color_item"
+        app:menu="@menu/bottom_nav_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 </RelativeLayout>
 

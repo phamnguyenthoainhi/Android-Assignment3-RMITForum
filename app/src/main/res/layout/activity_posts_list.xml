@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,6 +32,7 @@
         android:id="@+id/create_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/searchbar"
         android:layout_marginLeft="10dp"
         android:background="@android:color/transparent"
         android:text="Create a new post"
@@ -42,7 +43,9 @@
         android:id="@+id/swipe_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="16dp">
+        android:layout_above="@+id/bottom_nav_post"
+        android:layout_below="@id/create_post"
+        android:layout_marginBottom="0dp">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -53,17 +56,19 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-    <!--        android:id="@+id/botton_nav"-->
-    <!--        app:itemIconTint="@color/color_item"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentBottom="true"/>-->
-    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content">-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
 
 
-    <!--    </com.google.android.material.bottomnavigation.BottomNavigationView>-->
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-10dp"
+        android:paddingTop="5dp"
+        app:itemIconTint="@color/color_item"
+        app:menu="@menu/bottom_nav_menu">
 
-</LinearLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</RelativeLayout>

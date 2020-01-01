@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,20 +13,33 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
 
-        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/plus"
-        android:backgroundTint="#6F0A0000"
-        android:text="+"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:background="@drawable/icons8plus50"
+        android:backgroundTint="#BC1C22" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleviewcourse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_nav_post"
+        android:layout_below="@id/opencreatecourse"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="0dp" />
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-10dp"
+        android:paddingTop="5dp"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/color_item"
+        app:menu="@menu/bottom_nav_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+</RelativeLayout>

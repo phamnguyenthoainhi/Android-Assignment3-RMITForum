@@ -73,8 +73,17 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         });
         fetchCourse();
         createNavBar();
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+
+
     }
 
+    @Override
+    protected void onStart() {
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+
+        super.onStart();
+    }
 
     public void initListView() {
         Log.d(TAG, "initListView: " + courses);
@@ -94,13 +103,20 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     case R.id.navigation_home:
                         startActivity(new Intent(CourseActivity.this, CourseActivity.class));
 
+
+
+
                         break;
                     case R.id.navigation_user:
                         startActivity(new Intent(CourseActivity.this, ManageUserActivity.class));
+
                         break;
                     case R.id.navigation_notifications:
                         startActivity(new Intent(CourseActivity.this,NotificationsListActivity.class));
+
+
                         break;
+
                 }
                 return true;
             }

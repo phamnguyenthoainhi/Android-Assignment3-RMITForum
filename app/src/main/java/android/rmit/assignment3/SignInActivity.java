@@ -167,6 +167,7 @@ public class SignInActivity extends AppCompatActivity {
                             final FirebaseUser user = mAuth.getCurrentUser();
                             currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
                             utilities.createUser(currentUser, SignInActivity.this);
+
                             checkRegisteredggUser(user);
 
                             if (user.isEmailVerified()) {

@@ -61,6 +61,7 @@ public class SubscribedCourseUser extends Fragment {
                 });
     }
 
+
     public void fetchCoursebyId(final String doccourseid, final View view, final Context context) {
         subscribedCourses = new ArrayList<>();
         Log.d(TAG, "fetchCoursebyId: hello");
@@ -98,9 +99,14 @@ public class SubscribedCourseUser extends Fragment {
 
         currentUser = mAuth.getCurrentUser();
         subscribedCourses = new ArrayList<>();
+        if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            fetchCoursesbyUser(currentUser.getUid(), view, getContext());
+
+        } else  {
+            view.setVisibility(View.INVISIBLE);
+        }
 
 
-        fetchCoursesbyUser(currentUser.getUid(), view, getContext());
         return view;
     }
 }

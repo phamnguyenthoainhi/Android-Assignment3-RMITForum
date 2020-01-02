@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -32,6 +33,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     CourseViewHolder.OnCourseListener myOnCourseListener;
     private static final String TAG = "CourseAdapter";
+
+
 
 
     @NonNull
@@ -70,7 +73,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         ImageButton delete;
         Button subscribebtn;
         Button unsubscribebtn;
-
+        private FirebaseAuth mAuth;
         OnCourseListener onCourseListener;
         CourseViewHolder(View v, final OnCourseListener onCourseListener) {
             super(v);
@@ -80,6 +83,17 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             delete = v.findViewById(R.id.deletecourse);
             subscribebtn = v.findViewById(R.id.subscribebtn);
             unsubscribebtn = v.findViewById(R.id.unsubscribebtn);
+            mAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+                edit.setVisibility(View.INVISIBLE);
+                delete.setVisibility(View.INVISIBLE);
+
+            } else {
+                edit.setVisibility(View.VISIBLE);
+                delete.setVisibility(View.VISIBLE);
+            }
 
             this.onCourseListener = onCourseListener;
             v.setOnClickListener(this);

@@ -46,8 +46,7 @@ public class CreatedPosts extends Fragment  {
         adapter = new PostAdapter(arrayList, new PostAdapter.PostViewHolder.OnPostListener() {
             @Override
             public void OnPostClick(int position) {
-                Log.d(TAG, "OnPostClick: "+ arrayList);
-                Toast.makeText(context, "Clicked "+ arrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(getActivity(),PostDetailActivity.class);
                 intent.putExtra("id", arrayList.get(position).getId());
                 startActivity(intent);
@@ -73,11 +72,13 @@ public class CreatedPosts extends Fragment  {
                     post.setId(doc.getId());
                     arrayList.add(post);
                 }
-                Log.d(TAG, "onSuccess: hello "+ arrayList);
+
                 initRecyclerView(view, context, arrayList);
             }
         });
     }
+
+
 
     @Nullable
     @Override
@@ -87,9 +88,12 @@ public class CreatedPosts extends Fragment  {
         db = FirebaseFirestore.getInstance();
         arrayList = new ArrayList<>();
         currentUser = mAuth.getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            fetchPostbyUser(currentUser.getUid(), view, getContext());
+        } else {
+            view.setVisibility(View.INVISIBLE);
+        }
 
-        fetchPostbyUser(currentUser.getUid(), view, getContext());
         return view;
     }
 }

@@ -95,7 +95,7 @@ public class ManageUserActivity extends AppCompatActivity {
     ViewPager viewPager;
     TabLayout tabLayout;
     PagerController pagerController;
-
+    TextView ranking;
 
 
 
@@ -103,17 +103,31 @@ public class ManageUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_user);
+        ranklayout = findViewById(R.id.ranklayout);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        user = new User();
+        editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
 
+        imageView = editDialog.findViewById(R.id.imageview);
+        trophy = findViewById(R.id.trophy);
         username = findViewById(R.id.username);
         useremail = findViewById(R.id.useremail);
         logoutbtn = findViewById(R.id.logout);
         openeditform = findViewById(R.id.openedituser);
         mStorageRef = FirebaseStorage.getInstance().getReference().child("ImageFolder");
         avatar = findViewById(R.id.avatarimage);
-        editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
         Button back = findViewById(R.id.fromUser);
         viewPager = findViewById(R.id.viewpager);
         tabLayout = findViewById(R.id.tablayout);
+
+       ranking = findViewById(R.id.ranking);
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+//
+//        }
 
         pagerController = new PagerController(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerController);
@@ -143,16 +157,10 @@ public class ManageUserActivity extends AppCompatActivity {
                 finish();
             }
         });
-        ranklayout = findViewById(R.id.ranklayout);
-
-        imageView = editDialog.findViewById(R.id.imageview);
-        trophy = findViewById(R.id.trophy);
 
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-        user = new User();
+
+
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
 //            fetchCoursesbyUser(currentUser.getUid());
@@ -208,52 +216,53 @@ public class ManageUserActivity extends AppCompatActivity {
                         }
 
                         sumVotes = sort(sumVotes);
-                        if (sumVotes.size() > 5 ) {
-                            for (int i = 0; i < 5 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
-                                    ranklayout.setVisibility(View.VISIBLE);
-                                    trophy.setImageResource(R.drawable.award);
-                                    break;
-                                } else {
-                                    ranklayout.setVisibility(View.INVISIBLE);
+                        if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")){
+                            if (sumVotes.size() > 5 ) {
+                                for (int i = 0; i < 5 ; i++) {
+                                    if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                        ranklayout.setVisibility(View.VISIBLE);
+                                        trophy.setImageResource(R.drawable.award);
+                                        break;
+                                    } else {
+                                        ranklayout.setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                            }
-                        } if (sumVotes.size() == 2) {
-                            for (int i = 0; i < 2 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
-                                    Log.d(TAG, "onSuccess: checking "+currentUser.getUid().equals(sumVotes.get(i).getId()) );
-                                    ranklayout.setVisibility(View.VISIBLE);
-                                    trophy.setImageResource(R.drawable.award);
-                                    break;
-                                } else {
-                                    Log.d(TAG, "onSuccess: 124");
-                                    ranklayout.setVisibility(View.INVISIBLE);
+                            } if (sumVotes.size() == 2) {
+                                for (int i = 0; i < 2 ; i++) {
+                                    if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                        Log.d(TAG, "onSuccess: checking "+currentUser.getUid().equals(sumVotes.get(i).getId()) );
+                                        ranklayout.setVisibility(View.VISIBLE);
+                                        trophy.setImageResource(R.drawable.award);
+                                        break;
+                                    } else {
+                                        Log.d(TAG, "onSuccess: 124");
+                                        ranklayout.setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                            }
 
-                        } if (sumVotes.size() == 3) {
-                            for (int i = 0; i < 3 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
-                                    ranklayout.setVisibility(View.VISIBLE);
-                                    trophy.setImageResource(R.drawable.award);
-                                    break;
-                                } else {
-                                    ranklayout.setVisibility(View.INVISIBLE);
+                            } if (sumVotes.size() == 3) {
+                                for (int i = 0; i < 3 ; i++) {
+                                    if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                        ranklayout.setVisibility(View.VISIBLE);
+                                        trophy.setImageResource(R.drawable.award);
+                                        break;
+                                    } else {
+                                        ranklayout.setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                            }
 
-                        } if (sumVotes.size() == 4) {
-                            for (int i = 0; i < 4 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
-                                    ranklayout.setVisibility(View.VISIBLE);
-                                    trophy.setImageResource(R.drawable.award);
-                                    break;
-                                } else {
-                                    ranklayout.setVisibility(View.INVISIBLE);
+                            } if (sumVotes.size() == 4) {
+                                for (int i = 0; i < 4 ; i++) {
+                                    if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                        ranklayout.setVisibility(View.VISIBLE);
+                                        trophy.setImageResource(R.drawable.award);
+                                        break;
+                                    } else {
+                                        ranklayout.setVisibility(View.INVISIBLE);
+                                    }
                                 }
                             }
-                        }
-                        if (sumVotes.size() == 1) {
+                            if (sumVotes.size() == 1) {
                                 if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
@@ -262,8 +271,13 @@ public class ManageUserActivity extends AppCompatActivity {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
 
+                            }
+                        } else {
+                            tabLayout.setVisibility(View.INVISIBLE);
+                            ranklayout.setVisibility(View.VISIBLE);
+                            trophy.setImageResource(R.drawable.icons8settings40);
+                            ranking.setText("  Admin");
                         }
-
                     }
                 });
     }
@@ -467,42 +481,6 @@ public class ManageUserActivity extends AppCompatActivity {
         });
     }
 
-//    public void fetchCoursesbyUser(final String userid) {
-//
-//        db.collection("CourseUsers")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//
-//                                if (document.get("userid").equals(userid)) {
-//                                    Log.d(TAG, "onComplete: fetchcoursebyuser "+ document.get("courseid"));
-//                                    fetchCoursebyId(document.get("courseid").toString());
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-//    }
-//
-//    public void fetchCoursebyId(final String doccourseid) {
-//        subscribedCourses = new ArrayList<>();
-//        db.collection("Courses").document(doccourseid)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot snapshot) {
-//                        fetchedCourse = new Course();
-//                        fetchedCourse.setId(snapshot.get("id").toString());
-//                        fetchedCourse.setName(snapshot.get("name").toString());
-//                        fetchedCourse.setDocid(doccourseid);
-//                        subscribedCourses.add(fetchedCourse);
-////                        initRecyclerView();
-//                    }
-//                });
-//    }
 
 
 

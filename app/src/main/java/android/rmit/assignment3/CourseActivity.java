@@ -48,6 +48,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 //    boolean isSubscribed = false;
     String subscribedCourseid;
     BottomNavigationView bottomNavigationView;
+    EditText courseid;
     
 
 
@@ -114,7 +115,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         final AlertDialog alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(true);
 
-        final EditText courseid = createDialog.findViewById(R.id.courseid);
+        courseid = createDialog.findViewById(R.id.courseid);
         final EditText coursename = createDialog.findViewById(R.id.coursename);
 
         final Button createCourse = createDialog.findViewById(R.id.createCourse);
@@ -124,9 +125,39 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
             public void onClick(View view) {
                 if (!courseid.getText().toString().isEmpty() && !coursename.getText().toString().isEmpty()) {
                     course = new Course(courseid.getText().toString(), coursename.getText().toString());
-                    createCourse(course);
+                    db.collection("Courses").document(course.getId()).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        courseid.setError("Course id is already used. Please choose another one");
+                                        courseid.setText("");
+                                        courseid.requestFocus();
+                                    } else {
+                                        // Add a new document with a generated ID
+                                        db.collection("Courses").document(course.getId()).set(course).
+                                                addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "onSuccess: "+ aVoid);
+
+                                                        courses = new ArrayList<>();
+                                                        fetchCourse();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d(TAG, "onFailure: "+ e);
+                                                    }
+                                                });
+                                        alertDialog.dismiss();
+
+                                    }
+                                }
+                            });
+
                 }
-                alertDialog.dismiss();
             }
         });
         alertDialog.show();
@@ -186,26 +217,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         alertDialog.show();
     }
 
-    public void createCourse(Course course)
-    {
-        // Add a new document with a generated ID
-        db.collection("Courses")
-                .add(course)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        courses = new ArrayList<>();
-                        fetchCourse();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
+
 
     public void fetchCourse() {
         db.collection("Courses")
@@ -221,7 +233,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                                 course.setDocid(document.getId());
                                 courses.add(course);
                             }
-                            Log.d(TAG, "onComplete: courses " + courses);
 
                             initListView();
                         } else {

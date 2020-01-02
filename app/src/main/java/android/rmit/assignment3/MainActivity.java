@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                                 }
                             });
+                    buider.setCancelable(false);
                     buider.create().show();
                     break;
 

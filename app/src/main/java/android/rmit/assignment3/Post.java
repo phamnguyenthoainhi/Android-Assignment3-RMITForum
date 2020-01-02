@@ -9,21 +9,11 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String content) {
-        this.owner = "abc";
-        this.title = title;
-        this.content = content;
-        this.course = "COSC2171";
-        this.upvote = 0;
-        this.dateTime = System.currentTimeMillis();
-        this.id="";
-    }
-
-    public Post(String owner, String title, String content) {
+    public Post(String owner, String title, String content, String course) {
         this.owner = owner;
         this.title = title;
         this.content = content;
-        this.course = "COSC2171";
+        this.course = course;
         this.upvote = 0;
         this.dateTime = System.currentTimeMillis();
         this.id="";

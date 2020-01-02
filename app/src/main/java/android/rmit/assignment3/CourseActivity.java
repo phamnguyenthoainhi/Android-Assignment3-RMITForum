@@ -40,8 +40,8 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     RecyclerView recyclerView;
     CourseAdapter courseAdapter;
     ArrayList<Course> courses;
-    ImageButton edit;
     ImageButton delete;
+    ImageButton edit;
     Course_User course_user;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
@@ -269,7 +269,9 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     }
     @Override
     public void onCourseClick(int position) {
-
+        Intent intent = new Intent(CourseActivity.this,PostsListActivity.class);
+        intent.putExtra("id",courses.get(position).getId());
+        startActivity(intent);
     }
 
     @Override

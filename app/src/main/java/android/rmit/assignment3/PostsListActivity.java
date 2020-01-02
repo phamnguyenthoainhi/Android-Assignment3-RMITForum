@@ -45,6 +45,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
     RecyclerView recyclerView;
     PostAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    String courseId;
 
     EditText searchbar;
 
@@ -62,7 +63,9 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
             @Override
             public void onClick(View view) {
                 posts = new ArrayList<>();
-                fetchPosts();
+                if(courseId!=null) {
+                    fetchPosts(courseId);
+                }
             }
         });
 
@@ -90,7 +93,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
             }
         });
 
-        fetchPosts();
+        onNewIntent(getIntent());
 
         Button createPost = findViewById(R.id.create_post);
 
@@ -105,6 +108,21 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        processIntent(intent);
+    }
+
+    private void processIntent(Intent intent){
+
+        final Bundle bundle = intent.getExtras();
+
+        fetchPosts((String)bundle.get("id"));
+        courseId =(String) bundle.get("id");
 
     }
 
@@ -134,8 +152,9 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         startActivity(intent);
     }
 
-    protected void fetchPosts(){
-        db.collection("Posts").get()
+    protected void fetchPosts(String courseId){
+
+        db.collection("Posts").whereEqualTo("course",courseId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -189,7 +208,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPost(new Post(mAuth.getUid(),title.getText().toString(),content.getText().toString()));
+                createPost(new Post(mAuth.getUid(),title.getText().toString(),content.getText().toString(),courseId));
                 alertDialog.dismiss();
             }
         });

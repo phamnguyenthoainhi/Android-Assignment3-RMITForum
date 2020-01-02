@@ -162,38 +162,42 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         post = documentSnapshot.toObject(Post.class);
-                        post.setId(documentSnapshot.getId());
-                        title.setText(post.getTitle());
-                        content.setText(post.getContent());
-                        votes.setText(post.getUpvote()+"");
+                        if(post!=null) {
+                            post.setId(documentSnapshot.getId());
+                            title.setText(post.getTitle());
+                            content.setText(post.getContent());
+                            votes.setText(post.getUpvote() + "");
 
-                        fetchPostOwner(post.getOwner());
+                            fetchPostOwner(post.getOwner());
 
-                        if(mAuth.getUid()!=null && !mAuth.getUid().equals(post.getOwner())){
-                            editPost.setVisibility(View.GONE);
-                            deletePost.setVisibility(View.GONE);
+                            if (mAuth.getUid() != null && !mAuth.getUid().equals(post.getOwner())) {
+                                editPost.setVisibility(View.GONE);
+                                deletePost.setVisibility(View.GONE);
+                                fetchVoteInfo();
+                            } else if (mAuth.getUid() != null && mAuth.getUid().equals(post.getOwner())) {
+                                upvotePost.setVisibility(View.GONE);
+                                downvotePost.setVisibility(View.GONE);
+
+                                editPost.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        showPostDialog();
+                                    }
+                                });
+
+                                deletePost.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        deletePost();
+                                    }
+                                });
+                            }
                             fetchVoteInfo();
+                            fetchPostOwner(post.getOwner());
                         }
-                        else if(mAuth.getUid()!=null && mAuth.getUid().equals(post.getOwner())){
-                            upvotePost.setVisibility(View.GONE);
-                            downvotePost.setVisibility(View.GONE);
-
-                            editPost.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showPostDialog();
-                                }
-                            });
-
-                            deletePost.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    deletePost();
-                                }
-                            });
+                        else{
+                            title.setText("Post does not exist.");
                         }
-                        fetchVoteInfo();
-                        fetchPostOwner(post.getOwner());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

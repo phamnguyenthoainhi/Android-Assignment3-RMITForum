@@ -91,7 +91,12 @@ public class ReplyDetailActivity extends AppCompatActivity{
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         reply = documentSnapshot.toObject(Reply.class);
-                        content.setText(reply.getContent());
+                        if(reply!=null) {
+                            content.setText(reply.getContent());
+                        }
+                        else{
+                            content.setText("Reply does not exist");
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -22,7 +22,6 @@ public class PagerController extends FragmentPagerAdapter {
                 return new SubscribedCourseUser();
             case 1:
                 return new CreatedPosts();
-
             default:
                 return null;
         }

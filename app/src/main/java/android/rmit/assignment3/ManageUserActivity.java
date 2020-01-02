@@ -157,7 +157,6 @@ public class ManageUserActivity extends AppCompatActivity {
             fetchCurrentUser(currentUser.getUid());
 //            fetchCoursesbyUser(currentUser.getUid());
             fetchRank();
-            Toast.makeText(this, "" + currentUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         }
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +213,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                 if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
@@ -221,9 +221,12 @@ public class ManageUserActivity extends AppCompatActivity {
                         } if (sumVotes.size() == 2) {
                             for (int i = 0; i < 2 ; i++) {
                                 if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    Log.d(TAG, "onSuccess: checking "+currentUser.getUid().equals(sumVotes.get(i).getId()) );
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
+                                    Log.d(TAG, "onSuccess: 124");
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
                             }
@@ -233,6 +236,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                 if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
@@ -243,16 +247,17 @@ public class ManageUserActivity extends AppCompatActivity {
                                 if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
                             }
                         }
                         if (sumVotes.size() == 1) {
-
                                 if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }

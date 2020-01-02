@@ -1,10 +1,12 @@
 package android.rmit.assignment3;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SubscribedCourseUser extends Fragment {
 
@@ -30,12 +34,15 @@ public class SubscribedCourseUser extends Fragment {
     ArrayList<Course> subscribedCourses;
     Course fetchedCourse;
     FirebaseUser currentUser;
+    RecyclerView recyclerView;
+    GridLayoutManager gridLayoutManager;
+    SubscribedCourseAdapter subscribedCourseAdapter;
 
 
 
 
-    public void fetchCoursesbyUser(final String userid) {
 
+    public void fetchCoursesbyUser(final String userid, final View view, final Context context) {
         db.collection("CourseUsers")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -43,19 +50,20 @@ public class SubscribedCourseUser extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
                                 if (document.get("userid").equals(userid)) {
                                     Log.d(TAG, "onComplete: fetchcoursebyuser "+ document.get("courseid"));
-                                    fetchCoursebyId(document.get("courseid").toString());
+                                    fetchCoursebyId(document.get("courseid").toString(), view, context);
                                 }
                             }
                         }
+
                     }
                 });
     }
 
-    public void fetchCoursebyId(final String doccourseid) {
+    public void fetchCoursebyId(final String doccourseid, final View view, final Context context) {
         subscribedCourses = new ArrayList<>();
+        Log.d(TAG, "fetchCoursebyId: hello");
         db.collection("Courses").document(doccourseid)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -66,9 +74,18 @@ public class SubscribedCourseUser extends Fragment {
                         fetchedCourse.setName(snapshot.get("name").toString());
                         fetchedCourse.setDocid(doccourseid);
                         subscribedCourses.add(fetchedCourse);
-//                        initRecyclerView();
+                        initRecyclerView(view, context);
+
                     }
                 });
+    }
+
+        public void initRecyclerView(View view, Context context) {
+        recyclerView = view.findViewById(R.id.subscribecourserecyclerview);
+        gridLayoutManager = new GridLayoutManager(context, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, context);
+        recyclerView.setAdapter(subscribedCourseAdapter);
     }
 
 
@@ -77,10 +94,13 @@ public class SubscribedCourseUser extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.courses_tab, container, false);
         mAuth = FirebaseAuth.getInstance();
+
+
         currentUser = mAuth.getCurrentUser();
-        fetchCoursesbyUser(currentUser.getUid());
+        subscribedCourses = new ArrayList<>();
 
 
+        fetchCoursesbyUser(currentUser.getUid(), view, getContext());
         return view;
     }
 }

@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,10 +53,13 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     TextView owner;
     ArrayList<Reply> replies = new ArrayList<>();
     Utilities utilities = new Utilities();
+    SumVote sumVote;
 
     RecyclerView.Adapter adapter;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser;
+    User user;
 
     enum Vote{
         UPVOTE,
@@ -67,6 +71,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
 
+        sumVote = new SumVote();
         title = findViewById(R.id.title_text);
         content = findViewById(R.id.content_text);
         votes = findViewById(R.id.post_votes);
@@ -93,6 +98,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         });
 
         onNewIntent(getIntent());
+
+        currentUser = mAuth.getCurrentUser();
+        user = new User();
 
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -184,6 +192,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                                 }
                             });
                         }
+                        fetchVoteInfo();
+                        fetchPostOwner(post.getOwner());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -215,8 +225,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                     }
                 });
     }
-
-
 
     public void showReplyDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
@@ -287,12 +295,18 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         switch(vote){
             case UPVOTE:
                 post.increaseUpvote();
+                if (post.getOwner() != null ){
+                    fetchupdateSumVotes(post.getOwner(), true);
+                }
+
                 break;
             case DOWNVOTE:
                 post.decreaseUpvote();
+                if (post.getOwner() != null) {
+                    fetchupdateSumVotes(post.getOwner(), false);
+                }
                 break;
         }
-
         updateUpvote(vote);
     }
 
@@ -300,12 +314,41 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         switch(vote){
             case UPVOTE:
                 post.decreaseUpvote();
+                if (post.getOwner() != null) {
+                    fetchupdateSumVotes(post.getOwner(), false);
+                }
                 break;
             case DOWNVOTE:
                 post.increaseUpvote();
+                if (post.getOwner() != null ){
+                    fetchupdateSumVotes(post.getOwner(), true);
+                }
                 break;
         }
         removeUpvote();
+    }
+
+    public void fetchupdateSumVotes(final String ownerid, final boolean plus) {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(doc.getId().equals(ownerid)) {
+                                if (doc.get("sum") != null) {
+                                    if (plus) {
+                                        sumVote.setSum((Long) doc.get("sum") + 1);
+                                    } else {
+                                        if ((long) doc.get("sum") > 0) {
+                                            sumVote.setSum((long) doc.get("sum") - 1);
+                                        }
+                                    }
+                                    utilities.updateSumVote(ownerid, sumVote.getSum());
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     protected void updateUpvote(final Vote vote){
@@ -355,6 +398,9 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                     });
         }
     }
+
+
+
     protected void removeUpvote(){
         if(mAuth.getUid()!=null) {
             System.out.println("updating database...");

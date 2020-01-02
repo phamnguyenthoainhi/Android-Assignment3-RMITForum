@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ViewUtils;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.opencensus.stats.Aggregation;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -48,7 +50,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
-
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class ManageUserActivity extends AppCompatActivity {
@@ -84,6 +87,9 @@ public class ManageUserActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     GridLayoutManager gridLayoutManager;
     SubscribedCourseAdapter subscribedCourseAdapter;
+    ArrayList<SumVote> sumVotes;
+    ImageView trophy;
+    RelativeLayout ranklayout;
 
 
 
@@ -108,8 +114,10 @@ public class ManageUserActivity extends AppCompatActivity {
                 finish();
             }
         });
+        ranklayout = findViewById(R.id.ranklayout);
 
         imageView = editDialog.findViewById(R.id.imageview);
+        trophy = findViewById(R.id.trophy);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -119,14 +127,15 @@ public class ManageUserActivity extends AppCompatActivity {
         if (currentUser != null) {
             fetchCurrentUser(currentUser.getUid());
             fetchCoursesbyUser(currentUser.getUid());
-
+            fetchRank();
+            Toast.makeText(this, "" + currentUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         }
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(ManageUserActivity.this, SignInActivity.class));
+                startActivity(new Intent(ManageUserActivity.this, MainActivity.class));
             }
         });
 
@@ -142,6 +151,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
     public void initRecyclerView() {
         recyclerView = findViewById(R.id.subscribecourserecyclerview);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(ManageUserActivity.this, 0));
         gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
         subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
@@ -153,6 +163,86 @@ public class ManageUserActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
+    }
+
+    public void fetchRank() {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        sumVotes = new ArrayList<>();
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            SumVote sumVote = new SumVote();
+                            sumVote.setSum((Long) doc.get("sum"));
+                            sumVote.setId(doc.getId());
+                            sumVotes.add(sumVote);
+
+                        }
+
+                        sumVotes = sort(sumVotes);
+                        if (sumVotes.size() > 5 ) {
+                            for (int i = 0; i < 5 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        } if (sumVotes.size() == 2) {
+                            for (int i = 0; i < 2 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                        } if (sumVotes.size() == 3) {
+                            for (int i = 0; i < 3 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                        } if (sumVotes.size() == 4) {
+                            for (int i = 0; i < 4 ; i++) {
+                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        }
+                        if (sumVotes.size() == 1) {
+
+                                if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
+                                    ranklayout.setVisibility(View.VISIBLE);
+                                    trophy.setImageResource(R.drawable.award);
+                                } else {
+                                    ranklayout.setVisibility(View.INVISIBLE);
+                                }
+
+                        }
+
+                    }
+                });
+    }
+    public ArrayList<SumVote> sort(ArrayList<SumVote> sumVotes) {
+        Collections.sort(sumVotes, new Comparator<SumVote>() {
+            @Override
+            public int compare(SumVote t1, SumVote t2) {
+                return (int) (t2.getSum() - t1.getSum());
+            }
+
+
+        } );
+        return sumVotes;
     }
 
     @Override
@@ -200,12 +290,8 @@ public class ManageUserActivity extends AppCompatActivity {
                                     .placeholder(R.drawable.grey)
                                     .error(R.drawable.grey)
                                     .into(avatar);
-
                         }
-
                     }
-
-
                 });
 
             }
@@ -310,6 +396,7 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
     }
+
     public void updateUser(String imageuri) {
         db.collection("Users").document(currentUser.getUid())
                 .update("imageuri", imageuri).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -24,12 +24,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class SignInActivity extends AppCompatActivity {
@@ -48,6 +52,8 @@ public class SignInActivity extends AppCompatActivity {
     private int RC_SIGN_IN = 123;
     //Google Sign In Client
     private GoogleSignInClient mGoogleSignInClient;
+    FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,7 @@ public class SignInActivity extends AppCompatActivity {
         show = findViewById(R.id.showpasswordsignin);
         hide = findViewById(R.id.hidepasswordsignin);
         show.setVisibility(View.INVISIBLE);
+        db = FirebaseFirestore.getInstance();
 
         TextView signupfromsignin = findViewById(R.id.signupfromsignin);
         signupfromsignin.setClickable(true);
@@ -149,7 +156,6 @@ public class SignInActivity extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -158,16 +164,18 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
                             currentUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
                             utilities.createUser(currentUser, SignInActivity.this);
+                            checkRegisteredggUser(user);
+
                             if (user.isEmailVerified()) {
+                                Log.d(TAG, "onComplete: user verified !");
                                 startActivity(new Intent(SignInActivity.this, CourseActivity.class));
                             } else {
+                                Log.d(TAG, "onComplete: user not verified !");
                                 startActivity(new Intent(SignInActivity.this, Validate.class));
                             }
-                            finish();
-
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -190,6 +198,21 @@ public class SignInActivity extends AppCompatActivity {
         return true;
     }
 
+    public void checkRegisteredggUser(final FirebaseUser loggeduser) {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(!doc.getId().equals(loggeduser.getUid())) {
+                                SumVote sumVote = new SumVote((long) 0);
+                                utilities.createSumVote(loggeduser.getUid(), sumVote);
+                            }
+                        }
+                    }
+                });
+    }
+
 
     public void signin(final String inputemail, String inputpassword) {
         mAuth.signInWithEmailAndPassword(inputemail, inputpassword)
@@ -202,11 +225,13 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             utilities.getToken();
                             if (user.isEmailVerified()) {
+                                Log.d(TAG, "onComplete: Email verify");
                                 startActivity(new Intent(SignInActivity.this, CourseActivity.class));
                             } else {
+                                Log.d(TAG, "onComplete: Email not verify");
                                 startActivity(new Intent(SignInActivity.this, Validate.class));
                             }
-                            finish();
+//                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.

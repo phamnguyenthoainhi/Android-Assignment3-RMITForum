@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,6 +47,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     FirebaseUser currentUser;
 //    boolean isSubscribed = false;
     String subscribedCourseid;
+    BottomNavigationView bottomNavigationView;
     
 
 
@@ -59,6 +63,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         delete = course.findViewById(R.id.deletecourse);
         currentUser = mAuth.getCurrentUser();
         courses = new ArrayList<>();
+        bottomNavigationView = findViewById(R.id.bottom_nav_course);
         openCreateCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +71,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
             }
         });
         fetchCourse();
+        createNavBar();
     }
 
 
@@ -77,8 +83,27 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         recyclerView.setAdapter(courseAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+    }
 
+    public void createNavBar() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_home:
+                        startActivity(new Intent(CourseActivity.this, CourseActivity.class));
 
+                        break;
+                    case R.id.navigation_user:
+                        startActivity(new Intent(CourseActivity.this, ManageUserActivity.class));
+                        break;
+                    case R.id.navigation_notifications:
+                        startActivity(new Intent(CourseActivity.this,NotificationsListActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     public void showDialog() {

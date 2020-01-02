@@ -1,6 +1,7 @@
 package android.rmit.assignment3;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,7 +42,8 @@ public class Utilities {
 
     public void createUser(final User currentUser, final Context context) {
 
-        db.collection("Users").document(currentUser.getId()).set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection("Users").document(currentUser.getId()).set(currentUser)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -103,6 +107,53 @@ public class Utilities {
                 });
 
     }
+
+
+    public void updateSumVote(String ownerid, long vote) {
+        db.collection("SumVotes").document(ownerid).
+                update("sum", vote)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                });
+
+    }
+
+    public void createSumVote(String ownerid, SumVote sumVote) {
+        System.out.println("create Sum Vote ");
+        db.collection("SumVotes").document(ownerid).set(sumVote)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Create sumvote !");
+
+                    }
+                });
+    }
+
+    public void fetchSumVotes(final String ownerid) {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(doc.getId().equals(ownerid)) {
+
+                            }
+                        }
+                    }
+                });
+    }
+
+
+
+
+
+
+
+
+
 
 
 

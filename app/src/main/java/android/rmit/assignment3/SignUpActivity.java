@@ -130,6 +130,9 @@ public class SignUpActivity extends AppCompatActivity {
 
 
                             utilities.createUser(currentUser, SignUpActivity.this);
+                            SumVote sumVote = new SumVote((long) 0);
+                            utilities.createSumVote(user.getUid(),sumVote);
+
                             utilities.getToken();
 
                         } else {

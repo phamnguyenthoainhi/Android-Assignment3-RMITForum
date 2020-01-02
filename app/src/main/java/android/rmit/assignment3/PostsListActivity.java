@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +49,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
     EditText searchbar;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -63,6 +66,8 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
             }
         });
 
+        bottomNavigationView = findViewById(R.id.bottom_nav_post);
+        createNavBar();
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -72,8 +77,11 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                adapter.filter(charSequence, posts);
-                adapter.notifyDataSetChanged();
+                if (adapter != null) {
+                    adapter.filter(charSequence, posts);
+                    adapter.notifyDataSetChanged();
+                }
+
             }
 
             @Override
@@ -100,7 +108,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
     }
 
-    public ArrayList<Post> test(ArrayList<Post> postArrayList) {
+    public ArrayList<Post> sort(ArrayList<Post> postArrayList) {
         Collections.sort(postArrayList, new Comparator<Post>() {
             @Override
             public int compare(Post p1, Post p2) {
@@ -136,10 +144,31 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                             post.setId(documentSnapshot.getId());
                             posts.add(post);
                         }
-                        initRecyclerView(test(posts));
+                        initRecyclerView(sort(posts));
 
                     }
                 });
+    }
+    public void createNavBar() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_home:
+                        startActivity(new Intent(PostsListActivity.this, CourseActivity.class));
+
+                        break;
+                    case R.id.navigation_user:
+                        startActivity(new Intent(PostsListActivity.this, ManageUserActivity.class));
+                        break;
+                    case R.id.navigation_notifications:
+                        startActivity(new Intent(PostsListActivity.this,NotificationsListActivity.class));
+                        //Toast.makeText(MainActivity.this, "Switch to Notification", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     public void showPostDialog(){

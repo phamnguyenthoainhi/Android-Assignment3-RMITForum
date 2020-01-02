@@ -39,6 +39,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Utilities utilities = new Utilities();
+    SumVote sumVote = new SumVote();
 
     private ArrayList<Comment> comments = new ArrayList<>();
     Context mContext;
@@ -117,8 +118,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         recyclerView.setAdapter(adapter);
     }
 
-
-
     @Override
     public int getItemCount(){
         return replies.size();
@@ -168,8 +167,10 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).increaseUpvote();
+                fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;
             case DOWNVOTE:
+                fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
                 replies.get(replyIndex).decreaseUpvote();
                 break;
         }
@@ -180,9 +181,12 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).decreaseUpvote();
+//                fetchupdateSumVotes();
+                fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
                 break;
             case DOWNVOTE:
                 replies.get(replyIndex).increaseUpvote();
+                fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;
         }
         removeReplyVote(replies.get(replyIndex).getId(),holder,replyIndex);
@@ -336,6 +340,31 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                     });
         }
     }
+
+    public void fetchupdateSumVotes(final String ownerid, final boolean plus) {
+
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(doc.getId().equals(ownerid)) {
+                                if (doc.get("sum") != null) {
+                                    if (plus) {
+                                        sumVote.setSum((Long) doc.get("sum") + 1);
+                                    } else {
+                                        if ((long) doc.get("sum") > 0) {
+                                            sumVote.setSum((long) doc.get("sum") - 1);
+                                        }
+                                    }
+                                    utilities.updateSumVote(ownerid, sumVote.getSum());
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
 
     protected void fetchReplyOwner(String ownerId,final ReplyViewHolder holder){
         if(ownerId!=null) {

@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,11 +27,19 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String TAG = "NotificationsListActivity";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications_list);
 
+        Button back = findViewById(R.id.fromnoti);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         if(mAuth.getCurrentUser()!=null){
             Toast.makeText(this, mAuth.getUid(), Toast.LENGTH_SHORT).show();
             fetchNotifications(mAuth.getUid());

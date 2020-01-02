@@ -95,7 +95,6 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                             notification.setId(documentSnapshot.getId());
                             notifications.add(notification);
                         }
-                        Log.d(TAG, "onSuccess: "+ notifications);
                         initRecyclerView();
 
                     }

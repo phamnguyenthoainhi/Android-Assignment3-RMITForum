@@ -136,7 +136,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
          OnReplyListener onReplyListener;
 
-         ReplyViewHolder(View v, OnReplyListener onReplyListener){
+         ReplyViewHolder(View v, final OnReplyListener onReplyListener){
              super(v);
              replyContent = v.findViewById(R.id.reply_content);
              replyUpvote = v.findViewById(R.id.reply_upvote);
@@ -147,6 +147,20 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
              editReply = v.findViewById(R.id.edit_reply);
              deleteReply = v.findViewById(R.id.delete_reply);
              comment=v.findViewById(R.id.reply_comment);
+
+             replyOwner.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     onReplyListener.openUser(getAdapterPosition());
+                 }
+             });
+
+             replyAvatar.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     onReplyListener.openUser(getAdapterPosition());
+                 }
+             });
 
              this.onReplyListener = onReplyListener;
              v.setOnClickListener(this);
@@ -160,6 +174,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
         public interface OnReplyListener{
              void onReplyClick(int position);
+             void openUser(int position);
          }
     }
 
@@ -490,4 +505,5 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                     }
                 });
     }
+
 }

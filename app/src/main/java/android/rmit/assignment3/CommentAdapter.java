@@ -1,6 +1,9 @@
 package android.rmit.assignment3;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +35,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Comment> comments;
     private Utilities utilities = new Utilities();
+    Context mContext;
 
     @NonNull
     @Override
@@ -47,6 +52,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull final CommentViewHolder holder, final int position) {
         holder.commentContent.setText(comments.get(position).getContent());
         holder.commentVotes.setText(comments.get(position).getUpvote()+"");
+        holder.commentAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),ManageUserActivity.class).putExtra("id",comments.get(position).getOwner()));
+            }
+        });
+        holder.commentOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),ManageUserActivity.class).putExtra("id",comments.get(position).getOwner()));
+            }
+        });
 
         if(mAuth.getUid()!= null && !mAuth.getUid().equals(comments.get(position).getOwner())){
             holder.editComment.setVisibility(View.GONE);
@@ -89,18 +106,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Button editComment;
         Button deleteComment;
 
+
         CommentViewHolder(View v){
             super(v);
             commentContent = v.findViewById(R.id.comment_content);
             commentUpvote = v.findViewById(R.id.comment_upvote);
             commentDownvote = v.findViewById(R.id.comment_downvote);
             commentVotes = v.findViewById(R.id.comment_votes);
-            commentAvatar = v.findViewById(R.id.comment_onwer_avatar);
-            commentOwner = v.findViewById(R.id.comment_onwer_name);
+            commentAvatar = v.findViewById(R.id.comment_owner_avatar);
+            commentOwner = v.findViewById(R.id.comment_owner_name);
             editComment = v.findViewById(R.id.edit_comment);
             deleteComment = v.findViewById(R.id.delete_comment);
 
         }
+
     }
 
     protected void vote(int commentIndex, PostDetailActivity.Vote vote, CommentViewHolder holder){
@@ -284,8 +303,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             User user = documentSnapshot.toObject(User.class);
                             if (user != null) {
-                                if (user.getImageuri() != null && user.getImageuri() != "") {
-                                    holder.commentAvatar.setImageURI(utilities.convertUri(user.getImageuri()));
+                                if (user.getImageuri() != null && !user.getImageuri().equals("")) {
+                                    Picasso.with(mContext).load(Uri.parse(user.getImageuri())).fit().centerCrop()
+                                            .placeholder(R.drawable.grey)
+                                            .error(R.drawable.grey)
+                                            .into(holder.commentAvatar);
                                 }
                                 if (user.getFullname() != null) {
                                     holder.commentOwner.setText(user.getFullname());

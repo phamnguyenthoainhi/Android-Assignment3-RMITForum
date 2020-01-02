@@ -170,6 +170,20 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
                             fetchPostOwner(post.getOwner());
 
+                            avatar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(new Intent(PostDetailActivity.this,ManageUserActivity.class).putExtra("id",post.getOwner()));
+                                }
+                            });
+
+                            owner.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(new Intent(PostDetailActivity.this,ManageUserActivity.class).putExtra("id",post.getOwner()));
+                                }
+                            });
+
                             if (mAuth.getUid() != null && !mAuth.getUid().equals(post.getOwner())) {
                                 editPost.setVisibility(View.GONE);
                                 deletePost.setVisibility(View.GONE);
@@ -575,4 +589,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         builder.create().show();
     }
 
+    @Override
+    public void openUser(int position) {
+        startActivity(new Intent(PostDetailActivity.this,ManageUserActivity.class).putExtra("id",replies.get(position).getOwner()));
+    }
 }

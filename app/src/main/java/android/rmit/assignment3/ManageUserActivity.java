@@ -4,17 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ViewUtils;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import io.opencensus.stats.Aggregation;
-
-import android.Manifest;
-import android.content.ContentResolver;
+import androidx.viewpager.widget.ViewPager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -90,7 +85,10 @@ public class ManageUserActivity extends AppCompatActivity {
     ArrayList<SumVote> sumVotes;
     ImageView trophy;
     RelativeLayout ranklayout;
-
+    ViewPager viewPager;
+    TabLayout tabLayout;
+    PagerController pagerController;
+    String userId;
 
 
 
@@ -107,6 +105,30 @@ public class ManageUserActivity extends AppCompatActivity {
         avatar = findViewById(R.id.avatarimage);
         editDialog = getLayoutInflater().inflate(R.layout.edit_user, null);
         Button back = findViewById(R.id.fromUser);
+        viewPager = findViewById(R.id.viewpager);
+        tabLayout = findViewById(R.id.tablayout);
+
+//        pagerController = new PagerController(getSupportFragmentManager(), tabLayout.getTabCount());
+//        viewPager.setAdapter(pagerController);
+//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                viewPager.setCurrentItem(tab.getPosition());
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
+
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,12 +146,10 @@ public class ManageUserActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         user = new User();
-        if (currentUser != null) {
-            fetchCurrentUser(currentUser.getUid());
-            fetchCoursesbyUser(currentUser.getUid());
-            fetchRank();
-            Toast.makeText(this, "" + currentUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
-        }
+
+
+
+        onNewIntent(getIntent());
 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,13 +169,58 @@ public class ManageUserActivity extends AppCompatActivity {
 
     }
 
-    public void initRecyclerView() {
-        recyclerView = findViewById(R.id.subscribecourserecyclerview);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(ManageUserActivity.this, 0));
-        gridLayoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
-        recyclerView.setAdapter(subscribedCourseAdapter);
+//    public void initRecyclerView() {
+//        recyclerView = findViewById(R.id.subscribecourserecyclerview);
+////        recyclerView.addItemDecoration(new DividerItemDecoration(ManageUserActivity.this, 0));
+//        gridLayoutManager = new GridLayoutManager(this, 1);
+//        recyclerView.setLayoutManager(gridLayoutManager);
+//        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, ManageUserActivity.this);
+//        recyclerView.setAdapter(subscribedCourseAdapter);
+//
+//    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        processIntent(intent);
+    }
+
+    private void processIntent(Intent intent){
+
+        final Bundle bundle = intent.getExtras();
+
+        if(bundle!=null) {
+            if(bundle.get("id")!=null) {
+                fetchCurrentUser((String) bundle.get("id"));
+                userId = (String) bundle.get("id");
+
+                fetchRank(userId);
+
+                if (!mAuth.getUid().equals(userId)) {
+                    openeditform.setVisibility(View.GONE);
+                }
+
+                pagerController = new PagerController(getSupportFragmentManager(), tabLayout.getTabCount());
+                viewPager.setAdapter(pagerController);
+                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+                tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        viewPager.setCurrentItem(tab.getPosition());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+            }
+        }
 
     }
 
@@ -165,7 +230,7 @@ public class ManageUserActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-    public void fetchRank() {
+    public void fetchRank(final String id) {
         db.collection("SumVotes").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -182,28 +247,33 @@ public class ManageUserActivity extends AppCompatActivity {
                         sumVotes = sort(sumVotes);
                         if (sumVotes.size() > 5 ) {
                             for (int i = 0; i < 5 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                if (id.equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
                             }
                         } if (sumVotes.size() == 2) {
                             for (int i = 0; i < 2 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                if (id.equals(sumVotes.get(i).getId())) {
+                                    Log.d(TAG, "onSuccess: checking "+id.equals(sumVotes.get(i).getId()) );
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
+                                    Log.d(TAG, "onSuccess: 124");
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
                             }
 
                         } if (sumVotes.size() == 3) {
                             for (int i = 0; i < 3 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                if (id.equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
@@ -211,19 +281,20 @@ public class ManageUserActivity extends AppCompatActivity {
 
                         } if (sumVotes.size() == 4) {
                             for (int i = 0; i < 4 ; i++) {
-                                if (currentUser.getUid().equals(sumVotes.get(i).getId())) {
+                                if (id.equals(sumVotes.get(i).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+                                    break;
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
                             }
                         }
                         if (sumVotes.size() == 1) {
-
-                                if (currentUser.getUid().equals(sumVotes.get(0).getId())) {
+                                if (id.equals(sumVotes.get(0).getId())) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
+
                                 } else {
                                     ranklayout.setVisibility(View.INVISIBLE);
                                 }
@@ -433,46 +504,42 @@ public class ManageUserActivity extends AppCompatActivity {
         });
     }
 
-    public void fetchCoursesbyUser(final String userid) {
-
-        db.collection("CourseUsers")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                if (document.get("userid").equals(userid)) {
-                                    fetchCoursebyId(document.get("courseid").toString());
-
-                                }
-                            }
-                        }
-                    }
-                });
-
-    }
-
-    public void fetchCoursebyId(final String doccourseid) {
-        fetchedCourse = new Course();
-        subscribedCourses = new ArrayList<>();
-        db.collection("Courses").document(doccourseid)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot snapshot) {
-                        fetchedCourse.setId(snapshot.get("id").toString());
-                        fetchedCourse.setName(snapshot.get("name").toString());
-                        fetchedCourse.setDocid(doccourseid);
-                        subscribedCourses.add(fetchedCourse);
-                        Log.d(TAG, "fetchCoursesbyUser: "+ subscribedCourses);
-                        initRecyclerView();
-                    }
-                });
-
-
-    }
+//    public void fetchCoursesbyUser(final String userid) {
+//
+//        db.collection("CourseUsers")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                if (document.get("userid").equals(userid)) {
+//                                    Log.d(TAG, "onComplete: fetchcoursebyuser "+ document.get("courseid"));
+//                                    fetchCoursebyId(document.get("courseid").toString());
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//    }
+//
+//    public void fetchCoursebyId(final String doccourseid) {
+//        subscribedCourses = new ArrayList<>();
+//        db.collection("Courses").document(doccourseid)
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onSuccess(DocumentSnapshot snapshot) {
+//                        fetchedCourse = new Course();
+//                        fetchedCourse.setId(snapshot.get("id").toString());
+//                        fetchedCourse.setName(snapshot.get("name").toString());
+//                        fetchedCourse.setDocid(doccourseid);
+//                        subscribedCourses.add(fetchedCourse);
+////                        initRecyclerView();
+//                    }
+//                });
+//    }
 
 
 

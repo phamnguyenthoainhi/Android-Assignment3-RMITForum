@@ -3,13 +3,14 @@ package android.rmit.assignment3;
 public class Post {
 
     private String owner, title, content, course,id;
-    private int upvote;
+    private long upvote;
     private long dateTime;
 
     public Post() {
     }
 
     public Post(String owner, String title, String content, String course) {
+
         this.owner = owner;
         this.title = title;
         this.content = content;
@@ -19,7 +20,7 @@ public class Post {
         this.id="";
     }
 
-    public Post(String owner, String title, String content, String course, String id, int upvote, long dateTime) {
+    public Post(String owner, String title, String content, String course, String id, long upvote, long dateTime) {
         this.owner = owner;
         this.title = title;
         this.content = content;
@@ -29,7 +30,7 @@ public class Post {
         this.dateTime = dateTime;
     }
 
-    public Post(String owner, String title, String content, String course, int upvote, long dateTime) {
+    public Post(String owner, String title, String content, String course, long upvote, long dateTime) {
         this.owner = owner;
         this.title = title;
         this.content = content;
@@ -70,8 +71,12 @@ public class Post {
         this.course = course;
     }
 
-    public int getUpvote() {
+    public long getUpvote() {
         return upvote;
+    }
+
+    public void setUpvote(long upvote) {
+        this.upvote = upvote;
     }
 
     public void increaseUpvote() {

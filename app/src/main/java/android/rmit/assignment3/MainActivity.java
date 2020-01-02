@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                                 }
                             });
+                    buider.setCancelable(false);
                     buider.create().show();
                     break;
 
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void createNavBar() {
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case R.id.navigation_user:
-                        startActivity(new Intent(MainActivity.this, ManageUserActivity.class));
+                        startActivity(new Intent(MainActivity.this, ManageUserActivity.class).putExtra("id",mAuth.getUid()));
                         break;
                     case R.id.navigation_notifications:
                         startActivity(new Intent(MainActivity.this,NotificationsListActivity.class));

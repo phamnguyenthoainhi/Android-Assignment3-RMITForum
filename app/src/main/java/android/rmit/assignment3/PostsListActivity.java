@@ -130,7 +130,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         Collections.sort(postArrayList, new Comparator<Post>() {
             @Override
             public int compare(Post p1, Post p2) {
-                return p2.getUpvote() - p1.getUpvote();
+                return (int) (p2.getUpvote() - p1.getUpvote());
             }
         } );
         return postArrayList;
@@ -168,6 +168,13 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                     }
                 });
     }
+
+    @Override
+    protected void onStart() {
+        bottomNavigationView.getMenu().getItem(0).setChecked(false);
+        super.onStart();
+    }
+    
     public void createNavBar() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -178,7 +185,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
                         break;
                     case R.id.navigation_user:
-                        startActivity(new Intent(PostsListActivity.this, ManageUserActivity.class));
+                        startActivity(new Intent(PostsListActivity.this, ManageUserActivity.class).putExtra("id",mAuth.getUid()));
                         break;
                     case R.id.navigation_notifications:
                         startActivity(new Intent(PostsListActivity.this,NotificationsListActivity.class));

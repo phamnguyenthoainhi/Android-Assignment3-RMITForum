@@ -41,11 +41,20 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
             }
         });
         if(mAuth.getCurrentUser()!=null){
-            Toast.makeText(this, mAuth.getUid(), Toast.LENGTH_SHORT).show();
             fetchNotifications(mAuth.getUid());
         }
-        else{
-            Toast.makeText(this, "no user", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(mAuth.getCurrentUser()!=null){
+            if(adapter!=null){
+                notifications = new ArrayList<>();
+                fetchNotifications(mAuth.getUid());
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -63,7 +72,6 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     @Override
     public void onNotificationClick(int position) {
         Intent intent;
-        updateNotificationStatus(notifications.get(position).getId());
         switch(notifications.get(position).getType()){
             case "reply":
                 intent = new Intent(this, PostDetailActivity.class);
@@ -91,11 +99,14 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
                             Notification notification = documentSnapshot.toObject(Notification.class);
-                            Toast.makeText(NotificationsListActivity.this, notification.getContent(), Toast.LENGTH_SHORT).show();
                             notification.setId(documentSnapshot.getId());
                             notifications.add(notification);
                         }
                         initRecyclerView();
+
+                        for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                            updateNotificationStatus(documentSnapshot.getId());
+                        }
 
                     }
                 });
@@ -106,7 +117,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(NotificationsListActivity.this, "Set done", Toast.LENGTH_SHORT).show();
+                        Log.d("NOTIFICATIONS LIST: ","Set done.");
                     }
                 });
     }

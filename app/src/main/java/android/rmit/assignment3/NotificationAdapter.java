@@ -1,5 +1,6 @@
 package android.rmit.assignment3;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         holder.title.setText(notifications.get(position).getTitle());
         holder.content.setText(notifications.get(position).getContent());
+        if(!notifications.get(position).isSeen()){
+            holder.itemView.findViewById(R.id.notification_card).setBackgroundColor(Color.parseColor("#ffe6e6"));
+        }
     }
 
     @Override

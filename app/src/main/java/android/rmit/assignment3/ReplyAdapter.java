@@ -43,6 +43,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     private ArrayList<Comment> comments = new ArrayList<>();
     Context mContext;
+    RecyclerView.Adapter adapter;
 
     @NonNull
     @Override
@@ -110,7 +111,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     private void initRecyclerView(View v){
         RecyclerView recyclerView=v.findViewById(R.id.my_recycler_view);
-        RecyclerView.Adapter adapter= new CommentAdapter(comments);
+        adapter= new CommentAdapter(comments,v.getContext());
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(v.getContext());
 
         recyclerView.setHasFixedSize(true);
@@ -489,13 +490,43 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     }
 
-    protected void createComment(Comment comment, final ReplyViewHolder holder){
+    protected void createComment(final Comment comment, final ReplyViewHolder holder){
         db.collection("Comments").add(comment)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(holder.itemView.getContext(), "Successfully posted comment.", Toast.LENGTH_SHORT).show();
-
+                        if(adapter!=null) {
+                            db.collection("Comments").whereEqualTo("reply", comment.getReply()).get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            comments = new ArrayList<>();
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                Comment comment = documentSnapshot.toObject(Comment.class);
+                                                comment.setId(documentSnapshot.getId());
+                                                comments.add(comment);
+                                                initRecyclerView(holder.itemView);
+                                            }
+                                        }
+                                    });
+                        }
+                        else {
+                            db.collection("Comments").whereEqualTo("reply", comment.getReply()).get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            comments = new ArrayList<>();
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                Comment comment = documentSnapshot.toObject(Comment.class);
+                                                comment.setId(documentSnapshot.getId());
+                                                comments.add(comment);
+                                                initRecyclerView(holder.itemView);
+                                            }
+                                        }
+                                    });
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -128,9 +128,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         fetchReplies(id);
 
-        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-
-
     }
 
     public void initRecyclerView(){
@@ -234,7 +231,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                                         .placeholder(R.drawable.grey)
                                         .error(R.drawable.grey)
                                         .into(avatar);
-//                                avatar.setImageURI(utilities.convertUri(user.getImageuri()));
                             }
                             if(user.getFullname()!=null){
                                 owner.setText(user.getFullname());
@@ -275,15 +271,22 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(PostDetailActivity.this, "Successfully posted reply_dialog.", Toast.LENGTH_SHORT).show();
-//                        replies = new ArrayList<>();
-//                        fetchReplies(id);
+                        Toast.makeText(PostDetailActivity.this, "Successfully posted reply.", Toast.LENGTH_SHORT).show();
+                        if(adapter!=null){
+                            replies = new ArrayList<>();
+                            fetchReplies(id);
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            replies = new ArrayList<>();
+                            fetchReplies(id);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostDetailActivity.this, "Failed to post reply_dialog. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, "Failed to post reply. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -297,7 +300,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                         for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
                             Reply reply = documentSnapshot.toObject(Reply.class);
                             reply.setId(documentSnapshot.getId());
-                            //Toast.makeText(PostDetailActivity.this, reply.getContent(), Toast.LENGTH_SHORT).show();
                             replies.add(reply);
                             initRecyclerView();
 

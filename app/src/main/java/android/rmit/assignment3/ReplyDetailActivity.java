@@ -80,7 +80,7 @@ public class ReplyDetailActivity extends AppCompatActivity{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CommentAdapter(comments);
+        adapter = new CommentAdapter(comments,ReplyDetailActivity.this);
 
         recyclerView.setAdapter(adapter);
     }

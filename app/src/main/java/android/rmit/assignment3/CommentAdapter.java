@@ -44,8 +44,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return new CommentViewHolder(view);
     }
 
-    CommentAdapter(ArrayList<Comment> comments){
+    CommentAdapter(ArrayList<Comment> comments, Context context){
         this.comments = comments;
+        this.mContext = context;
     }
 
     @Override

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/notif_badge"
+        android:textColor="@android:color/white"
+        android:textSize="15px"
+        android:text=""
+        android:id="@+id/notif_count"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center"
+        android:padding="4dp"
+        />
+
+</FrameLayout>

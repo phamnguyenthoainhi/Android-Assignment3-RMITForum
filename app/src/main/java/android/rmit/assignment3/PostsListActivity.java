@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -19,11 +20,16 @@ import android.widget.EditText;
 
 import android.widget.Button;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -109,6 +115,8 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
             }
         });
 
+        showNotificationBadge();
+
     }
 
     @Override
@@ -124,6 +132,14 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         fetchPosts((String)bundle.get("id"));
         courseId =(String) bundle.get("id");
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bottomNavigationView!=null){
+            showNotificationBadge();
+        }
     }
 
     public ArrayList<Post> sort(ArrayList<Post> postArrayList) {
@@ -243,5 +259,38 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                 });
 
 
+    }
+
+    public void showNotificationBadge(){
+        if(mAuth.getUid()!=null){
+            db.collection("Notifications").whereEqualTo("user",mAuth.getUid()).whereEqualTo("seen",false).get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                if (task.getResult() != null ) {
+                                    if(task.getResult().size()>0) {
+                                        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+                                        View view = bottomNavigationMenuView.getChildAt(2);
+                                        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+                                        View notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+                                        ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(task.getResult().size() + "");
+                                        notificationBadge.setVisibility(View.VISIBLE);
+                                        bottomNavigationItemView.addView(notificationBadge);
+
+                                    }
+                                    else{
+                                        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+                                        View view = bottomNavigationMenuView.getChildAt(2);
+                                        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+                                        View notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+                                        bottomNavigationItemView.addView(notificationBadge);
+                                        notificationBadge.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+                        }
+                    });
+        }
     }
 }

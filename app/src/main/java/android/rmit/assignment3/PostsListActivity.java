@@ -11,7 +11,6 @@ import android.os.Bundle;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +37,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -215,7 +213,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
     public void showPostDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(PostsListActivity.this);
-        final View dialogView = getLayoutInflater().inflate(R.layout.invite,null);
+        final View dialogView = getLayoutInflater().inflate(R.layout.post_dialog,null);
 
         title = dialogView.findViewById(R.id.input_title);
         content = dialogView.findViewById(R.id.input_content);

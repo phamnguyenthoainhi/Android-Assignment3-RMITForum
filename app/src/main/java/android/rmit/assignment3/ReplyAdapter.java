@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder>{
+public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder> implements CommentAdapter.CommentViewHolder.OnCommentListener {
 
     private ArrayList<Reply> replies;
     private ReplyViewHolder.OnReplyListener onReplyListener;
@@ -40,6 +40,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Utilities utilities = new Utilities();
     SumVote sumVote = new SumVote();
+    ReplyViewHolder holder;
 
     private ArrayList<Comment> comments = new ArrayList<>();
     Context mContext;
@@ -60,6 +61,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
 
     @Override
     public void onBindViewHolder(@NonNull final ReplyViewHolder holder, final int position){
+        this.holder = holder;
         holder.replyContent.setText(replies.get(position).getContent());
         holder.replyVotes.setText(replies.get(position).getUpvote()+"");
         holder.comment.setOnClickListener(new View.OnClickListener() {
@@ -77,18 +79,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         else if(mAuth.getUid()!=null && mAuth.getUid().equals(replies.get(position).getOwner())){
             holder.replyUpvote.setVisibility(View.GONE);
             holder.replyDownvote.setVisibility(View.GONE);
-            holder.editReply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editReply(replies.get(position).getId(),holder,position);
-                }
-            });
-            holder.deleteReply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteReply(replies.get(position).getId(),holder);
-                }
-            });
+
         }
 
 
@@ -103,15 +94,16 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                             Comment comment = documentSnapshot.toObject(Comment.class);
                             comment.setId(documentSnapshot.getId());
                             comments.add(comment);
-                            initRecyclerView(holder.itemView);
+
                         }
+                        initRecyclerView(holder.itemView);
                     }
                 });
     }
 
     private void initRecyclerView(View v){
         RecyclerView recyclerView=v.findViewById(R.id.my_recycler_view);
-        adapter= new CommentAdapter(comments,v.getContext());
+        adapter= new CommentAdapter(comments,this,v.getContext());
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(v.getContext());
 
         recyclerView.setHasFixedSize(true);
@@ -163,6 +155,20 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                  }
              });
 
+             deleteReply.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     onReplyListener.deleteReply(getAdapterPosition());
+                 }
+             });
+
+             editReply.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     onReplyListener.editReply(getAdapterPosition());
+                 }
+             });
+
              this.onReplyListener = onReplyListener;
              v.setOnClickListener(this);
          }
@@ -176,6 +182,8 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         public interface OnReplyListener{
              void onReplyClick(int position);
              void openUser(int position);
+             void deleteReply(int position);
+             void editReply(int position);
          }
     }
 
@@ -406,63 +414,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         }
     }
 
-    protected void editReply (final String id, ReplyViewHolder holder, int replyIndex){
-
-        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
-        final View dialogView = LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.reply_dialog,null);
-
-        final EditText content = dialogView.findViewById(R.id.reply_input_content);
-        content.setText(replies.get(replyIndex).getContent());
-
-        Button reply = dialogView.findViewById(R.id.create_reply);
-
-        alert.setView(dialogView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-
-        reply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.collection("Replies").document(id).update("content",content.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                alertDialog.dismiss();
-                            }
-                        });
-
-            }
-        });
-
-        alertDialog.show();
-    }
-
-    protected void deleteReply(final String id, final ReplyViewHolder holder){
-        AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext())
-                .setTitle("Confirmation")
-                .setMessage("Do you want to delete this reply?")
-                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, int which) {
-                        db.collection("Replies").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(holder.itemView.getContext(), "Deleted the reply.", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        });
-
-                    }
-                })
-                .setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
 
     public void showCommentDialog(final int position, final ReplyViewHolder holder){
         final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
@@ -489,6 +440,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         alertDialog.show();
 
     }
+
 
     protected void createComment(final Comment comment, final ReplyViewHolder holder){
         db.collection("Comments").add(comment)
@@ -525,7 +477,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                                             }
                                         }
                                     });
-                            adapter.notifyDataSetChanged();
                         }
                     }
                 })
@@ -537,4 +488,97 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                 });
     }
 
+    @Override
+    public void deleteComment(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext())
+                .setTitle("Confirmation")
+                .setMessage("Do you want to delete this comment?")
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        db.collection("Comments").document(comments.get(position).getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(holder.itemView.getContext(), "Deleted the comment.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                db.collection("Comments").whereEqualTo("reply",comments.get(position).getReply()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                comments = new ArrayList<>();
+                                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                                                    Comment comment = documentSnapshot.toObject(Comment.class);
+                                                    comment.setId(documentSnapshot.getId());
+                                                    comments.add(comment);
+                                                    initRecyclerView(holder.itemView);
+                                                }
+                                                if(adapter!=null){
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+
+                    }
+                })
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    @Override
+    public void editComment(final int position) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+        final View dialogView = LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.comment_dialog,null);
+
+        final EditText content = dialogView.findViewById(R.id.comment_input_content);
+        content.setText(comments.get(position).getContent());
+
+        final Button comment = dialogView.findViewById(R.id.create_comment);
+
+        TextView dialogTitle= dialogView.findViewById(R.id.comment_dialog_title);
+        dialogTitle.setText("Edit this comment");
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("Comments").document(comments.get(position).getId()).update("content",content.getText().toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                alertDialog.dismiss();
+                                db.collection("Comments").whereEqualTo("reply",comments.get(position).getReply()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                comments = new ArrayList<>();
+                                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                                                    Comment comment = documentSnapshot.toObject(Comment.class);
+                                                    comment.setId(documentSnapshot.getId());
+                                                    comments.add(comment);
+                                                    initRecyclerView(holder.itemView);
+                                                }
+                                                if(adapter!=null){
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+
+            }
+        });
+
+        alertDialog.show();
+    }
 }

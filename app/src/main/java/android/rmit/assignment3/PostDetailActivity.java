@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -526,13 +527,16 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
     public void showPostDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
-        final View dialogView = getLayoutInflater().inflate(R.layout.invite,null);
+        final View dialogView = getLayoutInflater().inflate(R.layout.post_dialog,null);
 
         final EditText newTitle = dialogView.findViewById(R.id.input_title);
         final EditText newContent = dialogView.findViewById(R.id.input_content);
 
         newTitle.setText(post.getTitle());
         newContent.setText(post.getContent());
+
+        TextView dialogTitle = dialogView.findViewById(R.id.post_dialog_title);
+        dialogTitle.setText("Edit this post");
 
         final Button postButton = dialogView.findViewById(R.id.post);
 
@@ -561,6 +565,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(PostDetailActivity.this, "Successfully updated.", Toast.LENGTH_SHORT).show();
+                        fetchPost(post.getId());
                     }
                 });
     }
@@ -577,6 +582,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(PostDetailActivity.this, "Deleted post", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
+                                finish();
                             }
                         });
 
@@ -594,5 +600,76 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     @Override
     public void openUser(int position) {
         startActivity(new Intent(PostDetailActivity.this,ManageUserActivity.class).putExtra("id",replies.get(position).getOwner()));
+    }
+
+    @Override
+    public void deleteReply(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Do you want to delete this reply?")
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        db.collection("Replies").document(replies.get(position).getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(PostDetailActivity.this, "Deleted the reply.", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                replies=new ArrayList<>();
+                                fetchReplies(id);
+                                if(adapter!=null) {
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                            }
+                        });
+
+                    }
+                })
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    @Override
+    public void editReply(int position) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final View dialogView = LayoutInflater.from(this).inflate(R.layout.reply_dialog,null);
+
+        final EditText content = dialogView.findViewById(R.id.reply_input_content);
+        content.setText(replies.get(position).getContent());
+
+        Button reply = dialogView.findViewById(R.id.create_reply);
+
+        alert.setView(dialogView);
+
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.setCanceledOnTouchOutside(true);
+
+        reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("Replies").document(id).update("content",content.getText().toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                alertDialog.dismiss();
+                                replies=new ArrayList<>();
+                                fetchReplies(id);
+                                if(adapter!=null){
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                            }
+                        });
+
+            }
+        });
+
+        alertDialog.show();
     }
 }

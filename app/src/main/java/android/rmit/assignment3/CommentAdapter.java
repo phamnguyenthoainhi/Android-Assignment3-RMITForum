@@ -36,17 +36,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private ArrayList<Comment> comments;
     private Utilities utilities = new Utilities();
     Context mContext;
+    CommentViewHolder.OnCommentListener onCommentListener;
 
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment,parent,false);
-        return new CommentViewHolder(view);
+        return new CommentViewHolder(view,onCommentListener);
     }
 
-    CommentAdapter(ArrayList<Comment> comments, Context context){
+    CommentAdapter(ArrayList<Comment> comments, CommentViewHolder.OnCommentListener onCommentListener ,Context context){
         this.comments = comments;
         this.mContext = context;
+        this.onCommentListener = onCommentListener;
     }
 
     @Override
@@ -74,18 +76,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         else if(mAuth.getUid()!=null && mAuth.getUid().equals(comments.get(position).getOwner())){
             holder.commentDownvote.setVisibility(View.GONE);
             holder.commentUpvote.setVisibility(View.GONE);
-            holder.editComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editComment(comments.get(position).getId(),holder,position);
-                }
-            });
-            holder.deleteComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteComment(comments.get(position).getId(),holder);
-                }
-            });
         }
 
 
@@ -107,8 +97,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Button editComment;
         Button deleteComment;
 
+        OnCommentListener onCommentListener;
 
-        CommentViewHolder(View v){
+
+        CommentViewHolder(View v, final OnCommentListener onCommentListener){
             super(v);
             commentContent = v.findViewById(R.id.comment_content);
             commentUpvote = v.findViewById(R.id.comment_upvote);
@@ -119,6 +111,28 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             editComment = v.findViewById(R.id.edit_comment);
             deleteComment = v.findViewById(R.id.delete_comment);
 
+            deleteComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCommentListener.deleteComment(getAdapterPosition());
+                }
+            });
+
+            editComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCommentListener.editComment(getAdapterPosition());
+                }
+            });
+
+            this.onCommentListener = onCommentListener;
+        }
+
+
+
+        public interface OnCommentListener{
+            void deleteComment(int position);
+            void editComment(int position);
         }
 
     }
@@ -319,61 +333,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
-    protected void editComment (final String id, CommentViewHolder holder, int commentIndex){
 
-        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
-        final View dialogView = LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.comment_dialog,null);
 
-        final EditText content = dialogView.findViewById(R.id.comment_input_content);
-        content.setText(comments.get(commentIndex).getContent());
-
-        Button comment = dialogView.findViewById(R.id.create_comment);
-
-        alert.setView(dialogView);
-
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.setCanceledOnTouchOutside(true);
-
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.collection("Comments").document(id).update("content",content.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                alertDialog.dismiss();
-                            }
-                        });
-
-            }
-        });
-
-        alertDialog.show();
-    }
-
-    protected void deleteComment(final String id, final CommentViewHolder holder){
-        AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext())
-                .setTitle("Confirmation")
-                .setMessage("Do you want to delete this comment?")
-                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, int which) {
-                        db.collection("Comments").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(holder.itemView.getContext(), "Deleted the comment.", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        });
-
-                    }
-                })
-                .setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
 }

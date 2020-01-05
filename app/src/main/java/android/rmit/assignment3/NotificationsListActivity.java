@@ -47,12 +47,12 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         if(mAuth.getCurrentUser()!=null){
+            notifications = new ArrayList<>();
+            fetchNotifications(mAuth.getUid());
             if(adapter!=null){
-                notifications = new ArrayList<>();
-                fetchNotifications(mAuth.getUid());
                 adapter.notifyDataSetChanged();
             }
         }

@@ -4,20 +4,176 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f5f5f5"
     android:orientation="vertical"
     tools:context=".ReplyDetailActivity">
 
 
-    <TextView
-        android:id="@+id/content_text"
-        android:layout_width="wrap_content"
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="10px"
-        android:text="Content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_text" />
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="10dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="false"
+
+        app:contentPadding="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <RelativeLayout
+                android:id="@+id/owner_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <android.rmit.assignment3.RoundedImage
+                    android:id="@+id/reply_owner_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/defaultimg" />
+
+
+                <TextView
+                    android:id="@+id/reply_owner_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/reply_owner_avatar"
+                    android:text=""
+                    android:textColor="#B51A0202" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/reply_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/owner_layout">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/reply_votes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="+"
+                        android:textColor="#D13430"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/content_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        tools:text="Content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/comment_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reply_info"
+                android:layout_marginTop="10dp">
+
+                <Button
+                    android:id="@+id/comment_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_downvote"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Comment"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/edit_reply"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/comment_button"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Edit"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/delete_reply"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toEndOf="@id/edit_reply"
+                    android:background="#FFFFFF"
+                    android:minWidth="10dp"
+                    android:text="Delete"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/reply_upvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Up Vote"
+
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#D13430"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/reply_downvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_upvote"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Down Vote"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#1A78CA"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +56,7 @@ public class SubscribedCourseUser extends Fragment {
                 });
     }
 
+
     public void fetchCoursebyId(final String doccourseid, final View view, final Context context) {
         subscribedCourses = new ArrayList<>();
         Log.d(TAG, "fetchCoursebyId: hello");
@@ -96,7 +96,12 @@ public class SubscribedCourseUser extends Fragment {
         subscribedCourses = new ArrayList<>();
         String userId = manageUserActivity.userId;
 
-        fetchCoursesbyUser(userId, view, getContext());
+        if (!userId.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            fetchCoursesbyUser(userId, view, getContext());
+        } else  {
+            view.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 }

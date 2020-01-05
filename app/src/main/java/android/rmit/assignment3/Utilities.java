@@ -39,21 +39,23 @@ public class Utilities {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private boolean isSuccess;
 
     public void createUser(final User currentUser, final Context context) {
-
         db.collection("Users").document(currentUser.getId()).set(currentUser)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+
                     Toast.makeText(context,"Sign Up successfully !", Toast.LENGTH_SHORT).show();
                 } else {
-
                     Toast.makeText(context, "Sign Up failed. Please try again !", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
+
     }
     
 //    Hide the keyboard

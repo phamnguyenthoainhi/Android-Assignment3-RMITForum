@@ -64,6 +64,10 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         delete = course.findViewById(R.id.deletecourse);
         currentUser = mAuth.getCurrentUser();
         courses = new ArrayList<>();
+        if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            openCreateCourse.setVisibility(View.INVISIBLE);
+
+        }
         bottomNavigationView = findViewById(R.id.bottom_nav_course);
         openCreateCourse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +78,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         fetchCourse();
         createNavBar();
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
+
 
 
     }

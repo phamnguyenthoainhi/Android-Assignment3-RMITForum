@@ -174,7 +174,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         bottomNavigationView.getMenu().getItem(0).setChecked(false);
         super.onStart();
     }
-    
+
     public void createNavBar() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

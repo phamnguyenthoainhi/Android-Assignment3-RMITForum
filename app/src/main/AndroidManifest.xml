@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_rmit_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SubscribedCoursesTab"></activity>
+
         <activity android:name=".Validate" />
         <activity android:name=".NotificationsListActivity" />
         <activity

@@ -37,17 +37,13 @@ public class CreatedPosts extends Fragment  {
     FirebaseFirestore db;
     private static final String TAG = "CreatedPosts";
 
-//    public PostAdapter.PostViewHolder.OnPostListener onPostListener;
-
-
     protected void initRecyclerView(View view, final Context context, final ArrayList<Post> arrayList){
         recyclerView = view.findViewById(R.id.postrecyclerview);
         recyclerView.setHasFixedSize(true);
         adapter = new PostAdapter(arrayList, new PostAdapter.PostViewHolder.OnPostListener() {
             @Override
             public void OnPostClick(int position) {
-                Log.d(TAG, "OnPostClick: "+ arrayList);
-                Toast.makeText(context, "Clicked "+ arrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(getActivity(),PostDetailActivity.class);
                 intent.putExtra("id", arrayList.get(position).getId());
                 startActivity(intent);
@@ -73,25 +69,28 @@ public class CreatedPosts extends Fragment  {
                     post.setId(doc.getId());
                     arrayList.add(post);
                 }
-                Log.d(TAG, "onSuccess: hello "+ arrayList);
+
                 initRecyclerView(view, context, arrayList);
             }
         });
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_tab, container, false);
-//        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         arrayList = new ArrayList<>();
-//        currentUser = mAuth.getCurrentUser();
-
         ManageUserActivity manageUserActivity = (ManageUserActivity)getActivity();
         String userId = manageUserActivity.userId;
+        if (!userId.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            fetchPostbyUser(userId, view, getContext());
+        } else {
+            view.setVisibility(View.INVISIBLE);
+        }
 
-        fetchPostbyUser(userId, view, getContext());
         return view;
     }
 }

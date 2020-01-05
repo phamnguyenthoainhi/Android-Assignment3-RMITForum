@@ -1,8 +1,10 @@
 package android.rmit.assignment3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.icu.util.ULocale;
 
@@ -128,11 +130,10 @@ public class SignUpActivity extends AppCompatActivity {
                             user.updateProfile(profileUpdates);
                             currentUser = new User(user.getUid(), inputfullname, inputemail);
 
-
-                            utilities.createUser(currentUser, SignUpActivity.this);
                             SumVote sumVote = new SumVote((long) 0);
-                            utilities.createSumVote(user.getUid(),sumVote);
 
+                            createUser(currentUser, SignUpActivity.this);
+                            utilities.createSumVote(user.getUid(),sumVote);
                             utilities.getToken();
 
                         } else {
@@ -144,5 +145,22 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    public void createUser(final User currentUser, final Context context) {
+        db.collection("Users").document(currentUser.getId()).set(currentUser)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+
+                            Toast.makeText(context,"Sign Up successfully !", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
+                        } else {
+                            Toast.makeText(context, "Sign Up failed. Please try again !", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+
     }
 }

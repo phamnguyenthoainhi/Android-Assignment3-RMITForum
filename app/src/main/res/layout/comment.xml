@@ -1,158 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/comment_info"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="15dp">
+    android:layout_height="wrap_content">
+
 
     <RelativeLayout
-        android:id="@+id/comment_info"
+        android:id="@+id/line"
+        android:layout_width="1.5dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ownercmtinfo"
+        android:layout_alignBottom="@+id/comment_layout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-2dp"
+        android:background="#31000000" />
+
+    <RelativeLayout
+        android:id="@+id/ownercmtinfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp">
 
-        <RelativeLayout
-            android:id="@+id/ownercmtinfo"
-            android:layout_width="match_parent"
+        <android.rmit.assignment3.RoundedImage
+            android:id="@+id/comment_owner_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/defaultimg" />
+
+        <TextView
+            android:id="@+id/comment_owner_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp">
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/comment_owner_avatar"
+            android:text="Owner name"
+            android:textColor="#000000" />
+    </RelativeLayout>
 
-            <android.rmit.assignment3.RoundedImage
-                android:id="@+id/comment_owner_avatar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/defaultimg" />
 
-            <TextView
-                android:id="@+id/comment_owner_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/comment_owner_avatar"
-                android:text="Owner name"
-                android:textColor="#050000" />
-        </RelativeLayout>
-
+    <LinearLayout
+        android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ownercmtinfo"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp">
 
         <LinearLayout
-            android:id="@+id/comment_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ownercmtinfo"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/comment_votes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="+"
-                    android:textColor="#D13430"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/comment_votes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/comment_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:text="Content"
-                    android:textColor="#99050000" />
-
-            </LinearLayout>
+                android:text="+"
+                android:textColor="#D13430"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/commentbuttongroup"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/comment_layout"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp">
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
 
 
-            <Button
-                android:id="@+id/comment_upvote"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/comment_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Up Vote"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="Content"
+                android:textColor="#A4080000" />
 
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#D13430"
-                android:textSize="12sp" />
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/comment_downvote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toEndOf="@id/comment_upvote"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Down Vote"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#1A78CA"
-                android:textSize="12sp" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/edit_comment"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_marginRight="20dp"
-                android:layout_toEndOf="@id/comment_downvote"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Edit"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textSize="12sp" />
+    <RelativeLayout
+        android:id="@+id/commentbuttongroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_layout"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="5dp">
 
-            <Button
-                android:id="@+id/delete_comment"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_marginEnd="0dp"
-                android:layout_toEndOf="@id/edit_comment"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Delete"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textSize="12sp" />
-        </RelativeLayout>
 
+        <Button
+            android:id="@+id/comment_upvote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
+            android:minWidth="10dp"
+            android:text="Up Vote"
+
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="#D13430"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/comment_downvote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_toEndOf="@id/comment_upvote"
+            android:background="@android:color/transparent"
+            android:minWidth="10dp"
+            android:text="Down Vote"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="#1A78CA"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/edit_comment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_marginEnd="20dp"
+            android:layout_toEndOf="@id/comment_downvote"
+            android:background="@android:color/transparent"
+            android:minWidth="10dp"
+            android:text="Edit"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="#A8030000"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/delete_comment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_marginEnd="0dp"
+            android:layout_toEndOf="@id/edit_comment"
+            android:background="@android:color/transparent"
+            android:minWidth="10dp"
+            android:text="Delete"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textColor="#A8030000"
+            android:textSize="12sp" />
     </RelativeLayout>
+
 
 </RelativeLayout>

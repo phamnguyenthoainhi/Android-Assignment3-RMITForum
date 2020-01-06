@@ -10,180 +10,198 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/ownerreply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/line"-->
+        <!--            android:layout_width="1.5dp"-->
+        <!--            android:layout_height="wrap_content"-->
 
-            <android.rmit.assignment3.RoundedImage
-                android:id="@+id/reply_owner_avatar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/defaultimg" />
-
-
-            <TextView
-
-                android:id="@+id/reply_owner_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/owneravatar"
-                android:text="Owner name"
-                android:textColor="#0A0000" />
-            />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/contentreply"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ownerreply"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/reply_votes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+"
-                    android:textColor="#D13430"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="-"
-                    android:textColor="#1A78CA"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/reply_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Content"
-                    android:textColor="#AB080000" />
-            </LinearLayout>
-        </LinearLayout>
+        <!--            android:layout_alignBottom="@+id/replylayout"-->
+        <!--            android:layout_alignParentTop="true"-->
+        <!--            android:layout_marginStart="12dp"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:layout_marginBottom="55dp"-->
+        <!--            android:background="#31000000" />-->
 
         <RelativeLayout
-            android:id="@+id/replybuttongroup"
+            android:id="@+id/replylayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/contentreply"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp">
+            android:layout_height="wrap_content">
 
-
-            <Button
-                android:id="@+id/reply_upvote"
+            <LinearLayout
+                android:id="@+id/ownerreply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Up Vote"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#D13430"
-                android:textSize="12sp" />
+                <android.rmit.assignment3.RoundedImage
+                    android:id="@+id/reply_owner_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/defaultimg" />
 
-            <Button
-                android:id="@+id/reply_downvote"
-                android:layout_width="wrap_content"
+
+                <TextView
+
+                    android:id="@+id/reply_owner_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/owneravatar"
+                    android:text="Owner name"
+                    android:textColor="#000000"
+                    android:textStyle="" />
+                />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/replybuttongroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toEndOf="@id/reply_upvote"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Down Vote"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#1A78CA"
-                android:textSize="12sp" />
+                android:layout_below="@id/contentreply"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp">
 
-            <Button
-                android:id="@+id/reply_comment"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_marginRight="20dp"
-                android:layout_toEndOf="@id/reply_downvote"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Comment"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#0A0000"
-                android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/edit_reply"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_marginRight="20dp"
-                android:layout_toEndOf="@id/reply_comment"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Edit"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#0A0000"
-                android:textSize="12sp" />
+                <Button
+                    android:id="@+id/reply_upvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Up Vote"
 
-            <Button
-                android:id="@+id/delete_reply"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#D13430"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/reply_downvote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_upvote"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Down Vote"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#1A78CA"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/reply_comment"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_downvote"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Comment"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#A9030000"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/edit_reply"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_toEndOf="@id/reply_comment"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Edit"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#A9030000"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/delete_reply"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toEndOf="@id/edit_reply"
+                    android:background="@android:color/transparent"
+                    android:minWidth="10dp"
+                    android:text="Delete"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="#A9030000"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/contentreply"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_marginEnd="0dp"
-                android:layout_toEndOf="@id/edit_reply"
-                android:background="@android:color/transparent"
-                android:minWidth="10dp"
-                android:text="Delete"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="#0A0000"
-                android:textSize="12sp" />
+                android:layout_below="@id/ownerreply"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/reply_votes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+"
+                        android:textColor="#D13430"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/reply_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:text="Content"
+                        android:textColor="#A4080000" />
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/replybuttongroup"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="#FFFFFF" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/replylayout"
+            android:layout_marginStart="20dp" />
 
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/reply_info"
+        android:background="#20030000">
 
     </RelativeLayout>
 

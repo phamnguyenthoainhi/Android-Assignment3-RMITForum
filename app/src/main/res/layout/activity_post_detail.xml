@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f5f5f5"
+    android:background="#3CCFD8DC"
     android:orientation="vertical"
     tools:context=".PostDetailActivity">
 
@@ -12,11 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="0dp"
+        app:cardBackgroundColor="#FFFFFF"
+
         app:cardCornerRadius="10dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
-
         app:contentPadding="15dp">
 
         <RelativeLayout
@@ -48,7 +49,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/owneravatar"
                     android:text="Owner name"
-                    android:textColor="#B51A0202" />
+                    android:textColor="#000000" />
             </RelativeLayout>
 
             <LinearLayout
@@ -75,7 +76,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="30dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -84,13 +85,14 @@
                         android:layout_height="wrap_content"
 
                         android:text="Title"
-                        android:textColor="#FC070000" />
+                        android:textColor="#E4070000" />
 
                     <TextView
                         android:id="@+id/content_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
+                        android:textColor="#9A080000"
                         tools:text="Content" />
 
                 </LinearLayout>
@@ -112,7 +114,7 @@
                     android:layout_alignParentEnd="false"
                     android:layout_marginRight="20dp"
                     android:layout_toEndOf="@id/post_downvote"
-                    android:background="#FFFFFF"
+                    android:background="@android:color/transparent"
                     android:minWidth="10dp"
                     android:text="Reply"
                     android:textAlignment="viewStart"
@@ -128,7 +130,7 @@
                     android:layout_alignParentEnd="false"
                     android:layout_marginRight="20dp"
                     android:layout_toEndOf="@id/reply_button"
-                    android:background="#FFFFFF"
+                    android:background="@android:color/transparent"
                     android:minWidth="10dp"
                     android:text="Edit"
                     android:textAlignment="viewStart"
@@ -144,7 +146,7 @@
                     android:layout_alignParentEnd="false"
                     android:layout_marginEnd="0dp"
                     android:layout_toEndOf="@id/edit_post"
-                    android:background="#FFFFFF"
+                    android:background="@android:color/transparent"
                     android:minWidth="10dp"
                     android:text="Delete"
                     android:textAlignment="viewStart"

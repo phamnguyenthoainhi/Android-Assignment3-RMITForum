@@ -97,6 +97,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Button editComment;
         Button deleteComment;
 
+
         OnCommentListener onCommentListener;
 
 
@@ -110,6 +111,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             commentOwner = v.findViewById(R.id.comment_owner_name);
             editComment = v.findViewById(R.id.edit_comment);
             deleteComment = v.findViewById(R.id.delete_comment);
+
 
             deleteComment.setOnClickListener(new View.OnClickListener() {
                 @Override

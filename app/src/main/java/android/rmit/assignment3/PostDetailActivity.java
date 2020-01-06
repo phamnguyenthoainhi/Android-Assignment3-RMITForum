@@ -112,6 +112,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     @Override

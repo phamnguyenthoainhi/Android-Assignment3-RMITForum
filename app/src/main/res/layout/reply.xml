@@ -37,7 +37,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/owneravatar"
                 android:text="Owner name"
-                android:textColor="#F8080000" />
+                android:textColor="#0A0000" />
             />
         </LinearLayout>
 
@@ -139,6 +139,7 @@
                 android:text="Comment"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
+                android:textColor="#0A0000"
                 android:textSize="12sp" />
 
             <Button
@@ -154,6 +155,7 @@
                 android:text="Edit"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
+                android:textColor="#0A0000"
                 android:textSize="12sp" />
 
             <Button
@@ -169,6 +171,7 @@
                 android:text="Delete"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
+                android:textColor="#0A0000"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -176,7 +179,10 @@
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/replybuttongroup" />
+            android:layout_below="@id/replybuttongroup"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#FFFFFF" />
 
 
     </RelativeLayout>

@@ -37,7 +37,8 @@
         android:background="@android:color/transparent"
         android:text="Create a new post"
         android:textAlignment="viewStart"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="#BC1C22" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"

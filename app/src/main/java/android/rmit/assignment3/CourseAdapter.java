@@ -37,6 +37,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
 
 
+
     @NonNull
     @Override
     public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,6 +55,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
+
         holder.courseid.setText(myCourseList.get(position).getId());
         holder.coursename.setText(myCourseList.get(position).getName());
 
@@ -90,9 +92,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 edit.setVisibility(View.INVISIBLE);
                 delete.setVisibility(View.INVISIBLE);
 
+
             } else {
                 edit.setVisibility(View.VISIBLE);
                 delete.setVisibility(View.VISIBLE);
+
             }
 
             this.onCourseListener = onCourseListener;
@@ -147,7 +151,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     private void fetchSubscribeInfo(String idCourse, final CourseViewHolder holder){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         db.collection("CourseUsers").document(idCourse.concat(mAuth.getUid())).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -156,12 +160,25 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                         if(task.isSuccessful()){
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if(documentSnapshot.exists()){
-                                holder.unsubscribebtn.setVisibility(View.VISIBLE);
-                                holder.subscribebtn.setVisibility(View.GONE);
+                                if (mAuth.getCurrentUser().getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+                                    holder.subscribebtn.setVisibility(View.GONE);
+                                    holder.unsubscribebtn.setVisibility(View.GONE);
+                                } else {
+                                    holder.unsubscribebtn.setVisibility(View.VISIBLE);
+                                    holder.subscribebtn.setVisibility(View.GONE);
+                                }
+
                             }
                             else{
-                                holder.subscribebtn.setVisibility(View.VISIBLE);
-                                holder.unsubscribebtn.setVisibility(View.GONE);
+                                if (mAuth.getCurrentUser().getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+                                    holder.subscribebtn.setVisibility(View.GONE);
+                                    holder.unsubscribebtn.setVisibility(View.GONE);
+                                } else {
+                                    holder.subscribebtn.setVisibility(View.VISIBLE);
+                                    holder.unsubscribebtn.setVisibility(View.GONE);
+                                }
+
+
                             }
                         }
                     }

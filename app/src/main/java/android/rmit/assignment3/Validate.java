@@ -32,7 +32,7 @@ public class Validate extends AppCompatActivity {
                                               @Override
                                               public void onSuccess(Void aVoid) {
                                                   Toast.makeText(Validate.this, "Please check your email", Toast.LENGTH_SHORT).show();
-                                                  finish();
+                                                  startActivity(new Intent(Validate.this, CourseActivity.class));
                                               }
                                           });
                                       }

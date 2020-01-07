@@ -2,6 +2,7 @@ package android.rmit.assignment3;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -191,10 +192,12 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).increaseUpvote();
+                holder.replyUpvote.setTextColor(Color.parseColor("#7C020000"));
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;
             case DOWNVOTE:
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
+                holder.replyDownvote.setTextColor(Color.parseColor("#7C020000"));
                 replies.get(replyIndex).decreaseUpvote();
                 break;
         }
@@ -205,10 +208,14 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).decreaseUpvote();
-//                fetchupdateSumVotes();
+                holder.replyUpvote.setTextColor(Color.parseColor("#D13430"));
+
+
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
                 break;
             case DOWNVOTE:
+                holder.replyDownvote.setTextColor(Color.parseColor("#1A78CA"));
+
                 replies.get(replyIndex).increaseUpvote();
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import android.content.DialogInterface;
@@ -90,6 +91,8 @@ public class ManageUserActivity extends AppCompatActivity {
     PagerController pagerController;
     String userId;
     TextView ranking;
+    ArrayList<UserSumVote> userSumVotes;
+
 
 
 
@@ -121,6 +124,7 @@ public class ManageUserActivity extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,6 +152,14 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
 
+        if (currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")){
+            recyclerView = findViewById(R.id.rankrecyclerview);
+            recyclerView.setVisibility(View.VISIBLE);
+            TextView rankingtext = findViewById(R.id.ranktextview);
+            rankingtext.setVisibility(View.VISIBLE);
+            userSumVotes = new ArrayList<>();
+            fetchSumVote();
+        }
 
     }
 
@@ -222,7 +234,7 @@ public class ManageUserActivity extends AppCompatActivity {
                         if (!id.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")){
                             if (sumVotes.size() > 5 ) {
                                 for (int i = 0; i < 5 ; i++) {
-                                    if (id.equals(sumVotes.get(i).getId())) {
+                                    if ((id.equals(sumVotes.get(i).getId())) && (sumVotes.get(i).getSum() >= 5) ) {
                                         ranklayout.setVisibility(View.VISIBLE);
                                         trophy.setImageResource(R.drawable.award);
                                         break;
@@ -232,7 +244,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                 }
                             } if (sumVotes.size() == 2) {
                                 for (int i = 0; i < 2 ; i++) {
-                                    if (id.equals(sumVotes.get(i).getId())) {
+                                    if (id.equals(sumVotes.get(i).getId()) && sumVotes.get(i).getSum() >= 5) {
                                         Log.d(TAG, "onSuccess: checking "+currentUser.getUid().equals(sumVotes.get(i).getId()) );
                                         ranklayout.setVisibility(View.VISIBLE);
                                         trophy.setImageResource(R.drawable.award);
@@ -244,7 +256,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                 }
                             } if (sumVotes.size() == 3) {
                                 for (int i = 0; i < 3 ; i++) {
-                                    if (id.equals(sumVotes.get(i).getId())) {
+                                    if (id.equals(sumVotes.get(i).getId()) && sumVotes.get(i).getSum() >= 5) {
                                         ranklayout.setVisibility(View.VISIBLE);
                                         trophy.setImageResource(R.drawable.award);
                                         break;
@@ -255,7 +267,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
                             } if (sumVotes.size() == 4) {
                                 for (int i = 0; i < 4 ; i++) {
-                                    if (id.equals(sumVotes.get(i).getId())) {
+                                    if (id.equals(sumVotes.get(i).getId()) && sumVotes.get(i).getSum() >= 5) {
                                         ranklayout.setVisibility(View.VISIBLE);
                                         trophy.setImageResource(R.drawable.award);
                                         break;
@@ -265,7 +277,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                 }
                             }
                             if (sumVotes.size() == 1) {
-                                if (id.equals(sumVotes.get(0).getId())) {
+                                if (id.equals(sumVotes.get(0).getId()) && sumVotes.get(0).getSum() >= 5) {
                                     ranklayout.setVisibility(View.VISIBLE);
                                     trophy.setImageResource(R.drawable.award);
 
@@ -369,10 +381,6 @@ public class ManageUserActivity extends AppCompatActivity {
         usernameedit.setText(currentUser.getDisplayName());
         edit = editDialog.findViewById(R.id.editUserbtn);
         imageView = editDialog.findViewById(R.id.imageview);
-
-
-//        imageView.setImageURI(currentUser.getPhotoUrl());
-        Log.d(TAG, "openForm: current user photo url "+ currentUser.getPhotoUrl());
         editavatar = editDialog.findViewById(R.id.editavatar);
 
 
@@ -483,11 +491,76 @@ public class ManageUserActivity extends AppCompatActivity {
         });
     }
 
+    public void fetchSumVote() {
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (final DocumentSnapshot doc: queryDocumentSnapshots
+                             ) {
+                            db.collection("Users").document(doc.getId()).get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot snapshot) {
+                                            UserSumVote userSumVote = new UserSumVote();
+                                            Log.d(TAG, "onSuccess: "+ snapshot.get("fullname") + " : " + doc.get("sum") );
+                                            if (snapshot.get("imageuri") == null) {
+                                                userSumVote.setImageuri(null);
+                                                userSumVote.setUsername(snapshot.get("fullname").toString());
+                                                userSumVote.setVote((Long) doc.get("sum"));
+                                                userSumVote.setUserid(userId);
+                                                userSumVotes.add(userSumVote);
 
+                                                initRecylerview(userSumVotes);
+                                            }
+                                            else if (snapshot.get("fullname") == null) {
+                                                userSumVote.setUsername("");
+                                                userSumVote.setImageuri(snapshot.get("imageuri").toString());
+                                                userSumVote.setVote((Long) doc.get("sum"));
+                                                userSumVote.setUserid(userId);
+                                                userSumVotes.add(userSumVote);
+
+                                                initRecylerview(userSumVotes);
+                                            }
+                                            else if (doc.get("sum") == null) {
+                                                userSumVote.setVote((long) 0);
+                                                userSumVote.setImageuri(snapshot.get("imageuri").toString());
+                                                userSumVote.setUsername(snapshot.get("fullname").toString());
+
+                                                userSumVote.setUserid(userId);
+                                                userSumVotes.add(userSumVote);
+
+                                                initRecylerview(userSumVotes);
+                                            }
+                                            else {
+                                                userSumVote.setImageuri(snapshot.get("imageuri").toString());
+                                                userSumVote.setUsername(snapshot.get("fullname").toString());
+                                                userSumVote.setVote((Long) doc.get("sum"));
+                                                userSumVote.setUserid(userId);
+                                                userSumVotes.add(userSumVote);
+                                                initRecylerview(userSumVotes);
+
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
 
 
     public Uri convertUri(String s) {
         Uri uri = Uri.parse(s);
         return uri;
     }
+
+
+    public void initRecylerview(ArrayList<UserSumVote> userSumVotes ) {
+        System.out.println("Hello");
+        RankAdapter rankAdapter = new RankAdapter(userSumVotes, ManageUserActivity.this);
+        recyclerView.setAdapter(rankAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ManageUserActivity.this));
+    }
+
+
 }

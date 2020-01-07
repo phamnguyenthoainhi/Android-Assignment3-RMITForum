@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -222,6 +223,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         switch(vote){
             case UPVOTE:
                 reply.increaseUpvote();
+                upvoteReply.setTextColor(Color.parseColor("#7C020000"));
                 if (reply.getOwner() != null ){
                     fetchupdateSumVotes(reply.getOwner(), true);
                 }
@@ -229,6 +231,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                 break;
             case DOWNVOTE:
                 reply.decreaseUpvote();
+                downvoteReply.setTextColor(Color.parseColor("#7C020000"));
                 if (reply.getOwner() != null) {
                     fetchupdateSumVotes(reply.getOwner(), false);
                 }
@@ -240,12 +243,14 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
     protected void undoVote(Vote vote){
         switch(vote){
             case UPVOTE:
+                upvoteReply.setTextColor(Color.parseColor("#D13430"));
                 reply.decreaseUpvote();
                 if (reply.getOwner() != null) {
                     fetchupdateSumVotes(reply.getOwner(), false);
                 }
                 break;
             case DOWNVOTE:
+                downvoteReply.setTextColor(Color.parseColor("#1A78CA"));
                 reply.increaseUpvote();
                 if (reply.getOwner() != null ){
                     fetchupdateSumVotes(reply.getOwner(), true);

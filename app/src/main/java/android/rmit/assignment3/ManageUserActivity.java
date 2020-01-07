@@ -158,6 +158,7 @@ public class ManageUserActivity extends AppCompatActivity {
             TextView rankingtext = findViewById(R.id.ranktextview);
             rankingtext.setVisibility(View.VISIBLE);
             userSumVotes = new ArrayList<>();
+
             fetchSumVote();
         }
 
@@ -511,7 +512,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                                 userSumVote.setUserid(userId);
                                                 userSumVotes.add(userSumVote);
 
-                                                initRecylerview(userSumVotes);
+                                                initRecylerview(sortrank(userSumVotes));
                                             }
                                             else if (snapshot.get("fullname") == null) {
                                                 userSumVote.setUsername("");
@@ -520,7 +521,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                                 userSumVote.setUserid(userId);
                                                 userSumVotes.add(userSumVote);
 
-                                                initRecylerview(userSumVotes);
+                                                initRecylerview(sortrank(userSumVotes));
                                             }
                                             else if (doc.get("sum") == null) {
                                                 userSumVote.setVote((long) 0);
@@ -530,7 +531,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                                 userSumVote.setUserid(userId);
                                                 userSumVotes.add(userSumVote);
 
-                                                initRecylerview(userSumVotes);
+                                                initRecylerview(sortrank(userSumVotes));
                                             }
                                             else {
                                                 userSumVote.setImageuri(snapshot.get("imageuri").toString());
@@ -538,7 +539,7 @@ public class ManageUserActivity extends AppCompatActivity {
                                                 userSumVote.setVote((Long) doc.get("sum"));
                                                 userSumVote.setUserid(userId);
                                                 userSumVotes.add(userSumVote);
-                                                initRecylerview(userSumVotes);
+                                                initRecylerview(sortrank(userSumVotes));
 
                                             }
                                         }
@@ -554,6 +555,17 @@ public class ManageUserActivity extends AppCompatActivity {
         return uri;
     }
 
+    public ArrayList<UserSumVote> sortrank(ArrayList<UserSumVote> userSumVotes) {
+
+        Collections.sort(userSumVotes, new Comparator<UserSumVote>() {
+            @Override
+            public int compare(UserSumVote userSumVote1, UserSumVote userSumVote2) {
+                return (int) (userSumVote2.getVote() - userSumVote1.getVote());
+            }
+        } );
+        
+        return userSumVotes;
+    }
 
     public void initRecylerview(ArrayList<UserSumVote> userSumVotes ) {
         System.out.println("Hello");

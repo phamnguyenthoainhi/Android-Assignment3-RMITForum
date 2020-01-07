@@ -6,15 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,7 +33,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -56,6 +58,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     BottomNavigationView bottomNavigationView;
     EditText courseid;
     View notificationBadge;
+
 
 
     @Override
@@ -93,6 +96,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     @Override
     protected void onStart() {
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
+        registerReceiver(notificationReceiver, new IntentFilter());
 
         super.onStart();
     }
@@ -422,4 +426,23 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
             showNotificationBadge();
         }
     }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(notificationReceiver);
+    }
+
+    private BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String notification = intent.getAction();
+            System.out.println("COURSE: Received intent");
+            if(notification!=null && notification.equals("NOTIFICATION")){
+                System.out.println("COURSE: Received intent");
+                showNotificationBadge();
+            }
+        }
+    };
 }

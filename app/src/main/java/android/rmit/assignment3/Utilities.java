@@ -148,17 +148,6 @@ public class Utilities {
                 });
     }
 
-
-
-
-
-
-
-
-
-
-
-
     public void unsubscribe(String id, final Context context){
         db.collection("CourseUsers").document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

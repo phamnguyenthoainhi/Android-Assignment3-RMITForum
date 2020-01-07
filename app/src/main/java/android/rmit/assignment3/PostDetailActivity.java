@@ -56,6 +56,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     ArrayList<Reply> replies = new ArrayList<>();
     Utilities utilities = new Utilities();
     SumVote sumVote;
+    Button follow;
 
     RecyclerView.Adapter adapter;
 
@@ -99,6 +100,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
             }
         });
 
+        follow = findViewById(R.id.follow);
+
         onNewIntent(getIntent());
 
         currentUser = mAuth.getCurrentUser();
@@ -129,8 +132,88 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         fetchPost((String)bundle.get("id"));
         id =(String) bundle.get("id");
 
+        fetchFollowing();
         fetchReplies(id);
 
+    }
+
+    protected void followPost(PostUser postUser){
+        if(mAuth.getUid()!=null) {
+            db.collection("PostUser").document(id.concat(mAuth.getUid())).set(postUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    follow.setText("Following");
+                    follow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            unfollowPost();
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
+    protected void unfollowPost(){
+        if(mAuth.getUid()!=null){
+            db.collection("PostUser").document(id.concat(mAuth.getUid())).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            follow.setText("Follow");
+                            follow.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    followPost(new PostUser(mAuth.getUid(),id));
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
+    protected void fetchFollowing(){
+        if(mAuth.getUid()!=null){
+            db.collection("PostUser").document(id.concat(mAuth.getUid())).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.exists()){
+                                follow.setText("Following");
+                                follow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        unfollowPost();
+                                    }
+                                });
+                            }
+                            else{
+                                follow.setText("Follow");
+                                follow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        followPost(new PostUser(mAuth.getUid(),id));
+                                    }
+                                });
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     public void initRecyclerView(){

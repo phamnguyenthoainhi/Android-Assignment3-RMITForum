@@ -1,5 +1,6 @@
 package android.rmit.assignment3;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -65,5 +66,8 @@ public class NotificationService extends FirebaseMessagingService {
         notification.flags=Notification.FLAG_AUTO_CANCEL;
 
         notificationManager.notify(123,notification);
+        sendBroadcast(new Intent(this,CourseActivity.class).setAction("NOTIFICATION"));
+        //sendBroadcast(new Intent(this, PostsListActivity.class).setAction("NOTIFICATION"));
+
     }
 }

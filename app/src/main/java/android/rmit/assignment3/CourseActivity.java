@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,12 +51,11 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     Course_User course_user;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
-//    boolean isSubscribed = false;
+    //    boolean isSubscribed = false;
     String subscribedCourseid;
     BottomNavigationView bottomNavigationView;
     EditText courseid;
-    int viewId;
-    
+    View notificationBadge;
 
 
     @Override
@@ -368,51 +368,51 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()) {
-                                if(task.isSuccessful()) {
-                                    if (task.getResult() != null ) {
-                                        if(task.getResult().size()>0) {
-                                            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-                                            View view = bottomNavigationMenuView.getChildAt(2);
-                                            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-                                            View notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
-                                            ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(task.getResult().size() + "");
-                                            bottomNavigationItemView.addView(notificationBadge);
-                                            viewId=notificationBadge.getId();
 
-                                        }
-                                        else{
-                                            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-                                            View view = bottomNavigationMenuView.getChildAt(2);
-                                            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-                                            View notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
-                                            ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText("");
-                                            notificationBadge.findViewById(R.id.notif_count).setBackgroundColor(Color.parseColor("#00FFFFFF"));
-                                            bottomNavigationItemView.addView(notificationBadge);
-                                            View badge = bottomNavigationItemView.findViewById(viewId);
-                                            if(badge!=null){
-                                                badge.setVisibility(View.GONE);
-                                            }
-
-                                        }
+                                if (task.getResult() != null ) {
+                                    if (task.getResult().size() >= 1) {
+                                        System.out.println("Notification: " + task.getResult().size());
+                                        addNotificationBadge(task.getResult().size());
                                     }
                                     else{
-                                        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-                                        View view = bottomNavigationMenuView.getChildAt(2);
-                                        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-                                        View notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
-                                        ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText("");
-                                        notificationBadge.findViewById(R.id.notif_count).setBackgroundColor(Color.parseColor("#00FFFFFF"));
-                                        bottomNavigationItemView.addView(notificationBadge);
-                                        View badge = bottomNavigationItemView.findViewById(viewId);
-                                        if(badge!=null){
-                                            badge.setVisibility(View.GONE);
-                                        }
+                                        removeNotificationBadge();
                                     }
                                 }
+                                else{
+                                    removeNotificationBadge();
+                                }
                             }
+                            else{
+                                removeNotificationBadge();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            removeNotificationBadge();
                         }
                     });
         }
+    }
+
+    public void removeNotificationBadge(){
+        if(notificationBadge!=null) {
+            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+            View view = bottomNavigationMenuView.getChildAt(2);
+            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+            bottomNavigationItemView.removeView(notificationBadge);
+
+        }
+    }
+
+    public void addNotificationBadge(int number){
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        View view = bottomNavigationMenuView.getChildAt(2);
+        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+        notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+        ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(number + "");
+        bottomNavigationItemView.addView(notificationBadge);
     }
 
     @Override

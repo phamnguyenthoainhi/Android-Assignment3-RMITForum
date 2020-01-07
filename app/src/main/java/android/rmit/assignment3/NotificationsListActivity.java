@@ -1,5 +1,6 @@
 package android.rmit.assignment3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -25,7 +28,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     ArrayList<Notification> notifications = new ArrayList<>();
     RecyclerView.Adapter adapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private static final String TAG = "NotificationsListActivity";
+    private static final String TAG = "NotificationsList";
 
 
     @Override
@@ -49,12 +52,10 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     @Override
     protected void onResume() {
         super.onResume();
-        if(mAuth.getCurrentUser()!=null){
+        if(adapter!=null){
             notifications = new ArrayList<>();
             fetchNotifications(mAuth.getUid());
-            if(adapter!=null){
-                adapter.notifyDataSetChanged();
-            }
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -92,22 +93,24 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
     }
 
     protected void fetchNotifications(String id){
-        Toast.makeText(this, "fetching notif", Toast.LENGTH_SHORT).show();
-        db.collection("Notifications").whereEqualTo("user",id).get()
+        db.collection("Notifications").whereEqualTo("user",id).orderBy("dateTime", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Toast.makeText(NotificationsListActivity.this, "Successfully fetched notifs", Toast.LENGTH_SHORT).show();
                         for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
                             Notification notification = documentSnapshot.toObject(Notification.class);
                             notification.setId(documentSnapshot.getId());
                             notifications.add(notification);
-                        }
-                        initRecyclerView();
-
-                        for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
                             updateNotificationStatus(documentSnapshot.getId());
                         }
-
+                        initRecyclerView();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
                     }
                 });
     }
@@ -117,7 +120,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("NOTIFICATIONS LIST: ","Set done.");
+                        Log.d(TAG,"Set done.");
                     }
                 });
     }

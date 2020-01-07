@@ -55,6 +55,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     BottomNavigationView bottomNavigationView;
+    View notificationBadge;
 
 
     @Override
@@ -138,6 +139,12 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         if (bottomNavigationView!=null){
             showNotificationBadge();
         }
+        if(adapter!=null){
+            posts= new ArrayList<>();
+            fetchPosts(courseId);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     public ArrayList<Post> sort(ArrayList<Post> postArrayList) {
@@ -266,29 +273,50 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()) {
-                                if (task.getResult() != null ) {
-                                    if(task.getResult().size()>0) {
-                                        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-                                        View view = bottomNavigationMenuView.getChildAt(2);
-                                        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-                                        View notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
-                                        ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(task.getResult().size() + "");
-                                        notificationBadge.setVisibility(View.VISIBLE);
-                                        bottomNavigationItemView.addView(notificationBadge);
 
+                                if (task.getResult() != null ) {
+                                    if (task.getResult().size() >= 1) {
+                                        System.out.println("Notification: " + task.getResult().size());
+                                        addNotificationBadge(task.getResult().size());
                                     }
                                     else{
-                                        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-                                        View view = bottomNavigationMenuView.getChildAt(2);
-                                        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-                                        View notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
-                                        bottomNavigationItemView.addView(notificationBadge);
-                                        notificationBadge.setVisibility(View.GONE);
+                                        removeNotificationBadge();
                                     }
                                 }
+                                else{
+                                    removeNotificationBadge();
+                                }
                             }
+                            else{
+                                removeNotificationBadge();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            removeNotificationBadge();
                         }
                     });
         }
+    }
+
+    public void removeNotificationBadge(){
+        if(notificationBadge!=null) {
+            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+            View view = bottomNavigationMenuView.getChildAt(2);
+            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+            bottomNavigationItemView.removeView(notificationBadge);
+
+        }
+    }
+
+    public void addNotificationBadge(int number){
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        View view = bottomNavigationMenuView.getChildAt(2);
+        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
+        notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+        ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(number + "");
+        bottomNavigationItemView.addView(notificationBadge);
     }
 }

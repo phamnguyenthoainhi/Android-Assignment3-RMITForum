@@ -19,9 +19,9 @@
                 android:id="@+id/reply_dialog_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reply to this post"
+                android:text="Comment on this post"
                 android:textAlignment="center"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/reply_input_content"
@@ -42,7 +42,7 @@
                 android:layout_marginRight="60dp"
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="#BC1C22"
-                android:text="Reply"
+                android:text="Comment"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

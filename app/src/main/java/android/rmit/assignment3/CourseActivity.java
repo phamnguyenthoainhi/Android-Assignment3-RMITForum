@@ -73,6 +73,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
             openCreateCourse.setVisibility(View.INVISIBLE);
 
+
         }
         bottomNavigationView = findViewById(R.id.bottom_nav_course);
         openCreateCourse.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +98,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     }
 
     public void initListView() {
-        Log.d(TAG, "initListView: " + courses);
 
         recyclerView = findViewById(R.id.recycleviewcourse);
         courseAdapter = new CourseAdapter(courses, this);

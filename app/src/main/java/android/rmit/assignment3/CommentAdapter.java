@@ -3,6 +3,7 @@ package android.rmit.assignment3;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private ArrayList<Comment> comments;
     private Utilities utilities = new Utilities();
     Context mContext;
+    SumVote sumVote = new SumVote();
     CommentViewHolder.OnCommentListener onCommentListener;
 
     @NonNull
@@ -142,9 +145,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     protected void vote(int commentIndex, PostDetailActivity.Vote vote, CommentViewHolder holder){
         switch(vote){
             case UPVOTE:
+                holder.commentUpvote.setTextColor(Color.parseColor("#7C020000"));
                 comments.get(commentIndex).increaseUpvote();
+                fetchupdateSumVotes(comments.get(commentIndex).getOwner(), true);
                 break;
             case DOWNVOTE:
+                holder.commentDownvote.setTextColor(Color.parseColor("#7C020000"));
+                fetchupdateSumVotes(comments.get(commentIndex).getOwner(), false);
+
                 comments.get(commentIndex).decreaseUpvote();
                 break;
         }
@@ -154,9 +162,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     protected void undoVote(int commentIndex, PostDetailActivity.Vote vote, CommentViewHolder holder){
         switch(vote){
             case UPVOTE:
+                fetchupdateSumVotes(comments.get(commentIndex).getOwner(), false);
+
                 comments.get(commentIndex).decreaseUpvote();
+                holder.commentUpvote.setTextColor(Color.parseColor("#D13430"));
+
                 break;
             case DOWNVOTE:
+                fetchupdateSumVotes(comments.get(commentIndex).getOwner(), true);
+
+                holder.commentDownvote.setTextColor(Color.parseColor("#1A78CA"));
+
                 comments.get(commentIndex).increaseUpvote();
                 break;
         }
@@ -333,6 +349,31 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         }
                     });
         }
+    }
+
+
+    public void fetchupdateSumVotes(final String ownerid, final boolean plus) {
+
+        db.collection("SumVotes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc: queryDocumentSnapshots.getDocuments()) {
+                            if(doc.getId().equals(ownerid)) {
+                                if (doc.get("sum") != null) {
+                                    if (plus) {
+                                        sumVote.setSum((Long) doc.get("sum") + 1);
+                                    } else {
+                                        if ((long) doc.get("sum") > 0) {
+                                            sumVote.setSum((long) doc.get("sum") - 1);
+                                        }
+                                    }
+                                    utilities.updateSumVote(ownerid, sumVote.getSum());
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
 

@@ -116,7 +116,7 @@
                     android:layout_toEndOf="@id/post_downvote"
                     android:background="@android:color/transparent"
                     android:minWidth="10dp"
-                    android:text="Reply"
+                    android:text="Comment"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
                     android:textColor="#A9030000"

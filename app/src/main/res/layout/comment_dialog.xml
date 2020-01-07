@@ -21,9 +21,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Comment on this reply"
+                android:text="Reply to this comment"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/comment_input_content"
@@ -32,7 +32,8 @@
                 android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/create_comment"
@@ -42,7 +43,7 @@
                 android:layout_marginRight="60dp"
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="#BC1C22"
-                android:text="Comment"
+                android:text="Reply"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -320,10 +321,12 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null ){
                     fetchupdateSumVotes(post.getOwner(), true);
                 }
+                upvotePost.setTextColor(Color.parseColor("#7C020000"));
 
                 break;
             case DOWNVOTE:
                 post.decreaseUpvote();
+                downvotePost.setTextColor(Color.parseColor("#7C020000"));
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
@@ -339,12 +342,14 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
+                upvotePost.setTextColor(Color.parseColor("#D13430"));
                 break;
             case DOWNVOTE:
                 post.increaseUpvote();
                 if (post.getOwner() != null ){
                     fetchupdateSumVotes(post.getOwner(), true);
                 }
+                downvotePost.setTextColor(Color.parseColor("#1A78CA"));
                 break;
         }
         removeUpvote();

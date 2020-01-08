@@ -124,4 +124,5 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                     }
                 });
     }
+
 }

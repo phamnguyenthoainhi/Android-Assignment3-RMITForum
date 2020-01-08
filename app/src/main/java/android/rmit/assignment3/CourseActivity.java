@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -87,6 +88,9 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         });
         fetchCourse();
         createNavBar();
+
+
+
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
 
         showNotificationBadge();
@@ -96,7 +100,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     @Override
     protected void onStart() {
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
-        registerReceiver(notificationReceiver, new IntentFilter());
+        registerReceiver(notificationReceiver, new IntentFilter("android.rmit.assignment3.NOTIFICATION_CHECK"));
 
         super.onStart();
     }
@@ -368,25 +372,18 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     public void showNotificationBadge(){
         if(mAuth.getUid()!=null){
             db.collection("Notifications").whereEqualTo("user",mAuth.getUid()).whereEqualTo("seen",false).get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            System.out.println("Notifications success");
+                            if(!queryDocumentSnapshots.isEmpty()){
 
-                                if (task.getResult() != null ) {
-                                    if (task.getResult().size() >= 1) {
-                                        System.out.println("Notification: " + task.getResult().size());
-                                        addNotificationBadge(task.getResult().size());
-                                    }
-                                    else{
-                                        removeNotificationBadge();
-                                    }
-                                }
-                                else{
-                                    removeNotificationBadge();
-                                }
+                                System.out.println("Notifications exist: " + queryDocumentSnapshots.size());
+                                addNotificationBadge(queryDocumentSnapshots.size());
+
                             }
                             else{
+                                System.out.println("Notifications empty");
                                 removeNotificationBadge();
                             }
                         }
@@ -394,6 +391,8 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Notifications fail");
                             removeNotificationBadge();
                         }
                     });
@@ -402,6 +401,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 
     public void removeNotificationBadge(){
         if(notificationBadge!=null) {
+            System.out.println("Notifications remove badge");
             BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
             View view = bottomNavigationMenuView.getChildAt(2);
             BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
@@ -411,6 +411,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     }
 
     public void addNotificationBadge(int number){
+        System.out.println("Notifications add badge");
         BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         View view = bottomNavigationMenuView.getChildAt(2);
         BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
@@ -427,20 +428,19 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         }
     }
 
-
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(notificationReceiver);
     }
+
 
     private BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String notification = intent.getAction();
-            System.out.println("COURSE: Received intent");
-            if(notification!=null && notification.equals("NOTIFICATION")){
-                System.out.println("COURSE: Received intent");
+            if(notification!=null && notification.equals("android.rmit.assignment3.NOTIFICATION_CHECK")){
+                System.out.println("Notifications broadcast received");
                 showNotificationBadge();
             }
         }

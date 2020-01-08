@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -14,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 
@@ -75,7 +79,10 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         });
 
         bottomNavigationView = findViewById(R.id.bottom_nav_post);
+
         createNavBar();
+
+
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -115,6 +122,8 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         });
 
         showNotificationBadge();
+
+
 
     }
 
@@ -193,6 +202,8 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
     @Override
     protected void onStart() {
         bottomNavigationView.getMenu().getItem(0).setChecked(false);
+        registerReceiver(notificationReceiver, new IntentFilter("android.rmit.assignment3.NOTIFICATION_CHECK"));
+
         super.onStart();
     }
 
@@ -269,23 +280,14 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
     public void showNotificationBadge(){
         if(mAuth.getUid()!=null){
             db.collection("Notifications").whereEqualTo("user",mAuth.getUid()).whereEqualTo("seen",false).get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(!queryDocumentSnapshots.isEmpty()){
 
-                                if (task.getResult() != null ) {
-                                    if (task.getResult().size() >= 1) {
-                                        System.out.println("Notification: " + task.getResult().size());
-                                        addNotificationBadge(task.getResult().size());
-                                    }
-                                    else{
-                                        removeNotificationBadge();
-                                    }
-                                }
-                                else{
-                                    removeNotificationBadge();
-                                }
+                                    System.out.println("Notifications exist: " + queryDocumentSnapshots.size());
+                                    addNotificationBadge(queryDocumentSnapshots.size());
+
                             }
                             else{
                                 removeNotificationBadge();
@@ -319,4 +321,20 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
         ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(number + "");
         bottomNavigationItemView.addView(notificationBadge);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(notificationReceiver);
+    }
+
+    private BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String notification = intent.getAction();
+            if(notification!=null && notification.equals("android.rmit.assignment3.NOTIFICATION_CHECK")){
+                showNotificationBadge();
+            }
+        }
+    };
 }

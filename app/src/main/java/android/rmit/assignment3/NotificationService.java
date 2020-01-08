@@ -66,8 +66,7 @@ public class NotificationService extends FirebaseMessagingService {
         notification.flags=Notification.FLAG_AUTO_CANCEL;
 
         notificationManager.notify(123,notification);
-        sendBroadcast(new Intent(this,CourseActivity.class).setAction("NOTIFICATION"));
-        //sendBroadcast(new Intent(this, PostsListActivity.class).setAction("NOTIFICATION"));
+        sendBroadcast(new Intent("android.rmit.assignment3.NOTIFICATION_CHECK"));
 
     }
 }

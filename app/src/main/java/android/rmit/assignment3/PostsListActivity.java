@@ -60,6 +60,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     BottomNavigationView bottomNavigationView;
     View notificationBadge;
+    BottomNavigationItemView bottomNavigationItemView;
 
 
     @Override
@@ -82,6 +83,12 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
         createNavBar();
 
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        View view = bottomNavigationMenuView.getChildAt(2);
+        bottomNavigationItemView = (BottomNavigationItemView) view;
+        notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+        bottomNavigationItemView.addView(notificationBadge);
+        notificationBadge.setVisibility(View.INVISIBLE);
 
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -305,21 +312,14 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
     public void removeNotificationBadge(){
         if(notificationBadge!=null) {
-            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-            View view = bottomNavigationMenuView.getChildAt(2);
-            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-            bottomNavigationItemView.removeView(notificationBadge);
+            notificationBadge.setVisibility(View.INVISIBLE);
 
         }
     }
 
     public void addNotificationBadge(int number){
-        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-        View view = bottomNavigationMenuView.getChildAt(2);
-        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-        notificationBadge = LayoutInflater.from(PostsListActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
         ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(number + "");
-        bottomNavigationItemView.addView(notificationBadge);
+        notificationBadge.setVisibility(View.VISIBLE);
     }
 
     @Override

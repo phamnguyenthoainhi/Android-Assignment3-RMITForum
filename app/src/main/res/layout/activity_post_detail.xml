@@ -57,9 +57,9 @@
                 android:id="@+id/follow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Follow this post"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:text="Follow" />
 
             <LinearLayout
                 android:id="@+id/post_info"

@@ -132,7 +132,6 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         fetchPost((String)bundle.get("id"));
         id =(String) bundle.get("id");
 
-        fetchFollowing();
         fetchReplies(id);
 
     }
@@ -271,9 +270,13 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                                 editPost.setVisibility(View.GONE);
                                 deletePost.setVisibility(View.GONE);
                                 fetchVoteInfo();
+                                follow.setVisibility(View.VISIBLE);
+                                fetchFollowing();
                             } else if (mAuth.getUid() != null && mAuth.getUid().equals(post.getOwner())) {
                                 upvotePost.setVisibility(View.GONE);
                                 downvotePost.setVisibility(View.GONE);
+
+                                follow.setVisibility(View.GONE);
 
                                 editPost.setOnClickListener(new View.OnClickListener() {
                                     @Override

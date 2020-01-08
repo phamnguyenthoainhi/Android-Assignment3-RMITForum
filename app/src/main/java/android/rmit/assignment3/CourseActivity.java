@@ -59,7 +59,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
     BottomNavigationView bottomNavigationView;
     EditText courseid;
     View notificationBadge;
-
+    BottomNavigationItemView bottomNavigationItemView;
 
 
     @Override
@@ -92,6 +92,13 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 
 
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
+
+        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        View view = bottomNavigationMenuView.getChildAt(2);
+        bottomNavigationItemView = (BottomNavigationItemView) view;
+        notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
+        bottomNavigationItemView.addView(notificationBadge);
+        notificationBadge.setVisibility(View.INVISIBLE);
 
         showNotificationBadge();
 
@@ -375,15 +382,11 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            System.out.println("Notifications success");
                             if(!queryDocumentSnapshots.isEmpty()){
-
-                                System.out.println("Notifications exist: " + queryDocumentSnapshots.size());
                                 addNotificationBadge(queryDocumentSnapshots.size());
 
                             }
                             else{
-                                System.out.println("Notifications empty");
                                 removeNotificationBadge();
                             }
                         }
@@ -392,7 +395,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             e.printStackTrace();
-                            System.out.println("Notifications fail");
                             removeNotificationBadge();
                         }
                     });
@@ -401,23 +403,14 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 
     public void removeNotificationBadge(){
         if(notificationBadge!=null) {
-            System.out.println("Notifications remove badge");
-            BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-            View view = bottomNavigationMenuView.getChildAt(2);
-            BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-            bottomNavigationItemView.removeView(notificationBadge);
+            notificationBadge.setVisibility(View.INVISIBLE);
 
         }
     }
 
     public void addNotificationBadge(int number){
-        System.out.println("Notifications add badge");
-        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-        View view = bottomNavigationMenuView.getChildAt(2);
-        BottomNavigationItemView bottomNavigationItemView = (BottomNavigationItemView) view;
-        notificationBadge = LayoutInflater.from(CourseActivity.this).inflate(R.layout.notification_button, bottomNavigationItemView, false);
         ((TextView) notificationBadge.findViewById(R.id.notif_count)).setText(number + "");
-        bottomNavigationItemView.addView(notificationBadge);
+        notificationBadge.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -440,7 +433,6 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         public void onReceive(Context context, Intent intent) {
             String notification = intent.getAction();
             if(notification!=null && notification.equals("android.rmit.assignment3.NOTIFICATION_CHECK")){
-                System.out.println("Notifications broadcast received");
                 showNotificationBadge();
             }
         }

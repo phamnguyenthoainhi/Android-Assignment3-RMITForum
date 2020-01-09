@@ -428,7 +428,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         final EditText content = dialogView.findViewById(R.id.reply_input_content);
         content.setText(reply.getContent());
         TextView dialogTitle = dialogView.findViewById(R.id.reply_dialog_title);
-        dialogTitle.setText("Edit this reply");
+        dialogTitle.setText("Edit this comment");
 
         Button replyButton = dialogView.findViewById(R.id.create_reply);
 
@@ -463,14 +463,14 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
     public void deleteReply(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Confirmation")
-                .setMessage("Do you want to delete this post?")
+                .setMessage("Do you want to delete this comment?")
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         db.collection("Replies").document(reply.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(ReplyDetailActivity.this, "Deleted reply", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ReplyDetailActivity.this, "Deleted comment", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 finish();
                             }
@@ -510,14 +510,14 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
     public void deleteComment(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Confirmation")
-                .setMessage("Do you want to delete this comment?")
+                .setMessage("Do you want to delete this reply?")
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         db.collection("Comments").document(comments.get(position).getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(ReplyDetailActivity.this, "Deleted the comment.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ReplyDetailActivity.this, "Deleted the reply.", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 comments=new ArrayList<>();
                                 fetchComments(id);
@@ -549,7 +549,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         final Button comment = dialogView.findViewById(R.id.create_comment);
 
         TextView dialogTitle= dialogView.findViewById(R.id.comment_dialog_title);
-        dialogTitle.setText("Edit this comment");
+        dialogTitle.setText("Edit this reply");
 
         alert.setView(dialogView);
 
@@ -611,7 +611,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(ReplyDetailActivity.this, "Successfully posted comment.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReplyDetailActivity.this, "Successfully posted reply.", Toast.LENGTH_SHORT).show();
                         if(adapter!=null) {
                             comments=new ArrayList<>();
                             fetchComments(id);
@@ -626,7 +626,7 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ReplyDetailActivity.this, "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReplyDetailActivity.this, "Failed to post reply. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

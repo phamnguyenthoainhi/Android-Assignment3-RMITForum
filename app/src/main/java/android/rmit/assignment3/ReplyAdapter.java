@@ -463,7 +463,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(holder.itemView.getContext(), "Successfully posted comment.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(holder.itemView.getContext(), "Successfully posted reply.", Toast.LENGTH_SHORT).show();
                         if(adapter!=null) {
                             db.collection("Comments").whereEqualTo("reply", comment.getReply()).get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -499,7 +499,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(holder.itemView.getContext(), "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(holder.itemView.getContext(), "Failed to post reply. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -508,14 +508,14 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
     public void deleteComment(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext())
                 .setTitle("Confirmation")
-                .setMessage("Do you want to delete this comment?")
+                .setMessage("Do you want to delete this reply?")
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         db.collection("Comments").document(comments.get(position).getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(holder.itemView.getContext(), "Deleted the comment.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(holder.itemView.getContext(), "Deleted the reply.", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 db.collection("Comments").whereEqualTo("reply",comments.get(position).getReply()).get()
                                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -558,7 +558,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         final Button comment = dialogView.findViewById(R.id.create_comment);
 
         TextView dialogTitle= dialogView.findViewById(R.id.comment_dialog_title);
-        dialogTitle.setText("Edit this comment");
+        dialogTitle.setText("Edit this reply");
 
         alert.setView(dialogView);
 

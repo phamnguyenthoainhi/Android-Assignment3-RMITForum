@@ -360,7 +360,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(PostDetailActivity.this, "Successfully posted reply.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, "Successfully posted comment.", Toast.LENGTH_SHORT).show();
                         if(adapter!=null){
                             replies = new ArrayList<>();
                             fetchReplies(id);
@@ -375,7 +375,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostDetailActivity.this, "Failed to post reply. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, "Failed to post comment. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -708,14 +708,14 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
     public void deleteReply(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("Confirmation")
-                .setMessage("Do you want to delete this reply?")
+                .setMessage("Do you want to delete this comment?")
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         db.collection("Replies").document(replies.get(position).getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(PostDetailActivity.this, "Deleted the reply.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostDetailActivity.this, "Deleted the comment.", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 replies=new ArrayList<>();
                                 fetchReplies(id);
@@ -746,6 +746,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         content.setText(replies.get(position).getContent());
 
         Button reply = dialogView.findViewById(R.id.create_reply);
+
+        ((TextView)findViewById(R.id.reply_dialog_title)).setText("Edit this comment");
 
         alert.setView(dialogView);
 

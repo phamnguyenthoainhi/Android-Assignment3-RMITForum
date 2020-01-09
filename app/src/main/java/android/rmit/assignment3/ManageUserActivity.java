@@ -94,8 +94,6 @@ public class ManageUserActivity extends AppCompatActivity {
     ArrayList<UserSumVote> userSumVotes;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,8 +120,6 @@ public class ManageUserActivity extends AppCompatActivity {
         ranking = findViewById(R.id.ranking);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +148,7 @@ public class ManageUserActivity extends AppCompatActivity {
             }
         });
 
-        if (currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")){
+        if (currentUser.getUid().equals("pDc0OYA6wKT8P6oUoTMk53muN242")){
             recyclerView = findViewById(R.id.rankrecyclerview);
             recyclerView.setVisibility(View.VISIBLE);
             TextView rankingtext = findViewById(R.id.ranktextview);
@@ -232,7 +228,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
                         sumVotes = sort(sumVotes);
 
-                        if (!id.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")){
+                        if (!id.equals("pDc0OYA6wKT8P6oUoTMk53muN242")){
                             if (sumVotes.size() > 5 ) {
                                 for (int i = 0; i < 5 ; i++) {
                                     if ((id.equals(sumVotes.get(i).getId())) && (sumVotes.get(i).getSum() >= 5) ) {
@@ -568,7 +564,7 @@ public class ManageUserActivity extends AppCompatActivity {
     }
 
     public void initRecylerview(ArrayList<UserSumVote> userSumVotes ) {
-        System.out.println("Hello");
+
         RankAdapter rankAdapter = new RankAdapter(userSumVotes, ManageUserActivity.this);
         recyclerView.setAdapter(rankAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(ManageUserActivity.this));

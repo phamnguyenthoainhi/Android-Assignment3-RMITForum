@@ -418,6 +418,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
+
                 break;
         }
         updateUpvote(vote);

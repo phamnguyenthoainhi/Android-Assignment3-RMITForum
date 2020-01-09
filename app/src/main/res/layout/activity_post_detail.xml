@@ -55,11 +55,18 @@
 
             <Button
                 android:id="@+id/follow"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ownerlayout"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:text="Follow" />
+                android:layout_marginBottom="0dp"
+                android:background="@android:color/transparent"
+                android:text="Follow"
+                android:textAlignment="viewEnd"
+                android:textAllCaps="false"
+                android:textColor="#BC1C22" />
 
             <LinearLayout
                 android:id="@+id/post_info"
@@ -186,7 +193,6 @@
                     android:background="@android:color/transparent"
                     android:minWidth="10dp"
                     android:text="Down Vote"
-                    android:textAlignment="viewStart"
                     android:textAllCaps="false"
                     android:textColor="#1A78CA"
                     android:textSize="13sp" />

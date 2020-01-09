@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -74,7 +75,7 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
         delete = course.findViewById(R.id.deletecourse);
         currentUser = mAuth.getCurrentUser();
         courses = new ArrayList<>();
-        if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+        if (!currentUser.getUid().equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
             openCreateCourse.setVisibility(View.INVISIBLE);
 
 
@@ -86,6 +87,23 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
                 showDialog();
             }
         });
+
+
+
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.courseswiperefresh);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                courses = new ArrayList<>();
+                fetchCourse();
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
+
         fetchCourse();
         createNavBar();
 

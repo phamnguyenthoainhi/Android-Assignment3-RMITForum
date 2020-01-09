@@ -29,12 +29,16 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/editcourse"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/courseiddisplay"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="aaaaaaaaaa"
                     android:textColor="#C9140101"
@@ -42,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/coursenamedisplay"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="aaaaaaaaaaaaaaaaaaaaaaa"
                     android:textColor="#6B140101"
@@ -50,23 +54,28 @@
 
                 <Button
                     android:id="@+id/subscribebtn"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:text="Subscribe"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
-                    android:textColor="#BC1C22" />
+                    android:textColor="#BC1C22"
+                    style="?android:attr/borderlessButtonStyle"
+
+                    />
 
                 <Button
                     android:id="@+id/unsubscribebtn"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:text="Unsubscribe"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
-                    android:textColor="#7C020000" />
+                    android:textColor="#7C020000"
+                    style="?android:attr/borderlessButtonStyle"
+                    />
             </LinearLayout>
 
             <ImageButton

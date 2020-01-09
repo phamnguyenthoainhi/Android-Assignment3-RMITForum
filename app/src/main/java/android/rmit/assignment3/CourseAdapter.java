@@ -88,7 +88,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             mAuth = FirebaseAuth.getInstance();
             FirebaseUser currentUser = mAuth.getCurrentUser();
 
-            if (!currentUser.getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+            if (!currentUser.getUid().equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
                 edit.setVisibility(View.INVISIBLE);
                 delete.setVisibility(View.INVISIBLE);
 
@@ -160,7 +160,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                         if(task.isSuccessful()){
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if(documentSnapshot.exists()){
-                                if (mAuth.getCurrentUser().getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+                                if (mAuth.getCurrentUser().getUid().equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
                                     holder.subscribebtn.setVisibility(View.GONE);
                                     holder.unsubscribebtn.setVisibility(View.GONE);
                                 } else {
@@ -170,7 +170,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
                             }
                             else{
-                                if (mAuth.getCurrentUser().getUid().equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+                                if (mAuth.getCurrentUser().getUid().equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
                                     holder.subscribebtn.setVisibility(View.GONE);
                                     holder.unsubscribebtn.setVisibility(View.GONE);
                                 } else {

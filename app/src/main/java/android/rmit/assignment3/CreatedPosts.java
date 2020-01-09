@@ -85,7 +85,7 @@ public class CreatedPosts extends Fragment  {
         arrayList = new ArrayList<>();
         ManageUserActivity manageUserActivity = (ManageUserActivity)getActivity();
         String userId = manageUserActivity.userId;
-        if (!userId.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+        if (!userId.equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
             fetchPostbyUser(userId, view, getContext());
         } else {
             view.setVisibility(View.INVISIBLE);

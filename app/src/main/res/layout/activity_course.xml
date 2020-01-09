@@ -19,16 +19,25 @@
         android:background="@drawable/icons8plus50"
         android:backgroundTint="#BC1C22" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleviewcourse"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/courseswiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_nav_post"
+        android:layout_height="match_parent"
         android:layout_below="@id/opencreatecourse"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginTop="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleviewcourse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_nav_post"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="0dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_course"

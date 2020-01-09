@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,16 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
         if(mAuth.getCurrentUser()!=null){
             fetchNotifications(mAuth.getUid());
         }
+
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                notifications = new ArrayList<>();
+                fetchNotifications(mAuth.getUid());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
     }
 

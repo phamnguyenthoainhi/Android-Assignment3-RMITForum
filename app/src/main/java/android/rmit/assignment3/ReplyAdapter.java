@@ -192,12 +192,14 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).increaseUpvote();
-                holder.replyUpvote.setTextColor(Color.parseColor("#7C020000"));
+                holder.replyUpvote.setText("Undo vote");
+                holder.replyDownvote.setTextColor(Color.parseColor("#7C020000"));
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;
             case DOWNVOTE:
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
-                holder.replyDownvote.setTextColor(Color.parseColor("#7C020000"));
+                holder.replyDownvote.setText("Undo vote");
+                holder.replyUpvote.setTextColor(Color.parseColor("#7C020000"));
                 replies.get(replyIndex).decreaseUpvote();
                 break;
         }
@@ -208,14 +210,15 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
         switch(vote){
             case UPVOTE:
                 replies.get(replyIndex).decreaseUpvote();
-                holder.replyUpvote.setTextColor(Color.parseColor("#D13430"));
 
-
+                holder.replyUpvote.setText("Up Vote");
+                holder.replyDownvote.setTextColor(Color.parseColor("#1A78CA"));
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), false);
                 break;
             case DOWNVOTE:
-                holder.replyDownvote.setTextColor(Color.parseColor("#1A78CA"));
+                holder.replyUpvote.setTextColor(Color.parseColor("#D13430"));
 
+                holder.replyDownvote.setText("Down Vote");
                 replies.get(replyIndex).increaseUpvote();
                 fetchupdateSumVotes(replies.get(replyIndex).getOwner(), true);
                 break;
@@ -318,6 +321,9 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                             if(documentSnapshot.get("type")!=null){
                                 switch(documentSnapshot.get("type").toString()){
                                     case "upvote":
+                                        holder.replyUpvote.setText("Undo vote");
+                                        holder.replyDownvote.setTextColor(Color.parseColor("#7C020000"));
+
                                         holder.replyDownvote.setClickable(false);
                                         holder.replyUpvote.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -327,6 +333,9 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ReplyViewHol
                                         });
                                         break;
                                     case "downvote":
+                                        holder.replyDownvote.setText("Undo vote");
+                                        holder.replyUpvote.setTextColor(Color.parseColor("#7C020000"));
+
                                         holder.replyUpvote.setClickable(false);
                                         holder.replyDownvote.setOnClickListener(new View.OnClickListener() {
                                             @Override

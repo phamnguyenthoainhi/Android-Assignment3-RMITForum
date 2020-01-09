@@ -223,7 +223,8 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         switch(vote){
             case UPVOTE:
                 reply.increaseUpvote();
-                upvoteReply.setTextColor(Color.parseColor("#7C020000"));
+                upvoteReply.setText("Undo vote");
+                downvoteReply.setTextColor(Color.parseColor("#7C020000"));
                 if (reply.getOwner() != null ){
                     fetchupdateSumVotes(reply.getOwner(), true);
                 }
@@ -231,7 +232,8 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                 break;
             case DOWNVOTE:
                 reply.decreaseUpvote();
-                downvoteReply.setTextColor(Color.parseColor("#7C020000"));
+                downvoteReply.setText("Undo vote");
+                upvoteReply.setTextColor(Color.parseColor("#7C020000"));
                 if (reply.getOwner() != null) {
                     fetchupdateSumVotes(reply.getOwner(), false);
                 }
@@ -243,14 +245,16 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
     protected void undoVote(Vote vote){
         switch(vote){
             case UPVOTE:
-                upvoteReply.setTextColor(Color.parseColor("#D13430"));
+                upvoteReply.setText("Up Vote");
+                downvoteReply.setTextColor(Color.parseColor("#1A78CA"));
                 reply.decreaseUpvote();
                 if (reply.getOwner() != null) {
                     fetchupdateSumVotes(reply.getOwner(), false);
                 }
                 break;
             case DOWNVOTE:
-                downvoteReply.setTextColor(Color.parseColor("#1A78CA"));
+                upvoteReply.setTextColor(Color.parseColor("#D13430"));
+                downvoteReply.setText("Down Vote");
                 reply.increaseUpvote();
                 if (reply.getOwner() != null ){
                     fetchupdateSumVotes(reply.getOwner(), true);
@@ -362,6 +366,9 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                                                 undoVote(Vote.UPVOTE);
                                             }
                                         });
+                                        upvoteReply.setText("Undo vote");
+                                        downvoteReply.setTextColor(Color.parseColor("#7C020000"));
+
                                         downvoteReply.setClickable(false);
                                         break;
                                     case "downvote":
@@ -371,6 +378,8 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
                                                 undoVote(Vote.DOWNVOTE);
                                             }
                                         });
+                                        downvoteReply.setText("Undo vote");
+                                        upvoteReply.setTextColor(Color.parseColor("#7C020000"));
                                         upvoteReply.setClickable(false);
                                 }
                             }

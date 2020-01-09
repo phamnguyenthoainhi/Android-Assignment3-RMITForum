@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -130,7 +131,15 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
 
         showNotificationBadge();
 
-
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_to_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                posts = new ArrayList<>();
+                fetchPosts(courseId);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
     }
 

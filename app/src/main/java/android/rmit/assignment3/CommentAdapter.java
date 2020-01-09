@@ -145,12 +145,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     protected void vote(int commentIndex, PostDetailActivity.Vote vote, CommentViewHolder holder){
         switch(vote){
             case UPVOTE:
-                holder.commentUpvote.setTextColor(Color.parseColor("#7C020000"));
+                holder.commentUpvote.setText("Undo vote");
+                holder.commentDownvote.setTextColor(Color.parseColor("#7C020000"));
                 comments.get(commentIndex).increaseUpvote();
                 fetchupdateSumVotes(comments.get(commentIndex).getOwner(), true);
                 break;
             case DOWNVOTE:
-                holder.commentDownvote.setTextColor(Color.parseColor("#7C020000"));
+                holder.commentDownvote.setText("Undo vote");
+                holder.commentUpvote.setTextColor(Color.parseColor("#7C020000"));
                 fetchupdateSumVotes(comments.get(commentIndex).getOwner(), false);
 
                 comments.get(commentIndex).decreaseUpvote();
@@ -163,16 +165,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         switch(vote){
             case UPVOTE:
                 fetchupdateSumVotes(comments.get(commentIndex).getOwner(), false);
-
+                holder.commentUpvote.setText("Up Vote");
+                holder.commentDownvote.setTextColor(Color.parseColor("#1A78CA"));
                 comments.get(commentIndex).decreaseUpvote();
-                holder.commentUpvote.setTextColor(Color.parseColor("#D13430"));
 
                 break;
             case DOWNVOTE:
                 fetchupdateSumVotes(comments.get(commentIndex).getOwner(), true);
-
-                holder.commentDownvote.setTextColor(Color.parseColor("#1A78CA"));
-
+                holder.commentDownvote.setText("Down Vote");
+                holder.commentUpvote.setTextColor(Color.parseColor("#D13430"));
                 comments.get(commentIndex).increaseUpvote();
                 break;
         }
@@ -274,6 +275,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                             if(documentSnapshot.get("type")!=null){
                                 switch(documentSnapshot.get("type").toString()){
                                     case "upvote":
+                                        holder.commentUpvote.setText("Undo vote");
+                                        holder.commentDownvote.setTextColor(Color.parseColor("#7C020000"));
                                         holder.commentDownvote.setClickable(false);
                                         holder.commentUpvote.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -283,6 +286,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                                         });
                                         break;
                                     case "downvote":
+                                        holder.commentDownvote.setText("Undo vote");
+                                        holder.commentUpvote.setTextColor(Color.parseColor("#7C020000"));
                                         holder.commentUpvote.setClickable(false);
                                         holder.commentDownvote.setOnClickListener(new View.OnClickListener() {
                                             @Override

@@ -407,12 +407,14 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null ){
                     fetchupdateSumVotes(post.getOwner(), true);
                 }
-                upvotePost.setTextColor(Color.parseColor("#7C020000"));
+                upvotePost.setText("Undo vote");
+                downvotePost.setTextColor(Color.parseColor("#7C020000"));
 
                 break;
             case DOWNVOTE:
                 post.decreaseUpvote();
-                downvotePost.setTextColor(Color.parseColor("#7C020000"));
+                downvotePost.setText("Undo vote");
+                upvotePost.setTextColor(Color.parseColor("#7C020000"));
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
@@ -428,14 +430,17 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
-                upvotePost.setTextColor(Color.parseColor("#D13430"));
+                upvotePost.setText("Up Vote");
+                downvotePost.setTextColor(Color.parseColor("#1A78CA"));
                 break;
             case DOWNVOTE:
                 post.increaseUpvote();
                 if (post.getOwner() != null ){
                     fetchupdateSumVotes(post.getOwner(), true);
                 }
-                downvotePost.setTextColor(Color.parseColor("#1A78CA"));
+                downvotePost.setText("Down Vote");
+                upvotePost.setTextColor(Color.parseColor("#D13430"));
+
                 break;
         }
         removeUpvote();
@@ -566,6 +571,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                                                 undoVote(Vote.UPVOTE);
                                             }
                                         });
+                                        upvotePost.setText("Undo vote");
+                                        downvotePost.setTextColor(Color.parseColor("#7C020000"));
                                         downvotePost.setClickable(false);
                                         break;
                                     case "downvote":
@@ -575,6 +582,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                                                 undoVote(Vote.DOWNVOTE);
                                             }
                                         });
+                                        downvotePost.setText("Undo vote");
+                                        upvotePost.setTextColor(Color.parseColor("#7C020000"));
                                         upvotePost.setClickable(false);
                                 }
                             }

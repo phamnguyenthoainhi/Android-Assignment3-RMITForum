@@ -347,14 +347,12 @@ public class CourseActivity extends AppCompatActivity implements CourseAdapter.C
 
     @Override
     public void editButtonClick(View v, int posision) {
-        Toast.makeText(this, "Edit clicked "+ posision, Toast.LENGTH_SHORT).show();
         showEditDialog(posision);
 
     }
 
     @Override
     public void deleteButtonClick(View v, final int position) {
-        Toast.makeText(this, "Delete clicked "+ position, Toast.LENGTH_SHORT).show();
         AlertDialog.Builder buider = new AlertDialog.Builder(v.getContext()).setTitle("Confirmation").setMessage("Do you want to delete the selected course?")
                 .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

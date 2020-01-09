@@ -237,7 +237,7 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                         break;
                     case R.id.navigation_notifications:
                         startActivity(new Intent(PostsListActivity.this,NotificationsListActivity.class));
-                        //Toast.makeText(MainActivity.this, "Switch to Notification", Toast.LENGTH_SHORT).show();
+
                         break;
                 }
                 return true;
@@ -277,7 +277,6 @@ public class PostsListActivity extends AppCompatActivity implements PostAdapter.
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(PostsListActivity.this, documentReference.getId(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(PostsListActivity.this,PostDetailActivity.class);
                         intent.putExtra("id",documentReference.getId());
                         startActivity(intent);

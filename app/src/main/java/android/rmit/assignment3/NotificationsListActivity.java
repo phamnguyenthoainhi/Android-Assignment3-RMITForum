@@ -108,7 +108,7 @@ public class NotificationsListActivity extends AppCompatActivity implements Noti
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Toast.makeText(NotificationsListActivity.this, "Successfully fetched notifs", Toast.LENGTH_SHORT).show();
+
                         for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
                             Notification notification = documentSnapshot.toObject(Notification.class);
                             notification.setId(documentSnapshot.getId());

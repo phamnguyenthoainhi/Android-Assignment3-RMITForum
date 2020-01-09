@@ -319,7 +319,7 @@ public class ManageUserActivity extends AppCompatActivity {
 //            imageView.setImageURI(imageUri);
 
         } else {
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+
         }
 
     }

@@ -85,6 +85,13 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
         editPost=findViewById(R.id.edit_post);
         deletePost=findViewById(R.id.delete_post);
 
+        Button fromdetail = findViewById(R.id.frompostdetail);
+        fromdetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         avatar = findViewById(R.id.owneravatar);
         owner = findViewById(R.id.ownername);
 

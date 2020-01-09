@@ -79,6 +79,13 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         avatar =findViewById(R.id.reply_owner_avatar);
         owner = findViewById(R.id.reply_owner_name);
 
+        Button fromdetail = findViewById(R.id.fromreplydetail);
+        fromdetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         Button commentButton = findViewById(R.id.comment_button);
 
         commentButton.setOnClickListener(new View.OnClickListener() {

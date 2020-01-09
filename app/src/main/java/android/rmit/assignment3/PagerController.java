@@ -22,8 +22,10 @@ public class PagerController extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return new SubscribedCourseUser();
-            case 1:
+            case 2:
                 return new CreatedPosts();
+            case 1:
+                return new FollowedPost();
             default:
                 return null;
         }

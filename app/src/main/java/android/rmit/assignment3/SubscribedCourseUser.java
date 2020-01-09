@@ -1,6 +1,7 @@
 package android.rmit.assignment3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,7 +81,12 @@ public class SubscribedCourseUser extends Fragment {
         recyclerView = view.findViewById(R.id.subscribecourserecyclerview);
         gridLayoutManager = new GridLayoutManager(context, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
-        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, context);
+        subscribedCourseAdapter = new SubscribedCourseAdapter(subscribedCourses, new SubscribedCourseAdapter.SubscribedCourseViewHolder.OnCourseListener() {
+            @Override
+            public void onCourseClick(int position) {
+                startActivity(new Intent(getActivity(),PostsListActivity.class).putExtra("id",subscribedCourses.get(position).getId()));
+            }
+        },context);
         recyclerView.setAdapter(subscribedCourseAdapter);
     }
 

@@ -83,6 +83,9 @@ public class ReplyDetailActivity extends AppCompatActivity implements CommentAda
         fromdetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(reply.getPost()!=null && !reply.getPost().equals("")) {
+                    startActivity(new Intent(ReplyDetailActivity.this, PostDetailActivity.class).putExtra("id", reply.getPost()));
+                }
                 finish();
             }
         });

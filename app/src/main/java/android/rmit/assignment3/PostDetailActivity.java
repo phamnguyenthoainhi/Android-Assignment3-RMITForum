@@ -754,7 +754,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
 
         Button reply = dialogView.findViewById(R.id.create_reply);
 
-        ((TextView)findViewById(R.id.reply_dialog_title)).setText("Edit this comment");
+        TextView title = dialogView.findViewById(R.id.reply_dialog_title);
+        title.setText("Edit this comment");
 
         alert.setView(dialogView);
 

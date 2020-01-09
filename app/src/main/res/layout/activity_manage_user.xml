@@ -139,13 +139,21 @@
                 android:id="@+id/coursetab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Couses" />
+                android:text="Followed Courses" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/followposttab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Followed Posts" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/posttab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Posts" />
+                android:text="Created Posts" />
+
+
 
         </com.google.android.material.tabs.TabLayout>
         <androidx.viewpager.widget.ViewPager

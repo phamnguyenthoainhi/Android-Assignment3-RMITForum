@@ -96,7 +96,7 @@ public class SubscribedCourseUser extends Fragment {
         subscribedCourses = new ArrayList<>();
         String userId = manageUserActivity.userId;
 
-        if (!userId.equals("A1jnuCTWu2QkLygrlUngKRQbfPk2")) {
+        if (!userId.equals("pDc0OYA6wKT8P6oUoTMk53muN242")) {
             fetchCoursesbyUser(userId, view, getContext());
         } else  {
             view.setVisibility(View.INVISIBLE);

@@ -407,8 +407,8 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null ){
                     fetchupdateSumVotes(post.getOwner(), true);
                 }
-                upvotePost.setTextColor(Color.parseColor("#7C020000"));
 
+                upvotePost.setTextColor(Color.parseColor("#7C020000"));
                 break;
             case DOWNVOTE:
                 post.decreaseUpvote();
@@ -416,6 +416,7 @@ public class PostDetailActivity extends AppCompatActivity implements ReplyAdapte
                 if (post.getOwner() != null) {
                     fetchupdateSumVotes(post.getOwner(), false);
                 }
+
                 break;
         }
         updateUpvote(vote);
